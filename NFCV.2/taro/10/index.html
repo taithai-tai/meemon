@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>เลือกไพ่ 10 ใบ | Taithai Tarot</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body {
+  font-family: sans-serif;
+  background: rgb(8,10,35);
+  color: #fff;
+  text-align: center;
+  margin: 0;
+  padding-top: 60px;
+}
+
+.circle {
+  width: 600px;
+  height: 600px;
+  margin: auto;
+  position: relative;
+}
+
+.card {
+  width: 65px;
+  height: 120px;
+  background: url("https://upload.wikimedia.org/wikipedia/commons/5/53/RWS_Tarot_00_Fool.jpg");
+  background-size: cover;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform-origin: -200px center;
+  cursor: pointer;
+  filter: brightness(0.7);
+  border-radius: 6px;
+  transition: 0.2s;
+}
+
+.card:hover {
+  filter: brightness(1);
+}
+
+.card.selected {
+  outline: 3px solid #FFD93D;
+  filter: brightness(1.15);
+  transform: translate(-50%, -50%) scale(1.15) !important;
+}
+
+#count {
+  font-size: 1.2rem;
+  margin: 15px 0;
+}
+
+button {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 30px;
+  font-size: 1rem;
+  cursor: pointer;
+  background: #FFD93D;
+  color: #000;
+  font-weight: bold;
+  margin: 10px;
+}
+
+button:disabled {
+  background: #666;
+  cursor: not-allowed;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>เลือกไพ่ 10 ใบ</h1>
+<div>คลิกเลือกไพ่ 10 ใบ แล้วกดปุ่ม ‘ทำนาย’</div>
+<div id="count">เลือกแล้ว: 0 / 10</div>
+
+<div class="circle" id="deck"></div>
+
+<button id="shuffle">สับไพ่</button>
+<button id="cut">ตัดไพ่</button>
+<button id="submit" disabled>ทำนาย</button>
+
+<script>
+const deckEl = document.getElementById("deck");
+const countEl = document.getElementById("count");
+const submitBtn = document.getElementById("submit");
+
+let cardCount = 72; // จำนวนไพ่ (เปลี่ยนเป็น 78 ได้)
+let selectedCards = [];
+
+function placeCards() {
+  deckEl.innerHTML = "";
+  for (let i = 0; i < cardCount; i++) {
+    const card = document.createElement("div");
+    card.classList.add("card");
+    const angle = (360 / cardCount) * i;
+    card.style.transform = 
+      `translate(-50%, -50%) rotate(${angle}deg) translate(260px) rotate(${-angle}deg)`;
+
+    card.addEventListener("click", () => toggleSelect(card, i));
+    deckEl.appendChild(card);
+  }
+}
+
+function toggleSelect(card, index) {
+  if (!card.classList.contains("selected")) {
+    if (selectedCards.length >= 10) return;
+    card.classList.add("selected");
+    selectedCards.push(index);
+  } else {
+    card.classList.remove("selected");
+    selectedCards = selectedCards.filter(i => i !== index);
+  }
+
+  countEl.textContent = `เลือกแล้ว: ${selectedCards.length} / 10`;
+  submitBtn.disabled = selectedCards.length !== 10;
+}
+
+function shuffleCards() {
+  deckEl.style.transform = "rotate(10deg)";
+  setTimeout(() => deckEl.style.transform = "rotate(0deg)", 300);
+}
+
+function cutCards() {
+  deckEl.style.transform = "rotate(180deg)";
+  setTimeout(() => deckEl.style.transform = "rotate(0deg)", 300);
+}
+
+submitBtn.addEventListener("click", () => {
+  alert("คุณเลือกไพ่ครบแล้ว 🎉\nเดี๋ยวฉันจะทำหน้าผลให้คุณต่อ!");
+  console.log("Cards picked:", selectedCards);
+});
+
+document.getElementById("shuffle").addEventListener("click", shuffleCards);
+document.getElementById("cut").addEventListener("click", cutCards);
+
+placeCards();
+</script>
+
+</body>
+</html>
