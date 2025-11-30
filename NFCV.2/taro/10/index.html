@@ -44,23 +44,23 @@
     .subtitle {
       font-size: 0.85rem;
       opacity: 0.85;
-      margin-bottom: 10px;      /* เดิม 8px → ให้ห่างจากหัวข้อขึ้นอีกหน่อย */
+      margin-bottom: 10px;      /* ระยะห่างหัวข้อ */
       line-height: 1.4;
     }
     
     #count {
-      margin: 6px 0 14px;       /* เดิม 4px 0 10px → เพิ่มช่องไฟก่อนวงไพ่ */
+      margin: 6px 0 14px;       /* ช่องไฟก่อนวงไพ่ */
       font-weight: 600;
       font-size: 0.9rem;
     }
     
-    /* วงไพ่ – ขยับลงมาจากตัวหนังสืออีกหน่อย */
+    /* วงไพ่ – ขยับลงมาจากตัวหนังสือ */
     .circle-wrapper {
       display: flex;
       justify-content: center;
       align-items: center;
-      margin-top: 10px;         /* เพิ่ม: ดันวงไพ่ลงจากข้อความด้านบน */
-      margin-bottom: 18px;      /* เดิม 10px → เว้นระยะจากปุ่มมากขึ้น */
+      margin-top: 10px;         /* ดันวงไพ่ลงจากข้อความด้านบน */
+      margin-bottom: 18px;      /* เว้นระยะจากปุ่ม */
     }
 
     .circle {
@@ -69,6 +69,7 @@
       max-width: 420px;
       max-height: 420px;
       position: relative;
+      margin: 0 auto;
     }
 
     .card {
@@ -104,12 +105,12 @@
       z-index: 5;
     }
 
-   /* ปุ่ม – เลื่อนลงจากวงไพ่เพิ่มอีกนิด */
+   /* ปุ่ม – เลื่อนลงจากวงไพ่ */
     .btn-row {
       display: flex;
       gap: 6px;
       justify-content: center;
-      margin-top: 8px;          /* เพิ่ม: ทำให้ปุ่มห่างจากวงไพ่ขึ้นอีก */
+      margin-top: 8px;          /* ห่างจากวงไพ่ */
       margin-bottom: 10px;
       flex-wrap: wrap;
     }
@@ -225,6 +226,53 @@
         font-size: 0.8rem;
       }
     }
+
+    /* ========== Animation สำหรับสับไพ่ & ตัดไพ่ ========== */
+
+    /* ป้องกันกดซ้ำตอนกำลังเล่นแอนิเมชัน */
+    .circle.animating {
+      pointer-events: none;
+    }
+
+    /* สับไพ่ – หมุน + เด้งนิดหน่อย */
+    .circle.shuffle-anim {
+      animation: shuffleSpin 0.5s ease-in-out;
+    }
+
+    @keyframes shuffleSpin {
+      0% {
+        transform: none;
+      }
+      30% {
+        transform: rotate(-8deg) scale(1.03);
+      }
+      60% {
+        transform: rotate(8deg) scale(1.03);
+      }
+      100% {
+        transform: none;
+      }
+    }
+
+    /* ตัดไพ่ – ขยับขึ้นลงเหมือนยกสำรับขึ้นมาตัด */
+    .circle.cut-anim {
+      animation: cutMove 0.5s ease-in-out;
+    }
+
+    @keyframes cutMove {
+      0% {
+        transform: none;
+      }
+      30% {
+        transform: translateY(10px);
+      }
+      60% {
+        transform: translateY(-8px);
+      }
+      100% {
+        transform: none;
+      }
+    }
   </style>
 </head>
 
@@ -255,7 +303,7 @@
     </div>
   </div>
 
-   <script>
+  <script>
     // โฟลเดอร์เก็บรูปไพ่จาก GitHub (จาก test.html ไปยังรูป)
     const IMAGE_BASE = "https://taithai-tai.github.io/meemon/NFCV.2/taro/Picture/PrintaciousCo/";
     const CARD_BACK = "Back of the cards.png"; // หลังไพ่
@@ -384,7 +432,10 @@
     function placeCards() {
       deckEl.innerHTML = "";
       const n = deckOrder.length;
-      const radius = Math.min(deckEl.offsetWidth, deckEl.offsetHeight) / 2 - 40; // ปรับตามขนาดจอ
+      const radius = Math.max(
+        60,
+        Math.min(deckEl.offsetWidth, deckEl.offsetHeight) / 2 - 40
+      ); // กัน radius ติดลบ / เล็กเกิน
 
       for (let i = 0; i < n; i++) {
         const angle = (360 / n) * i;
@@ -422,23 +473,43 @@
       submitBtn.disabled = (selected.length !== MAX_PICK);
     }
 
+    // สับไพ่ + เล่น animation
     shuffleBtn.addEventListener("click", () => {
-      shuffleArray(deckOrder);
-      selected = [];
-      countEl.textContent = `เลือกแล้ว: 0 / ${MAX_PICK}`;
-      submitBtn.disabled = true;
-      resultSection.style.display = "none";
-      placeCards();
+      if (deckEl.classList.contains("animating")) return; // กันกดรัว
+
+      deckEl.classList.add("animating", "shuffle-anim");
+
+      // รอให้ animation เล่นจบก่อนค่อยสับไพ่จริง
+      setTimeout(() => {
+        shuffleArray(deckOrder);
+        selected = [];
+        countEl.textContent = `เลือกแล้ว: 0 / ${MAX_PICK}`;
+        submitBtn.disabled = true;
+        resultSection.style.display = "none";
+        placeCards();
+
+        deckEl.classList.remove("shuffle-anim", "animating");
+      }, 500); // ต้องตรงกับเวลา animation 0.5s
     });
 
+    // ตัดไพ่ + เล่น animation
     cutBtn.addEventListener("click", () => {
-      const half = Math.floor(deckOrder.length / 2);
-      deckOrder = deckOrder.slice(half).concat(deckOrder.slice(0, half));
-      selected = [];
-      countEl.textContent = `เลือกแล้ว: 0 / ${MAX_PICK}`;
-      submitBtn.disabled = true;
-      resultSection.style.display = "none";
-      placeCards();
+      if (deckEl.classList.contains("animating")) return;
+
+      deckEl.classList.add("animating", "cut-anim");
+
+      setTimeout(() => {
+        const half = Math.floor(deckOrder.length / 2);
+        deckOrder = deckOrder.slice(half).concat(deckOrder.slice(0, half));
+
+        selected = [];
+        countEl.textContent = `เลือกแล้ว: 0 / ${MAX_PICK}`;
+        submitBtn.disabled = true;
+        resultSection.style.display = "none";
+        placeCards();
+
+        deckEl.classList.remove("cut-anim", "animating");
+      }, 500);
     });
 
     submitBtn.addEventListener("click", () => {
