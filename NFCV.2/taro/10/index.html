@@ -44,22 +44,23 @@
     .subtitle {
       font-size: 0.85rem;
       opacity: 0.85;
-      margin-bottom: 8px;
+      margin-bottom: 10px;      /* เดิม 8px → ให้ห่างจากหัวข้อขึ้นอีกหน่อย */
       line-height: 1.4;
     }
-
+    
     #count {
-      margin: 4px 0 10px;
+      margin: 6px 0 14px;       /* เดิม 4px 0 10px → เพิ่มช่องไฟก่อนวงไพ่ */
       font-weight: 600;
       font-size: 0.9rem;
     }
-
-    /* วงไพ่ – mobile-first */
+    
+    /* วงไพ่ – ขยับลงมาจากตัวหนังสืออีกหน่อย */
     .circle-wrapper {
       display: flex;
       justify-content: center;
       align-items: center;
-      margin-bottom: 10px;
+      margin-top: 10px;         /* เพิ่ม: ดันวงไพ่ลงจากข้อความด้านบน */
+      margin-bottom: 18px;      /* เดิม 10px → เว้นระยะจากปุ่มมากขึ้น */
     }
 
     .circle {
@@ -103,12 +104,13 @@
       z-index: 5;
     }
 
-    /* ปุ่ม – จัดให้เหมาะกับนิ้วโป้ง */
+   /* ปุ่ม – เลื่อนลงจากวงไพ่เพิ่มอีกนิด */
     .btn-row {
       display: flex;
       gap: 6px;
       justify-content: center;
-      margin-bottom: 8px;
+      margin-top: 8px;          /* เพิ่ม: ทำให้ปุ่มห่างจากวงไพ่ขึ้นอีก */
+      margin-bottom: 10px;
       flex-wrap: wrap;
     }
 
