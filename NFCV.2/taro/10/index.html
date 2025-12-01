@@ -1,142 +1,278 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<title>Taithai Tarot</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <title>Taithai Tarot | เลือกไพ่ 10 ใบ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<style>
-:root {
-  --bg: #0d0d0d;
-  --accent: #ffcf4a;
-  --text: #eaeaea;
-  --card-size: 70px;
-}
+  <style>
+    :root {
+      --bg-main: radial-gradient(circle at top, #05081f, #02010b);
+      --accent: #fbbf24;
+      --accent-soft: #ffd93d;
+      --text-main: #f9fafb;
+      --text-soft: #9ca3af;
+    }
 
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  text-align: center;
-  padding: 16px;
-}
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: var(--bg-main);
+      color: var(--text-main);
+      text-align: center;
+      margin: 0;
+      padding: 16px 10px 24px;
+    }
 
-h2 {
-  font-size: 1.25rem;
-  margin-bottom: 18px;
-  color: var(--accent);
-}
+    .page {
+      max-width: 480px;
+      margin: 0 auto;
+    }
 
-button {
-  background: var(--accent);
-  border: none;
-  padding: 12px;
-  width: 100%;
-  border-radius: 8px;
-  margin: 8px 0;
-  font-weight: bold;
-  font-size: 1rem;
-  cursor: pointer;
-}
+    h1 {
+      margin: 6px 0 4px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 1rem;
+    }
 
-/* Deck Layout */
-#deck {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: center;
-  margin-bottom: 20px;
-}
+    .subtitle {
+      font-size: 0.85rem;
+      opacity: 0.85;
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+    
+    #count {
+      margin: 6px 0 14px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    
+    .circle-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 10px;
+      margin-bottom: 18px;
+    }
 
-.card {
-  width: var(--card-size);
-  height: calc(var(--card-size)*1.6);
-  background: #222;
-  border-radius: 8px;
-  background-size: cover;
-  transition: transform .3s ease;
-  cursor: pointer;
-}
+    .circle {
+      width: 90vw;
+      height: 90vw;
+      max-width: 420px;
+      max-height: 420px;
+      position: relative;
+      margin: 0 auto;
+    }
 
-/* Shuffle Animation */
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
+    /* ตอนกำลังเล่น animation ห้ามกดซ้ำ */
+    .circle.animating {
+      pointer-events: none;
+    }
 
-.spin {
-  animation: spin 2.5s linear 3;
-}
+    .card {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 16vw;
+      max-width: 70px;
+      min-width: 45px;
+      aspect-ratio: 7 / 12;
+      background-size: cover;
+      background-position: center;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+      cursor: pointer;
+      filter: brightness(0.75);
+      transition:
+        transform 0.16s ease,
+        filter 0.16s ease,
+        box-shadow 0.16s ease,
+        outline-width 0.1s ease;
+    }
 
-/* Cut Animation */
-.cut {
-  transform: translateY(-20px);
-}
+    .card:hover {
+      filter: brightness(1);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.8);
+    }
 
-/* Result */
-.result-card {
-  background: #1a1a1a;
-  padding: 10px;
-  border-radius: 10px;
-  margin-bottom: 18px;
-}
+    .card.selected {
+      outline: 3px solid var(--accent-soft);
+      filter: brightness(1.15);
+      transform: translate(-50%, -50%) scale(1.12) !important;
+      z-index: 5;
+    }
 
-.result-card img {
-  width: 140px;
-  border-radius: 10px;
-}
+    .btn-row {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      margin-top: 8px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
 
-.position-title {
-  font-size: .85rem;
-  color: var(--accent);
-  margin: 6px 0 2px;
-  font-weight: bold;
-}
+    button {
+      flex: 1 1 30%;
+      min-width: 90px;
+      padding: 9px 10px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
 
-.result-name {
-  font-size: .9rem;
-  margin-bottom: 2px;
-  font-weight: bold;
-}
+    #shuffleBtn,
+    #cutBtn {
+      background: #020617;
+      color: #e5e7eb;
+      border: 1px solid rgba(148,163,184,0.7);
+    }
 
-.result-meaning {
-  font-size: .85rem;
-  opacity: .9;
-  line-height: 1.3rem;
-}
+    #submitBtn {
+      background: var(--accent);
+      color: #111827;
+    }
 
-#result-section { display: none; }
+    #submitBtn:disabled {
+      background: #4b5563;
+      color: var(--text-soft);
+      cursor: not-allowed;
+    }
 
-</style>
+    #resultSection {
+      margin-top: 14px;
+      padding: 10px 10px 14px;
+      border-radius: 16px;
+      background: rgba(15,23,42,0.88);
+      border: 1px solid rgba(148,163,184,0.35);
+      display: none;
+    }
+
+    #resultSection h2 {
+      margin: 0 0 6px;
+      font-size: 0.95rem;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .result-card {
+      background: radial-gradient(circle at top, #111827, #020617);
+      padding: 8px;
+      border-radius: 12px;
+      border: 1px solid rgba(55,65,81,0.9);
+      font-size: 0.78rem;
+    }
+
+    .result-card img {
+      width: 100%;
+      border-radius: 8px;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .result-name {
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .result-meaning {
+      opacity: 0.92;
+      line-height: 1.3;
+    }
+
+    .disclaimer {
+      margin-top: 8px;
+      font-size: 0.7rem;
+      opacity: 0.65;
+      line-height: 1.4;
+    }
+
+    @media (min-width: 768px) {
+      body {
+        padding-top: 24px;
+      }
+      h1 {
+        font-size: 1.2rem;
+      }
+      .subtitle {
+        font-size: 0.9rem;
+      }
+      .circle {
+        width: 420px;
+        height: 420px;
+      }
+      .card {
+        width: 70px;
+      }
+      .result-grid {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+      #resultSection h2 {
+        font-size: 1.05rem;
+      }
+      .result-card {
+        font-size: 0.8rem;
+      }
+    }
+
+    /* ========== Animation สำหรับสับไพ่ (หมุนวงไพ่) ========== */
+    .circle.spin {
+      animation: spin 2s linear 3;
+    }
+
+    @keyframes shuffleRotate {
+      0%   { transform: rotate(0deg); }
+      25%  { transform: rotate(-15deg); }
+      75%  { transform: rotate(15deg); }
+      100% { transform: rotate(0deg); }
+    }
+  </style>
 </head>
+
 <body>
+  <div class="page">
+    <h1>TAITHAI TAROT 🔮</h1>
+    <div class="subtitle">
+      แตะเลือกไพ่ <b>10 ใบ</b> จากวงไพ่ด้านล่าง แล้วกดปุ่ม “ทำนาย”
+    </div>
+    <div id="count">เลือกแล้ว: 0 / 10</div>
 
-<h2>เลือกไพ่ 10 ใบ เพื่อดูดวง</h2>
+    <div class="circle-wrapper">
+      <div class="circle" id="deck"></div>
+    </div>
 
-<div id="deck"></div>
+    <div class="btn-row">
+      <button id="shuffleBtn">สับไพ่</button>
+      <button id="cutBtn">ตัดไพ่</button>
+      <button id="submitBtn" disabled>ทำนาย</button>
+    </div>
 
-<button id="shuffleBtn">🔄 สับไพ่</button>
-<button id="cutBtn">✂️ ตัดไพ่</button>
-<button id="submitBtn">🔮 ทำนาย</button>
+    <div id="resultSection">
+      <h2>ผลการทำนาย 10 ใบของคุณ</h2>
+      <div class="result-grid" id="resultGrid"></div>
+      <div class="disclaimer">
+        *ความหมายใช้เป็นแนวทางเท่านั้น การตัดสินใจทุกอย่างขึ้นอยู่กับตัวคุณเอง 🌙
+      </div>
+    </div>
+  </div>
 
-<section id="result-section">
-  <h2>🔮 ผลการทำนายของคุณ</h2>
-  <div id="results"></div>
-</section>
+  <script>
+    const IMAGE_BASE = "https://taithai-tai.github.io/meemon/NFCV.2/taro/Picture/PrintaciousCo/";
+    const CARD_BACK = "Back of the cards.png";
 
-<script>
-// 📌 ตำแหน่งความหมาย 10 ใบ
-const POSITION_MEANINGS = [
-"สถานการณ์ปัจจุบัน","อุปสรรค","จิตใต้สำนึก","อดีตที่ผ่านมา","จุดมุ่งหมาย",
-"อนาคตที่คาดหวัง","ตัวตนภายใน","สภาพแวดล้อม","ความหวังและความกลัว","ภาพรวม / ผลลัพธ์สุดท้าย"
-];
-
-// 📌 รูปภาพไพ่ — ใช้ชื่อแบบสมมติให้ขึ้นภาพได้ก่อน (คุณจะอัปเดตชื่อจริงทีหลัง)
-const IMAGE_BASE = "https://taithai-tai.github.io/meemon/NFCV.2/taro/Picture/PrintaciousCo/";
-const CARD_BACK = IMAGE_BASE + "back.png";
-
-const cardFaces = [
+    const cardFaces = [
       // ----- Major Arcana (22) -----
       { name: "0 The Fool", file: "the fool.png", meaning: "การเริ่มต้นใหม่ ความกล้าเสี่ยง เปิดใจรับประสบการณ์ใหม่ ๆ" },
       { name: "I The Magician", file: "THE MAGICIAN.png", meaning: "มีศักยภาพและทรัพยากรพร้อม ลงมือทำให้ไอเดียกลายเป็นจริง" },
@@ -226,84 +362,201 @@ const cardFaces = [
       { name: "King of Pentacles", file: "king OF PENTACLES.png", meaning: "เจ้าของกิจการ/ผู้บริหารที่มั่งคั่ง คิดเรื่องความมั่นคงการเงินระยะยาว" }
     ];
 
+    const deckEl = document.getElementById("deck");
+    const countEl = document.getElementById("count");
+    const shuffleBtn = document.getElementById("shuffleBtn");
+    const cutBtn = document.getElementById("cutBtn");
+    const submitBtn = document.getElementById("submitBtn");
+    const resultSection = document.getElementById("resultSection");
+    const resultGrid = document.getElementById("resultGrid");
+    const MAX_PICK = 10;
 
-const deckEl = document.getElementById("deck");
-const resultsEl = document.getElementById("results");
-const resultSection = document.getElementById("result-section");
+    let deckOrder = [];
+    let selected = [];
 
-let selected = [];
+    function initDeck() {
+      deckOrder = cardFaces.map((_, i) => i);
+      shuffleArray(deckOrder);
+      selected = [];
+      countEl.textContent = `เลือกแล้ว: 0 / ${MAX_PICK}`;
+      submitBtn.disabled = true;
+      resultSection.style.display = "none";
+      placeCards();
+    }
 
-function renderDeck() {
-  deckEl.innerHTML = "";
-  cards.forEach((c,i)=>{
-    const el = document.createElement("div");
-    el.className="card";
-    el.style.backgroundImage = `url(${CARD_BACK})`;
-    el.onclick = ()=>selectCard(i, el);
-    deckEl.appendChild(el);
-  });
-}
+    function shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+    }
 
-// ✔ เลือกไพ่
-function selectCard(i, el){
-  if(selected.length>=10) return;
-  if(selected.includes(i)) return;
-  selected.push(i);
-  el.style.transform="scale(1.2)";
-  if(selected.length===10){
-    document.getElementById("submitBtn").style.opacity="1";
-  }
-}
+    function computeRadius() {
+      return Math.max(
+        60,
+        Math.min(deckEl.offsetWidth, deckEl.offsetHeight) / 2 - 40
+      );
+    }
 
-// ✔ ทำนาย — แสดงผล
-document.getElementById("submitBtn").onclick = ()=>{
-  if(selected.length<10) return;
-  resultsEl.innerHTML="";
+    function placeCards() {
+      deckEl.innerHTML = "";
+      const n = deckOrder.length;
+      const radius = computeRadius();
 
-  selected.forEach((idx,pos)=>{
-    const c = cards[idx];
-    const wrap = document.createElement("div");
-    wrap.className="result-card";
+      for (let i = 0; i < n; i++) {
+        const angle = (360 / n) * i;
+        const rad = angle * (Math.PI / 180);
 
-    const img = document.createElement("img");
-    img.src = IMAGE_BASE + c.file;
+        const card = document.createElement("div");
+        card.className = "card";
+        card.style.backgroundImage = `url("${IMAGE_BASE + CARD_BACK}")`;
 
-    const posEl=document.createElement("div");
-    posEl.className="position-title";
-    posEl.innerText = `ใบที่ ${pos+1}: ${POSITION_MEANINGS[pos]}`;
+        const x = Math.cos(rad) * radius;
+        const y = Math.sin(rad) * radius;
+        card.style.transform =
+          `translate(-50%, -50%) translate(${x}px, ${y}px) rotate(${angle + 90}deg)`;
 
-    const name=document.createElement("div");
-    name.className="result-name";
-    name.innerText = c.name;
+        const cardIndex = deckOrder[i];
+        card.dataset.cardIndex = cardIndex;
+        card.addEventListener("click", () => toggleSelect(card));
+        deckEl.appendChild(card);
+      }
+    }
 
-    const meaning=document.createElement("div");
-    meaning.className="result-meaning";
-    meaning.innerText = c.meaning;
+    function toggleSelect(cardEl) {
+      const cardIndex = Number(cardEl.dataset.cardIndex);
 
-    wrap.append(img,posEl,name,meaning);
-    resultsEl.appendChild(wrap);
-  });
+      if (!cardEl.classList.contains("selected")) {
+        if (selected.length >= MAX_PICK) return;
+        cardEl.classList.add("selected");
+        selected.push(cardIndex);
+      } else {
+        cardEl.classList.remove("selected");
+        selected = selected.filter(i => i !== cardIndex);
+      }
 
-  resultSection.style.display="block";
-  resultSection.scrollIntoView({behavior:"smooth"});
-};
+      countEl.textContent = `เลือกแล้ว: ${selected.length} / ${MAX_PICK}`;
+      submitBtn.disabled = (selected.length !== MAX_PICK);
+    }
 
-// 🔄 สับไพ่
-document.getElementById("shuffleBtn").onclick = ()=>{
-  deckEl.classList.add("spin");
-  setTimeout(()=> deckEl.classList.remove("spin"), 6000);
-};
+    function resetSelectionUI() {
+      selected = [];
+      countEl.textContent = `เลือกแล้ว: 0 / ${MAX_PICK}`;
+      submitBtn.disabled = true;
+      resultSection.style.display = "none";
 
-// ✂️ ตัดไพ่
-document.getElementById("cutBtn").onclick = ()=>{
-  [...deckEl.children].forEach(el=>{
-    el.classList.add("cut");
-    setTimeout(()=>el.classList.remove("cut"),1000);
-  });
-};
+      deckEl.querySelectorAll(".card.selected")
+        .forEach(c => c.classList.remove("selected"));
+    }
 
-renderDeck();
-</script>
+    // ⭐ สับไพ่: หมุนวงไพ่ → สุ่มสำรับ → วางใหม่
+    shuffleBtn.addEventListener("click", () => {
+      if (deckEl.classList.contains("animating")) return;
 
+      deckEl.classList.add("animating", "shuffle-anim");
+      resetSelectionUI();
+
+      setTimeout(() => {
+        shuffleArray(deckOrder);
+        placeCards();
+        deckEl.classList.remove("shuffle-anim", "animating");
+      }, 800); // ต้องตรงกับเวลา animation 0.8s
+    });
+
+    // ฟังก์ชันตัดไพ่แบบ "บนสุดซ้อนล่างสุด" 3 รอบ
+    function fancyCut(times = 3) {
+      for (let t = 0; t < times; t++) {
+        const tmp = [];
+        let left = 0;
+        let right = deckOrder.length - 1;
+        while (left <= right) {
+          if (left === right) {
+            tmp.push(deckOrder[left]);
+          } else {
+            tmp.push(deckOrder[left], deckOrder[right]);
+          }
+          left++;
+          right--;
+        }
+        deckOrder = tmp;
+      }
+    }
+
+    // 🐢 ตัดไพ่: รวบกอง → fancyCut → กระจายใหม่ (แบบช้าลง)
+    cutBtn.addEventListener("click", () => {
+      if (deckEl.classList.contains("animating")) return;
+      const cards = Array.from(deckEl.querySelectorAll(".card"));
+      if (!cards.length) return;
+
+      deckEl.classList.add("animating");
+      resetSelectionUI();
+
+      // 1) ไพ่ทุกใบวิ่งเข้ากลาง (ช้าลง)
+      cards.forEach(card => {
+        card.style.transition = "transform 0.6s ease";
+        card.style.transform = "translate(-50%, -50%) scale(1)";
+      });
+
+      // 2) ทำ fancyCut + กระจายออกใหม่ (ช้าลง)
+      setTimeout(() => {
+        fancyCut(3);
+        const n = deckOrder.length;
+        const radius = computeRadius();
+
+        cards.forEach((card, i) => {
+          const angle = (360 / n) * i;
+          const rad = angle * (Math.PI / 180);
+          const x = Math.cos(rad) * radius;
+          const y = Math.sin(rad) * radius;
+          const cardIndex = deckOrder[i];
+          card.dataset.cardIndex = cardIndex;
+          card.style.transform =
+            `translate(-50%, -50%) translate(${x}px, ${y}px) rotate(${angle + 90}deg)`;
+        });
+
+        setTimeout(() => {
+          cards.forEach(card => {
+            card.style.transition = "";
+          });
+          deckEl.classList.remove("animating");
+        }, 600);
+      }, 600);
+    });
+
+    submitBtn.addEventListener("click", () => {
+      resultGrid.innerHTML = "";
+      selected.forEach((idx, i) => {
+        const data = cardFaces[idx];
+        const cardDiv = document.createElement("div");
+        cardDiv.className = "result-card";
+
+        const img = document.createElement("img");
+        img.src = IMAGE_BASE + data.file;
+        img.alt = data.name;
+
+        const nameEl = document.createElement("div");
+        nameEl.className = "result-name";
+        nameEl.textContent = `ใบที่ ${i + 1}: ${data.name}`;
+
+        const meaningEl = document.createElement("div");
+        meaningEl.className = "result-meaning";
+        meaningEl.textContent = data.meaning || "";
+
+        cardDiv.appendChild(img);
+        cardDiv.appendChild(nameEl);
+        cardDiv.appendChild(meaningEl);
+        resultGrid.appendChild(cardDiv);
+      });
+
+      resultSection.style.display = "block";
+      resultSection.scrollIntoView({ behavior: "smooth" });
+    });
+
+    window.addEventListener("resize", () => {
+      placeCards();
+    });
+
+    initDeck();
+  </script>
 </body>
 </html>
