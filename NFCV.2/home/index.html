@@ -54,19 +54,18 @@
       gap: 10px;
     }
 
-    .brand-logo {
-      width: 38px;
-      height: 38px;
-      border-radius: 999px;
-      background: radial-gradient(circle at 30% 0, #fff7d6, #b8860b);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #1a1305;
-      font-weight: 800;
-      font-size: 18px;
-      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.08),
-        0 14px 30px rgba(0, 0, 0, 0.75);
+    /* โลโก้ใหม่ */
+    .brand-logo-img {
+      width: 46px;
+      height: 46px;
+      object-fit: contain;
+      border-radius: 12px;
+      background: #000;
+      padding: 4px;
+      box-shadow:
+        0 0 0 2px rgba(255, 215, 0, 0.2),
+        0 10px 22px rgba(0, 0, 0, 0.75),
+        0 0 25px rgba(245, 192, 86, 0.25);
     }
 
     .brand-text-main {
@@ -311,20 +310,23 @@
       letter-spacing: 0.06em;
       color: rgba(148, 163, 184, 0.9);
     }
-
   </style>
 </head>
 
 <body>
-  <header class="top-bar">
+  <div class="app-shell">
+    <!-- HEADER -->
+    <header class="top-bar">
       <div class="brand">
-        <img class="brand-logo-img" src="https://raw.githubusercontent.com/taithai-tai/meemon/main/NFCV.2/home/logo.png" alt="MEEMON Logo">
+        <img class="brand-logo-img"
+             src="https://raw.githubusercontent.com/taithai-tai/meemon/main/NFCV.2/home/logo.png"
+             alt="MEEMON Logo">
         <div>
           <div class="brand-text-main">MEEMON</div>
           <div class="brand-text-sub">เว็บรวมดูดวง & เสี่ยงทายออนไลน์</div>
         </div>
       </div>
-    
+
       <div class="user-pill">
         <div class="dot-online"></div>
         <span>พร้อมดูดวงวันนี้ ✨</span>
@@ -339,7 +341,7 @@
       </div>
       <div class="hero-title">เริ่มดูดวงกับไม้เซ้งปวย & ไพ่ 24 ใบ</div>
       <div class="hero-sub">
-        เลือกวิธีเสี่ยงทายที่ชอบได้เลย ทั้งไพ่ เสีย́งเซียมซี โยนไม้ และสุ่มเลขมงคลในที่เดียว
+        เลือกวิธีเสี่ยงทายที่ชอบได้เลย ทั้งไพ่ เสี่ยงเซียมซี โยนไม้ และสุ่มเลขมงคลในที่เดียว
       </div>
       <div class="hero-cta-row">
         <a href="tarot24.html" class="hero-main-btn">
@@ -399,7 +401,7 @@
         <div class="feature-tag">ไม้เซ้งปวย</div>
       </a>
 
-      <!-- ปุ่มดูดวงรายวัน (เผื่อใช้ต่อยอด) -->
+      <!-- ปุ่มดูดวงรายวัน -->
       <a href="daily-fortune.html" class="feature-card">
         <div class="feature-icon-wrap">📆</div>
         <div class="feature-text-title">ดวงประจำวัน</div>
