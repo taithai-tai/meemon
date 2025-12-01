@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>Taithai Tarot | เลือกไพ่ 3 ใบ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    :root {
+      --bg-main: radial-gradient(circle at top, #05081f, #02010b);
+      --accent: #fbbf24;
+      --accent-soft: #ffd93d;
+      --text-main: #f9fafb;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: var(--bg-main);
+      color: var(--text-main);
+      text-align: center;
+      padding: 20px 10px;
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 1.1rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 6px;
+    }
+
+    #count {
+      margin-bottom: 14px;
+      font-size: 0.9rem;
+    }
+
+    .card-row {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .card {
+      width: 28vw;
+      max-width: 110px;
+      aspect-ratio: 7 / 12;
+      background-size: cover;
+      background-position: center;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.2s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+      filter: brightness(0.7);
+    }
+
+    .card.selected {
+      outline: 3px solid var(--accent-soft);
+      filter: brightness(1.1);
+      transform: scale(1.08);
+    }
+
+    button {
+      width: 65%;
+      padding: 10px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 1rem;
+      background: var(--accent);
+      border: none;
+      cursor: pointer;
+      margin-top: 10px;
+      color: #111;
+    }
+
+    button:disabled {
+      background: #555;
+      color: #aaa;
+      cursor: not-allowed;
+    }
+
+    #resultSection {
+      margin-top: 18px;
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(0,0,0,0.45);
+      display: none;
+    }
+
+    .result-card {
+      margin-bottom: 12px;
+      font-size: 0.88rem;
+    }
+    .result-card img {
+      width: 100%;
+      max-width: 200px;
+      border-radius: 12px;
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>TAITHAI TAROT 🔮</h1>
+  <div>แตะเลือกไพ่ 3 ใบ: <b>อดีต – ปัจจุบัน – อนาคต</b></div>
+  <div id="count">เลือกแล้ว: 0 / 3</div>
+
+  <div class="card-row" id="deck"></div>
+
+  <button id="submitBtn" disabled>ทำนาย</button>
+
+  <div id="resultSection">
+    <h3>ผลการทำนาย</h3>
+    <div id="resultList"></div>
+  </div>
+
+<script>
+  const IMAGE_BASE = "https://taithai-tai.github.io/meemon/NFCV.2/taro/Picture/PrintaciousCo/";
+  const CARD_BACK = "Back of the cards.png";
+
+  const cardFaces = [...(window.cardFacesGlobal || [])]; // ใช้ชุดไพ่เดียวกับของคุณ
+
+  const maxPick = 3;
+  let deckOrder = [...Array(cardFaces.length).keys()];
+  shuffle(deckOrder);
+  let selected = [];
+
+  const deckEl = document.getElementById("deck");
+  const countEl = document.getElementById("count");
+  const submitBtn = document.getElementById("submitBtn");
+  const resultList = document.getElementById("resultList");
+  const resultSection = document.getElementById("resultSection");
+
+  function shuffle(arr){
+    for(let i=arr.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [arr[i],arr[j]]=[arr[j],arr[i]];
+    }
+  }
+
+  function init(){
+    deckOrder.forEach((idx)=>{
+      const card=document.createElement("div");
+      card.className="card";
+      card.style.backgroundImage=`url("${IMAGE_BASE + CARD_BACK}")`;
+      card.dataset.index=idx;
+      card.onclick=()=>select(card);
+      deckEl.appendChild(card);
+    });
+  }
+
+  function select(card){
+    const idx=Number(card.dataset.index);
+
+    if(!card.classList.contains("selected")){
+      if(selected.length>=maxPick) return;
+      card.classList.add("selected");
+      selected.push(idx);
+    }else{
+      card.classList.remove("selected");
+      selected=selected.filter(i=>i!==idx);
+    }
+
+    countEl.textContent=`เลือกแล้ว: ${selected.length} / ${maxPick}`;
+    submitBtn.disabled=(selected.length!==maxPick);
+  }
+
+  submitBtn.onclick=()=>{
+    resultList.innerHTML="";
+    const positions=["อดีต","ปัจจุบัน","อนาคต"];
+
+    selected.forEach((idx,i)=>{
+      const data=cardFaces[idx];
+      const box=document.createElement("div");
+      box.className="result-card";
+
+      box.innerHTML = `
+        <div><b>${positions[i]}</b></div>
+        <img src="${IMAGE_BASE + data.file}">
+        <div><b>${data.name}</b></div>
+        <div>${data.meaning}</div>
+      `;
+
+      resultList.appendChild(box);
+    });
+
+    resultSection.style.display="block";
+    resultSection.scrollIntoView({behavior:"smooth"});
+  };
+
+  init();
+</script>
+
+</body>
+</html>
