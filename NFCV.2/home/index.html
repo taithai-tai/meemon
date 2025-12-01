@@ -314,6 +314,23 @@
 </head>
 
 <body>
+  <script src="https://taithai-tai.github.io/token/token.js"></script>
+  <script>
+    
+    Token.useOnce({
+      // ถ้าอยากให้ลบ token ออกจาก URL หลังใช้ครั้งแรก ค่อยเปลี่ยนเป็น true
+      cleanUrl: false,
+    },
+      
+    onAlreadyUsed: () => {
+      window.location.href = "https://github.com/taithai-tai/meemon/blob/main/NFCV.2/sorry.jpg";
+    },
+
+    onInvalid: () => {
+        window.location.href = "https://vt.tiktok.com/ZSHvJkQbqnYdk-GbvcE/";
+    },
+      
+  </script>
   <div class="app-shell">
     <!-- HEADER -->
     <header class="top-bar">
