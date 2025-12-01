@@ -114,7 +114,7 @@
       text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
     }
 
-    /* วงกลมที่เอาไว้รับคลิกโยนไม้ */
+    /* วงกลมที่เอาไว้ลากโยนไม้ */
     .throw-area {
       margin-top: 4px;
       width: 220px;
@@ -128,18 +128,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
       position: relative;
       overflow: hidden;
-      transform-origin: center center;
-      transition: transform 0.16s ease-out, box-shadow 0.16s ease-out;
-    }
-
-    .throw-area:hover {
-      transform: translateY(-3px);
-      box-shadow:
-        0 24px 50px rgba(0, 0, 0, 0.9),
-        0 0 0 3px rgba(248, 250, 252, 0.2);
     }
 
     .throw-area-label {
@@ -152,18 +142,34 @@
       font-size: 12px;
       padding: 3px 10px;
       border-radius: 999px;
+      pointer-events: none;
     }
 
-    /* รูปไม้คว่ำที่แสดงในวงกลม */
-    .wood-preview {
-      width: 120px;
+    /* กลุ่มไม้ 2 อันที่ลากได้ */
+    .drag-handle {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: center;
+      transform: translateY(40px);
+      transition: transform 0.18s ease-out;
+      cursor: grab;
+      touch-action: none; /* กันหน้าเว็บเลื่อนตอนลากในมือถือ */
+    }
+
+    .drag-handle.dragging {
+      cursor: grabbing;
+    }
+
+    .drag-coin {
+      width: 70px;
       height: auto;
       filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.9));
-      pointer-events: none;
       user-select: none;
+      pointer-events: none;
     }
 
-    /* เอฟเฟกต์สั่นตอนโยน */
+    /* ผลโยนเสร็จ – เอฟเฟกต์ขย่มทั้งวงกลม */
     .shake {
       animation: shake 0.55s ease-in-out;
     }
@@ -281,8 +287,8 @@
         width: 200px;
         height: 200px;
       }
-      .wood-preview {
-        width: 110px;
+      .drag-coin {
+        width: 64px;
       }
     }
   </style>
@@ -296,20 +302,27 @@
           ไม้เสี่ยงทายตามคติหมุนเซ้งปวย
         </div>
         <div class="title-main">เซ้งปวย</div>
-        <div class="title-sub">ตั้งจิตให้สงบ แล้วโยนไม้ถามเทพเจ้า ✨</div>
+        <div class="title-sub">กดค้างแล้วลากไม้ขึ้นเพื่อโยนถามเทพเจ้า ✨</div>
       </div>
 
       <div class="main-area">
-        <div class="label">แตะที่วงกลมเพื่อโยนไม้ 2 อัน</div>
+        <div class="label">ลากไม้คว่ำ 2 อันขึ้นด้านบนเพื่อโยน</div>
 
-        <!-- พื้นที่กดโยนไม้ -->
+        <!-- พื้นที่ลากโยนไม้ -->
         <div id="throwArea" class="throw-area">
-          <img
-            class="wood-preview"
-            src="https://raw.githubusercontent.com/taithai-tai/meemon/main/NFCV.2/Wood/b.png"
-            alt="ไม้เซ้งปวยคว่ำ"
-          />
-          <div class="throw-area-label">แตะเพื่อโยน</div>
+          <div id="dragHandle" class="drag-handle">
+            <img
+              class="drag-coin"
+              src="https://raw.githubusercontent.com/taithai-tai/meemon/main/NFCV.2/Wood/b.png"
+              alt="ไม้เซ้งปวยคว่ำ 1"
+            />
+            <img
+              class="drag-coin"
+              src="https://raw.githubusercontent.com/taithai-tai/meemon/main/NFCV.2/Wood/b.png"
+              alt="ไม้เซ้งปวยคว่ำ 2"
+            />
+          </div>
+          <div class="throw-area-label">กดค้างแล้วลากขึ้น</div>
         </div>
 
         <p class="hint">
@@ -358,6 +371,7 @@
       "https://raw.githubusercontent.com/taithai-tai/meemon/main/NFCV.2/Wood/b.png"; // คว่ำ
 
     const throwArea = document.getElementById("throwArea");
+    const dragHandle = document.getElementById("dragHandle");
     const resultCard = document.getElementById("resultCard");
     const coin1 = document.getElementById("coin1");
     const coin2 = document.getElementById("coin2");
@@ -370,34 +384,93 @@
 
     let isThrowing = false;
 
-    // ฟังก์ชันโยนไม้ 2 อัน
+    // ---- ระบบลากขึ้นเพื่อโยน ----
+    let dragging = false;
+    let startY = 0;
+    let currentDelta = 0;
+    const MAX_UP = -90;   // ลากขึ้นได้สูงสุดประมาณนี้ (px)
+    const TRIGGER_UP = -45; // ถ้าน้อยกว่านี้ (ลากขึ้นเยอะ) = โยนจริง
+
+    function getY(e) {
+      if (e.touches && e.touches[0]) return e.touches[0].clientY;
+      return e.clientY;
+    }
+
+    function onDragStart(e) {
+      if (isThrowing) return; // กำลังโยนอยู่ อย่าเพิ่งลากใหม่
+      dragging = true;
+      startY = getY(e);
+      currentDelta = 0;
+      dragHandle.classList.add("dragging");
+      dragHandle.style.transition = "none";
+      e.preventDefault();
+    }
+
+    function onDragMove(e) {
+      if (!dragging) return;
+      const y = getY(e);
+      let delta = y - startY; // เลื่อนลง = บวก, เลื่อนขึ้น = ลบ
+      if (delta < MAX_UP) delta = MAX_UP;
+      if (delta > 40) delta = 40; // ดึงลงได้ไม่เยอะ
+      currentDelta = delta;
+      dragHandle.style.transform = `translateY(${40 + delta}px)`;
+      e.preventDefault();
+    }
+
+    function onDragEnd(e) {
+      if (!dragging) return;
+      dragging = false;
+      dragHandle.classList.remove("dragging");
+      dragHandle.style.transition = "transform 0.18s ease-out";
+
+      if (currentDelta <= TRIGGER_UP && !isThrowing) {
+        // ลากขึ้นพอ → ทำท่าเด้งขึ้นแล้วโยน
+        dragHandle.style.transform = "translateY(-30px)";
+        setTimeout(() => {
+          dragHandle.style.transform = "translateY(40px)";
+          throwWoods();
+        }, 180);
+      } else {
+        // ลากไม่ถึง → กลับตำแหน่งเดิม
+        dragHandle.style.transform = "translateY(40px)";
+      }
+    }
+
+    // mouse events
+    dragHandle.addEventListener("mousedown", onDragStart);
+    window.addEventListener("mousemove", onDragMove);
+    window.addEventListener("mouseup", onDragEnd);
+
+    // touch events (มือถือ)
+    dragHandle.addEventListener("touchstart", onDragStart, { passive: false });
+    window.addEventListener("touchmove", onDragMove, { passive: false });
+    window.addEventListener("touchend", onDragEnd);
+
+    // ---- ฟังก์ชันโยนไม้ 2 อัน ----
     function throwWoods() {
       if (isThrowing) return;
       isThrowing = true;
 
-      // เล่นแอนิเมชันสั่น
+      // เขย่าวงกลม
       throwArea.classList.add("shake");
 
       setTimeout(() => {
         throwArea.classList.remove("shake");
-        isThrowing = false;
 
         // สุ่มหงาย/คว่ำ 2 อัน (true = หงาย, false = คว่ำ)
         const up1 = Math.random() < 0.5;
         const up2 = Math.random() < 0.5;
 
-        // ตั้งรูป
+        // ตั้งรูปแสดงผล
         coin1.src = up1 ? IMG_UP : IMG_DOWN;
         coin2.src = up2 ? IMG_UP : IMG_DOWN;
 
-        // ตั้งข้อความลายไม้ที่ออก
         const label1 = up1 ? "หงาย" : "คว่ำ";
         const label2 = up2 ? "หงาย" : "คว่ำ";
         patternText.textContent = `ลายไม้ที่ออก: ${label1} – ${label2}`;
 
-        // ตัดสินผล 3 แบบ
         if (up1 && up2) {
-          // หงายทั้งคู่ = เฉี่ยปวย
+          // หงาย–หงาย = เฉี่ยปวย
           resultName.textContent = "เฉี่ยปวย";
           resultBadge.textContent = "ยังไม่ชัด โยนใหม่ได้";
           meaningMain.textContent = "ยังคลุมเครือ เทพเจ้ายังไม่ให้คำตอบชัดเจน";
@@ -406,7 +479,7 @@
           resultNote.textContent =
             "ถ้าอยากได้คำตอบชัด ๆ ลองตั้งจิตให้แน่วแน่ แล้วโยนถามใหม่อีกครั้ง.";
         } else if (!up1 && !up2) {
-          // คว่ำทั้งคู่ = อิมปวย
+          // คว่ำ–คว่ำ = อิมปวย
           resultName.textContent = "อิมปวย";
           resultBadge.textContent = "ยังไม่สำเร็จตามที่หวัง";
           meaningMain.textContent = "การขอครั้งนี้ ยังไม่เป็นไปตามที่ต้องการ";
@@ -415,7 +488,7 @@
           resultNote.textContent =
             "อย่าเพิ่งท้อ อาจแค่ยังไม่ใช่จังหวะที่ดี ลองวางแผนใหม่ให้รอบคอบขึ้น.";
         } else {
-          // หงายหนึ่ง คว่ำหนึ่ง = ปั๊วะปวย
+          // หงาย–คว่ำ / คว่ำ–หงาย = ปั๊วะปวย
           resultName.textContent = "ปั๊วะปวย";
           resultBadge.textContent = "สิ่งที่ขอมีโอกาสสำเร็จ";
           meaningMain.textContent = "เทพเจ้ายื่นมือสนับสนุน สิ่งที่ขอมีแนวโน้มจะสำเร็จ";
@@ -425,12 +498,10 @@
             "ถือเป็นนิมิตที่ดี ลองลุยทำตามแผนของคุณอย่างมีสติและไม่ประมาท.";
         }
 
-        // แสดงกล่องผลลัพธ์
         resultCard.classList.remove("hidden");
+        isThrowing = false;
       }, 580);
     }
-
-    throwArea.addEventListener("click", throwWoods);
   </script>
 </body>
 </html>
