@@ -1,9 +1,14 @@
+<!DOCTYPE html>
 <html>
   <body>
-    <script src="https://taithai-tai.github.io/token/token.js"></script>
+    <script src="https://taithai-tai.github.io/app/token.js"></script>
     <script>
-      // ทุกครั้งที่เปิดหน้านี้ → สร้างโทเคนใหม่ แล้วส่งไปหน้า testV2home.html
-      Token.create({ target: "https://taithai-tai.github.io/meemon/NFCV.2/Wood" });
+      window.onload = () => {
+        Token.create({
+          target: "https://taithai-tai.github.io/meemon/NFCV.2/Wood"
+          // หรือ "/meemon/NFCV.2/home/" ถ้ามี index.html อยู่ในนั้น
+        });
+      };
     </script>
   </body>
 </html>
