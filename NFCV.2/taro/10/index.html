@@ -228,15 +228,14 @@
     }
 
     /* ========== Animation สำหรับสับไพ่ (หมุนวงไพ่) ========== */
-    .circle.spin {
-      animation: spin 2s linear 3;
+    /* เวลา JS ใส่ class="shuffle-anim" ให้กับ .circle วงไพ่ทั้งวงจะหมุน */
+    .circle.shuffle-anim {
+      animation: shuffleRotate 1.5s ease-in-out;
     }
-
+    /* หมุนไป–กลับ 1 รอบ (0.8 วินาที) */
     @keyframes shuffleRotate {
       0%   { transform: rotate(0deg); }
-      25%  { transform: rotate(-15deg); }
-      75%  { transform: rotate(15deg); }
-      100% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
   </style>
 </head>
