@@ -524,33 +524,47 @@
     });
 
     submitBtn.addEventListener("click", () => {
+      const positionMeaning = [
+        "สถานการณ์ปัจจุบัน",
+        "อุปสรรค",
+        "จิตใต้สำนึก",
+        "อดีตที่ผ่านมา",
+        "จุดมุ่งหมาย",
+        "อนาคตที่คาดหวัง",
+        "ตัวตนภายใน",
+        "สภาพแวดล้อม",
+        "ความหวังและความกลัว",
+        "ภาพรวมผลลัพธ์"
+      ];
+    
       resultGrid.innerHTML = "";
       selected.forEach((idx, i) => {
         const data = cardFaces[idx];
         const cardDiv = document.createElement("div");
         cardDiv.className = "result-card";
-
+    
         const img = document.createElement("img");
         img.src = IMAGE_BASE + data.file;
         img.alt = data.name;
-
+    
         const nameEl = document.createElement("div");
         nameEl.className = "result-name";
-        nameEl.textContent = `ใบที่ ${i + 1}: ${data.name}`;
-
+        nameEl.textContent = `ใบที่ ${i + 1}: ${data.name} — ${positionMeaning[i]}`;
+    
         const meaningEl = document.createElement("div");
         meaningEl.className = "result-meaning";
         meaningEl.textContent = data.meaning || "";
-
+    
         cardDiv.appendChild(img);
         cardDiv.appendChild(nameEl);
         cardDiv.appendChild(meaningEl);
         resultGrid.appendChild(cardDiv);
       });
-
+    
       resultSection.style.display = "block";
       resultSection.scrollIntoView({ behavior: "smooth" });
     });
+
 
     window.addEventListener("resize", () => {
       placeCards();
