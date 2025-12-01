@@ -2,9 +2,10 @@
   <body>
     <script src="https://taithai-tai.github.io/token/token.js"></script>
     <script>
-      // ทุกครั้งที่เปิดหน้านี้ → สร้างโทเคนใหม่ แล้วส่งไปหน้า home/index.html
       Token.create({
-        target: "https://taithai-tai.github.io/meemon/NFCV.2/home/index.html"
+        // ให้ไปโฟลเดอร์ home (ที่มี index.html อยู่)
+        target: "/meemon/NFCV.2/home/"
+        // ถ้ามั่นใจว่า index.html มีอยู่แน่ ๆ ก็จบ
       });
     </script>
   </body>
