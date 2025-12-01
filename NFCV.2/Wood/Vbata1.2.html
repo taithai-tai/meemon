@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <title>โยนไม้เซ้งปวย | Taithai</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg-main: #b91c1c;
+      --bg-dark: #7f1d1d;
+      --panel: #facc15;
+      --panel-soft: #fef3c7;
+      --text-main: #111827;
+      --text-light: #fefce8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Prompt", system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #f97316, #7f1d1d 55%, #450a0a);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 480px;
+      background: var(--bg-main);
+      border-radius: 24px;
+      padding: 20px 18px 24px;
+      box-shadow:
+        0 24px 60px rgba(0, 0, 0, 0.8),
+        0 0 0 3px rgba(248, 250, 252, 0.1) inset;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .app::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(254, 240, 138, 0.25), transparent 55%),
+        radial-gradient(circle at 100% 100%, rgba(252, 211, 77, 0.22), transparent 55%);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .app-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .header {
+      text-align: center;
+      color: var(--text-light);
+      margin-bottom: 16px;
+    }
+
+    .title-main {
+      font-size: 26px;
+      letter-spacing: 0.15em;
+      text-shadow: 0 3px 6px rgba(0, 0, 0, 0.6);
+      margin-bottom: 4px;
+    }
+
+    .title-sub {
+      font-size: 13px;
+      opacity: 0.9;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.28);
+      color: var(--text-light);
+      margin-bottom: 6px;
+    }
+
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #facc15;
+      box-shadow: 0 0 10px rgba(250, 204, 21, 1);
+    }
+
+    .main-area {
+      margin-top: 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .label {
+      font-size: 14px;
+      color: var(--text-light);
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+    }
+
+    /* วงกลมที่เอาไว้รับคลิกโยนไม้ */
+    .throw-area {
+      margin-top: 4px;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 0%, #fecaca, #991b1b);
+      border: 4px solid #facc15;
+      box-shadow:
+        0 18px 36px rgba(0, 0, 0, 0.85),
+        0 0 0 3px rgba(248, 250, 252, 0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transform-origin: center center;
+      transition: transform 0.16s ease-out, box-shadow 0.16s ease-out;
+    }
+
+    .throw-area:hover {
+      transform: translateY(-3px);
+      box-shadow:
+        0 24px 50px rgba(0, 0, 0, 0.9),
+        0 0 0 3px rgba(248, 250, 252, 0.2);
+    }
+
+    .throw-area-label {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.4);
+      color: var(--text-light);
+      font-size: 12px;
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+
+    /* รูปไม้คว่ำที่แสดงในวงกลม */
+    .wood-preview {
+      width: 120px;
+      height: auto;
+      filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.9));
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* เอฟเฟกต์สั่นตอนโยน */
+    .shake {
+      animation: shake 0.55s ease-in-out;
+    }
+
+    @keyframes shake {
+      0%   { transform: translateX(0) rotate(0deg); }
+      20%  { transform: translateX(-8px) rotate(-6deg); }
+      40%  { transform: translateX(8px) rotate(6deg); }
+      60%  { transform: translateX(-5px) rotate(-3deg); }
+      80%  { transform: translateX(5px) rotate(3deg); }
+      100% { transform: translateX(0) rotate(0deg); }
+    }
+
+    .hint {
+      font-size: 12px;
+      color: var(--text-light);
+      text-align: center;
+      opacity: 0.9;
+    }
+
+    .hint span {
+      font-weight: 600;
+      color: #fde68a;
+    }
+
+    /* กล่องผลลัพธ์ */
+    .result-card {
+      margin-top: 6px;
+      width: 100%;
+      background: var(--panel);
+      border-radius: 16px;
+      padding: 12px 12px 10px;
+      box-shadow:
+        0 12px 26px rgba(0, 0, 0, 0.55),
+        0 0 0 2px rgba(0, 0, 0, 0.18);
+    }
+
+    .result-title {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .result-badge {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.16);
+    }
+
+    .result-layout {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .coins {
+      display: flex;
+      gap: 4px;
+    }
+
+    .coin-img {
+      width: 52px;
+      height: auto;
+      border-radius: 999px;
+      background: var(--panel-soft);
+      padding: 4px;
+      box-shadow:
+        0 6px 14px rgba(0, 0, 0, 0.45),
+        0 0 0 1px rgba(0, 0, 0, 0.12);
+    }
+
+    .result-texts {
+      flex: 1;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .pattern-text {
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .meaning-main {
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .meaning-sub {
+      font-size: 12px;
+    }
+
+    .result-note {
+      font-size: 11px;
+      margin-top: 4px;
+      opacity: 0.9;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @media (max-width: 480px) {
+      .app {
+        padding: 18px 12px 20px;
+      }
+      .title-main {
+        font-size: 24px;
+      }
+      .throw-area {
+        width: 200px;
+        height: 200px;
+      }
+      .wood-preview {
+        width: 110px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="app-inner">
+      <div class="header">
+        <div class="badge">
+          <div class="badge-dot"></div>
+          ไม้เสี่ยงทายตามคติหมุนเซ้งปวย
+        </div>
+        <div class="title-main">เซ้งปวย</div>
+        <div class="title-sub">ตั้งจิตให้สงบ แล้วโยนไม้ถามเทพเจ้า ✨</div>
+      </div>
+
+      <div class="main-area">
+        <div class="label">แตะที่วงกลมเพื่อโยนไม้ 2 อัน</div>
+
+        <!-- พื้นที่กดโยนไม้ -->
+        <div id="throwArea" class="throw-area">
+          <img
+            class="wood-preview"
+            src="https://raw.githubusercontent.com/taithai-tai/meemon/main/NFCV.2/Wood/b.png"
+            alt="ไม้เซ้งปวยคว่ำ"
+          />
+          <div class="throw-area-label">แตะเพื่อโยน</div>
+        </div>
+
+        <p class="hint">
+          ผลลัพธ์มี 3 แบบ: <span>เฉี่ยปวย, อิมปวย, ปั๊วะปวย</span><br>
+          ใช้เพื่อความสบายใจและความสนุกเท่านั้น
+        </p>
+
+        <!-- กล่องแสดงผลลัพธ์ -->
+        <div id="resultCard" class="result-card hidden">
+          <div class="result-title">
+            <span id="resultName">ผลการโยน</span>
+            <span id="resultBadge" class="result-badge"></span>
+          </div>
+          <div class="result-layout">
+            <div class="coins">
+              <img
+                id="coin1"
+                class="coin-img"
+                src="https://raw.githubusercontent.com/taithai-tai/meemon/main/NFCV.2/Wood/b.png"
+                alt="ไม้เซ้งปวย 1"
+              />
+              <img
+                id="coin2"
+                class="coin-img"
+                src="https://raw.githubusercontent.com/taithai-tai/meemon/main/NFCV.2/Wood/b.png"
+                alt="ไม้เซ้งปวย 2"
+              />
+            </div>
+            <div class="result-texts">
+              <div id="patternText" class="pattern-text"></div>
+              <div id="meaningMain" class="meaning-main"></div>
+              <div id="meaningSub" class="meaning-sub"></div>
+            </div>
+          </div>
+          <div id="resultNote" class="result-note"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // URL รูป
+    const IMG_UP =
+      "https://raw.githubusercontent.com/taithai-tai/meemon/main/NFCV.2/Wood/f.png"; // หงาย
+    const IMG_DOWN =
+      "https://raw.githubusercontent.com/taithai-tai/meemon/main/NFCV.2/Wood/b.png"; // คว่ำ
+
+    const throwArea = document.getElementById("throwArea");
+    const resultCard = document.getElementById("resultCard");
+    const coin1 = document.getElementById("coin1");
+    const coin2 = document.getElementById("coin2");
+    const patternText = document.getElementById("patternText");
+    const meaningMain = document.getElementById("meaningMain");
+    const meaningSub = document.getElementById("meaningSub");
+    const resultName = document.getElementById("resultName");
+    const resultBadge = document.getElementById("resultBadge");
+    const resultNote = document.getElementById("resultNote");
+
+    let isThrowing = false;
+
+    // ฟังก์ชันโยนไม้ 2 อัน
+    function throwWoods() {
+      if (isThrowing) return;
+      isThrowing = true;
+
+      // เล่นแอนิเมชันสั่น
+      throwArea.classList.add("shake");
+
+      setTimeout(() => {
+        throwArea.classList.remove("shake");
+        isThrowing = false;
+
+        // สุ่มหงาย/คว่ำ 2 อัน (true = หงาย, false = คว่ำ)
+        const up1 = Math.random() < 0.5;
+        const up2 = Math.random() < 0.5;
+
+        // ตั้งรูป
+        coin1.src = up1 ? IMG_UP : IMG_DOWN;
+        coin2.src = up2 ? IMG_UP : IMG_DOWN;
+
+        // ตั้งข้อความลายไม้ที่ออก
+        const label1 = up1 ? "หงาย" : "คว่ำ";
+        const label2 = up2 ? "หงาย" : "คว่ำ";
+        patternText.textContent = `ลายไม้ที่ออก: ${label1} – ${label2}`;
+
+        // ตัดสินผล 3 แบบ
+        if (up1 && up2) {
+          // หงายทั้งคู่ = เฉี่ยปวย
+          resultName.textContent = "เฉี่ยปวย";
+          resultBadge.textContent = "ยังไม่ชัด โยนใหม่ได้";
+          meaningMain.textContent = "ยังคลุมเครือ เทพเจ้ายังไม่ให้คำตอบชัดเจน";
+          meaningSub.textContent =
+            "มักตีความว่าให้โยนถามใหม่อีกครั้ง หรือพิจารณาคำขอให้ชัดกว่านี้ก่อน.";
+          resultNote.textContent =
+            "ถ้าอยากได้คำตอบชัด ๆ ลองตั้งจิตให้แน่วแน่ แล้วโยนถามใหม่อีกครั้ง.";
+        } else if (!up1 && !up2) {
+          // คว่ำทั้งคู่ = อิมปวย
+          resultName.textContent = "อิมปวย";
+          resultBadge.textContent = "ยังไม่สำเร็จตามที่หวัง";
+          meaningMain.textContent = "การขอครั้งนี้ ยังไม่เป็นไปตามที่ต้องการ";
+          meaningSub.textContent =
+            "อาจต้องเปลี่ยนเวลา เปลี่ยนวิธี หรือทบทวนว่าเรื่องที่ขอนั้นเหมาะสมหรือยัง.";
+          resultNote.textContent =
+            "อย่าเพิ่งท้อ อาจแค่ยังไม่ใช่จังหวะที่ดี ลองวางแผนใหม่ให้รอบคอบขึ้น.";
+        } else {
+          // หงายหนึ่ง คว่ำหนึ่ง = ปั๊วะปวย
+          resultName.textContent = "ปั๊วะปวย";
+          resultBadge.textContent = "สิ่งที่ขอมีโอกาสสำเร็จ";
+          meaningMain.textContent = "เทพเจ้ายื่นมือสนับสนุน สิ่งที่ขอมีแนวโน้มจะสำเร็จ";
+          meaningSub.textContent =
+            "แต่ต้องมีการลงมือทำและรับผิดชอบในสิ่งที่ตัวเองตัดสินใจด้วย.";
+          resultNote.textContent =
+            "ถือเป็นนิมิตที่ดี ลองลุยทำตามแผนของคุณอย่างมีสติและไม่ประมาท.";
+        }
+
+        // แสดงกล่องผลลัพธ์
+        resultCard.classList.remove("hidden");
+      }, 580);
+    }
+
+    throwArea.addEventListener("click", throwWoods);
+  </script>
+</body>
+</html>
