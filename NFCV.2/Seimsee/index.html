@@ -10,7 +10,7 @@
 
   <style>
     :root {
-      --bg: radial-gradient(circle at top, #0f172a, #020617);
+      --bg: radial-gradient(circle at top, #020617, #000000);
       --card-bg: rgba(15, 23, 42, 0.9);
       --accent: #fbbf24;
       --accent-soft: #facc15;
@@ -35,98 +35,96 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 16px;
+      padding: 20px;
     }
 
     .app {
       width: 100%;
-      max-width: 480px;
+      max-width: 520px; /* กว้างขึ้นนิดนึง */
     }
 
     .card {
       background: var(--card-bg);
-      border-radius: 24px;
-      padding: 20px 20px 24px;
+      border-radius: 28px;
+      padding: 24px 22px 26px;
       box-shadow:
-        0 20px 40px rgba(0, 0, 0, 0.6),
-        0 0 0 1px rgba(148, 163, 184, 0.2);
-      backdrop-filter: blur(16px);
+        0 24px 50px rgba(0, 0, 0, 0.7),
+        0 0 0 1px rgba(148, 163, 184, 0.25);
+      backdrop-filter: blur(18px);
     }
 
     .header {
       text-align: center;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
 
     .logo-circle {
-      width: 72px;
-      height: 72px;
+      width: 80px;
+      height: 80px;
       border-radius: 50%;
-      margin: 0 auto 12px;
+      margin: 0 auto 14px;
       background: radial-gradient(circle at 30% 0%, #fef9c3, #f59e0b);
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 10px 25px rgba(248, 250, 252, 0.3);
+      box-shadow: 0 12px 26px rgba(248, 250, 252, 0.35);
       animation: float 3s ease-in-out infinite;
     }
 
     .logo-circle span {
-      font-size: 36px;
+      font-size: 40px;
     }
 
     .title {
-      font-size: 1.6rem;
+      font-size: 1.9rem; /* ใหญ่ขึ้น */
       font-weight: 600;
-      letter-spacing: 0.03em;
+      letter-spacing: 0.04em;
     }
 
     .subtitle {
-      font-size: 0.92rem;
+      font-size: 1rem;
       color: var(--text-soft);
+      margin-top: 4px;
+      line-height: 1.5;
     }
 
     .shake-box {
-      margin: 18px 0;
+      margin: 22px 0 10px;
       display: flex;
       justify-content: center;
     }
 
+    /* ตัดกรอบ/กล่องออก ให้เหลือแค่พื้นที่วางรูปโล่ง ๆ */
     .box-visual {
-      width: 130px;
-      height: 120px;
-      border-radius: 16px;
-      background: linear-gradient(145deg, #1e293b, #020617);
-      border: 1px solid rgba(148, 163, 184, 0.4);
       position: relative;
-      overflow: hidden;
       display: flex;
-      align-items: flex-end;
+      align-items: center;
       justify-content: center;
-      padding-bottom: 8px;
+      width: 100%;
     }
 
     .lamp {
       position: absolute;
-      inset-inline: 0;
-      top: -26px;
-      margin: auto;
-      width: 72px;
-      height: 72px;
+      width: 230px;
+      height: 230px;
       border-radius: 50%;
-      background: radial-gradient(circle at 30% 0%, #fef9c3, transparent 60%);
-      opacity: 0.8;
+      background: radial-gradient(circle, rgba(254, 249, 195, 0.65), transparent 60%);
+      opacity: 0.9;
       pointer-events: none;
       mix-blend-mode: screen;
+      filter: blur(1px);
     }
 
-    /* รูปเซียมซีของคุณ */
+    /* รูปเซียมซี — ตัวเอกของงาน */
     .seimsee-img {
-      height: 90px;
+      position: relative;
+      height: 210px;          /* ขยายรูปให้ใหญ่ขึ้น */
+      max-width: 80%;
       object-fit: contain;
       user-select: none;
       cursor: pointer;
-      transition: transform 0.1s ease;
+      z-index: 1;
+      transition: transform 0.12s ease, filter 0.12s ease;
     }
 
     /* รูปสั่นตอนแตะ */
@@ -134,32 +132,32 @@
       animation: tapShake 0.35s ease;
     }
 
-    /* กล่องสั่นตอนสุ่มใบ */
+    /* กล่องสั่นตอนสุ่มใบ (สั่นทั้งโซนรูป) */
     .box-visual.box-shake {
       animation: shakeBox 0.7s ease-in-out;
     }
 
     .hint {
       text-align: center;
-      font-size: 0.8rem;
+      font-size: 0.92rem;
       color: var(--text-soft);
       margin-bottom: 4px;
     }
 
     .tap-status {
       text-align: center;
-      font-size: 0.78rem;
+      font-size: 0.9rem;
       color: var(--accent-soft);
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
 
     .result-card {
-      margin-top: 4px;
-      padding: 12px 14px;
-      border-radius: 18px;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      min-height: 96px;
+      margin-top: 8px;
+      padding: 14px 16px;
+      border-radius: 20px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      min-height: 110px;
       display: none;
       opacity: 0;
     }
@@ -173,20 +171,20 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
 
     .result-number {
       font-weight: 600;
-      font-size: 1rem;
+      font-size: 1.05rem;
       color: var(--accent-soft);
     }
 
     .result-level {
-      font-size: 0.82rem;
-      padding: 4px 10px;
+      font-size: 0.9rem;
+      padding: 5px 12px;
       border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.7);
+      border: 1px solid rgba(148, 163, 184, 0.8);
       color: var(--text-main);
     }
 
@@ -201,92 +199,36 @@
     }
 
     .result-title {
-      font-size: 0.98rem;
+      font-size: 1rem;
       font-weight: 500;
       margin-bottom: 4px;
     }
 
     .result-main {
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       color: var(--text-soft);
-      margin-bottom: 6px;
+      margin-bottom: 8px;
+      line-height: 1.5;
     }
 
     .result-advice-label {
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       color: var(--accent-soft);
-      margin-bottom: 2px;
+      margin-bottom: 3px;
     }
 
     .result-advice {
-      font-size: 0.86rem;
+      font-size: 0.93rem;
       color: var(--text-main);
-    }
-
-    .history {
-      margin-top: 16px;
-      border-top: 1px dashed rgba(148, 163, 184, 0.6);
-      padding-top: 10px;
-    }
-
-    .history-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 6px;
-      font-size: 0.85rem;
-      color: var(--text-soft);
-    }
-
-    .history-list {
-      max-height: 120px;
-      overflow-y: auto;
-      padding-right: 4px;
-    }
-
-    .history-item {
-      font-size: 0.8rem;
-      color: var(--text-soft);
-      display: flex;
-      justify-content: space-between;
-      gap: 6px;
-      padding: 4px 0;
-      border-bottom: 1px dashed rgba(30, 64, 175, 0.4);
-    }
-
-    .badge-level {
-      font-size: 0.7rem;
-      padding: 2px 8px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      white-space: nowrap;
-    }
-
-    .badge-level.good {
-      border-color: var(--success);
-      color: var(--success);
-    }
-
-    .badge-level.bad {
-      border-color: var(--danger);
-      color: var(--danger);
+      line-height: 1.5;
     }
 
     .footer {
-      margin-top: 6px;
+      margin-top: 10px;
       text-align: center;
-      font-size: 0.7rem;
+      font-size: 0.78rem;
       color: var(--text-soft);
       opacity: 0.7;
-    }
-
-    .history-list::-webkit-scrollbar {
-      width: 4px;
-    }
-
-    .history-list::-webkit-scrollbar-thumb {
-      background: rgba(148, 163, 184, 0.6);
-      border-radius: 999px;
     }
 
     @keyframes float {
@@ -325,7 +267,7 @@
 
     @media (min-width: 600px) {
       .card {
-        padding: 24px 24px 26px;
+        padding: 26px 26px 28px;
       }
     }
   </style>
@@ -339,7 +281,8 @@
         </div>
         <div class="title">เสี่ยงเซียมซี Taithai</div>
         <div class="subtitle">
-          ตั้งจิตอธิษฐานให้สงบ แล้วแตะที่รูปเซียมซี 5 ครั้งติดกันเพื่อเสี่ยงเซียมซี 💫
+          ตั้งจิตให้สงบ แล้วแตะที่รูปเซียมซี<br />
+          5 ครั้งติดกันเพื่อเสี่ยงเซียมซี 💫
         </div>
       </div>
 
@@ -373,14 +316,6 @@
 
         <div class="result-advice-label">คำแนะนำเพิ่มเติม</div>
         <div class="result-advice" id="resultAdvice"></div>
-      </div>
-
-      <div class="history" id="historySection" style="display: none">
-        <div class="history-header">
-          <span>ประวัติการเสี่ยงล่าสุด</span>
-          <span id="historyCount"></span>
-        </div>
-        <div class="history-list" id="historyList"></div>
       </div>
 
       <div class="footer">
@@ -500,13 +435,9 @@
     const resultMain = document.getElementById("resultMain");
     const resultAdvice = document.getElementById("resultAdvice");
 
-    const historySection = document.getElementById("historySection");
-    const historyList = document.getElementById("historyList");
-    const historyCount = document.getElementById("historyCount");
     const tapStatus = document.getElementById("tapStatus");
 
     let isDrawing = false;
-    const history = [];
 
     // นับจำนวนครั้งที่แตะรูป
     let tapCount = 0;
@@ -516,42 +447,6 @@
     function getRandomFortune() {
       const index = Math.floor(Math.random() * fortunes.length);
       return fortunes[index];
-    }
-
-    function updateHistory(fortune) {
-      history.unshift({ time: new Date(), fortune });
-      if (history.length > 10) history.pop();
-
-      historyList.innerHTML = "";
-      history.forEach((item) => {
-        const li = document.createElement("div");
-        li.className = "history-item";
-
-        const left = document.createElement("span");
-        const timeStr = item.time.toLocaleTimeString("th-TH", {
-          hour: "2-digit",
-          minute: "2-digit",
-        });
-        left.textContent = `ใบที่ ${item.fortune.number} · ${item.fortune.title}`;
-
-        const right = document.createElement("span");
-        const badge = document.createElement("span");
-        badge.className =
-          "badge-level " +
-          (item.fortune.level.includes("ไม่ค่อยดี") ||
-          item.fortune.level.includes("เสี่ยง")
-            ? "bad"
-            : "good");
-        badge.textContent = `${item.fortune.level} · ${timeStr}`;
-        right.appendChild(badge);
-
-        li.appendChild(left);
-        li.appendChild(right);
-        historyList.appendChild(li);
-      });
-
-      historyCount.textContent = `ทั้งหมด ${history.length} ครั้ง`;
-      historySection.style.display = history.length ? "block" : "none";
     }
 
     function showResult(fortune) {
@@ -582,14 +477,12 @@
       if (isDrawing) return;
       isDrawing = true;
 
-      // กล่องสั่นตอนสุ่ม
       boxVisual.classList.add("box-shake");
       tapStatus.textContent = "กำลังสุ่มใบเซียมซีให้คุณ... 🔮";
 
       setTimeout(() => {
         const fortune = getRandomFortune();
         showResult(fortune);
-        updateHistory(fortune);
 
         boxVisual.classList.remove("box-shake");
         tapStatus.textContent =
@@ -609,18 +502,16 @@
     function handleTap() {
       animateTapShake();
 
-      // นับแตะ
       tapCount += 1;
 
-      // รีเซ็ต timer ถ้ามี
       if (tapTimer) clearTimeout(tapTimer);
 
-      // ตั้งเวลารีเซ็ตถ้าหยุดแตะนานเกินไป
       tapTimer = setTimeout(() => {
         tapCount = 0;
+        tapStatus.textContent =
+          "แตะที่รูป 5 ครั้งภายในเวลาสั้น ๆ ระบบจะสุ่มใบเซียมซีให้คุณ 🎲";
       }, TAP_RESET_DELAY);
 
-      // อัปเดต status เล็กน้อย
       tapStatus.textContent = `แตะแล้ว ${tapCount} ครั้ง (ครบ 5 ครั้งจะสุ่มให้)`;
 
       if (tapCount >= 5) {
