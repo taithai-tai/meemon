@@ -5,7 +5,7 @@
   <title>Taithai Seimsee | เสี่ยงเซียมซีออนไลน์</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- ฟอนต์สวย ๆ จาก Google -->
+  <!-- ฟอนต์ -->
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet" />
 
   <style>
@@ -124,56 +124,19 @@
     .seimsee-img {
       height: 90px;
       object-fit: contain;
-      pointer-events: none;
       user-select: none;
-      animation: float 3s ease-in-out infinite;
-    }
-
-    .shake {
-      animation: shakeBox 0.7s ease-in-out;
-    }
-
-    .btn-main {
-      width: 100%;
-      border: none;
-      border-radius: 999px;
-      padding: 12px 18px;
-      font-size: 1.02rem;
-      font-weight: 600;
-      margin-bottom: 6px;
       cursor: pointer;
-      background: linear-gradient(135deg, var(--accent), var(--accent-soft));
-      color: #1f2933;
-      box-shadow:
-        0 12px 20px rgba(248, 250, 252, 0.25),
-        0 0 0 1px rgba(113, 63, 18, 0.25);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition:
-        transform 0.12s ease,
-        box-shadow 0.12s ease,
-        filter 0.12s ease,
-        opacity 0.12s ease;
+      transition: transform 0.1s ease;
     }
 
-    .btn-main:active {
-      transform: translateY(2px) scale(0.98);
-      box-shadow:
-        0 6px 12px rgba(0, 0, 0, 0.5),
-        0 0 0 1px rgba(113, 63, 18, 0.6);
-      filter: brightness(0.96);
+    /* รูปสั่นตอนแตะ */
+    .seimsee-img.tap-shake {
+      animation: tapShake 0.35s ease;
     }
 
-    .btn-main.disabled {
-      opacity: 0.6;
-      cursor: default;
-      pointer-events: none;
-    }
-
-    .btn-main span.icon {
-      font-size: 1.2rem;
+    /* กล่องสั่นตอนสุ่มใบ */
+    .box-visual.box-shake {
+      animation: shakeBox 0.7s ease-in-out;
     }
 
     .hint {
@@ -183,15 +146,11 @@
       margin-bottom: 4px;
     }
 
-    .shake-status {
+    .tap-status {
       text-align: center;
       font-size: 0.78rem;
       color: var(--accent-soft);
       margin-bottom: 12px;
-    }
-
-    .shake-status.error {
-      color: var(--danger);
     }
 
     .result-card {
@@ -344,6 +303,15 @@
       100% { transform: translateX(0) rotate(0deg); }
     }
 
+    @keyframes tapShake {
+      0%   { transform: translateX(0); }
+      20%  { transform: translateX(-4px) rotate(-1deg); }
+      40%  { transform: translateX(4px) rotate(1deg); }
+      60%  { transform: translateX(-3px) rotate(-0.7deg); }
+      80%  { transform: translateX(3px) rotate(0.7deg); }
+      100% { transform: translateX(0); }
+    }
+
     @keyframes fadeInUp {
       from {
         opacity: 0;
@@ -371,33 +339,28 @@
         </div>
         <div class="title">เสี่ยงเซียมซี Taithai</div>
         <div class="subtitle">
-          ตั้งจิตอธิษฐานให้สงบ แล้วเขย่าโทรศัพท์<br />
-          หรือกดปุ่มเพื่อเสี่ยงเซียมซี 💫
+          ตั้งจิตอธิษฐานให้สงบ แล้วแตะที่รูปเซียมซี 5 ครั้งติดกันเพื่อเสี่ยงเซียมซี 💫
         </div>
       </div>
 
       <div class="shake-box">
         <div class="box-visual" id="boxVisual">
           <div class="lamp"></div>
-          <!-- ใช้รูปเซียมซีจาก GitHub ของคุณ -->
+          <!-- รูปเซียมซีจาก GitHub ของคุณ -->
           <img
             src="https://raw.githubusercontent.com/taithai-tai/meemon/main/NFCV.2/Seimsee/Seimsee.png"
             alt="เซียมซี"
             class="seimsee-img"
+            id="seimseeImg"
           />
         </div>
       </div>
 
-      <button id="drawBtn" class="btn-main">
-        <span class="icon">✨</span>
-        <span>เขย่าเซียมซี</span>
-      </button>
-
       <div class="hint">
         ใช้เพื่อความบันเทิงและสิริมงคลเท่านั้น ไม่ใช่การทำนายที่แน่นอน 🎋
       </div>
-      <div id="shakeStatus" class="shake-status">
-        โหมดเขย่าโทรศัพท์: จะเปิดอัตโนมัติหลังจากกดปุ่มครั้งแรก 📱
+      <div id="tapStatus" class="tap-status">
+        แตะที่รูป 5 ครั้งภายในเวลาสั้น ๆ ระบบจะสุ่มใบเซียมซีให้คุณ 🎲
       </div>
 
       <div id="resultCard" class="result-card">
@@ -527,30 +490,28 @@
       },
     ];
 
-    const drawBtn = document.getElementById("drawBtn");
     const boxVisual = document.getElementById("boxVisual");
+    const seimseeImg = document.getElementById("seimseeImg");
+
     const resultCard = document.getElementById("resultCard");
     const resultNumber = document.getElementById("resultNumber");
     const resultLevel = document.getElementById("resultLevel");
     const resultTitle = document.getElementById("resultTitle");
     const resultMain = document.getElementById("resultMain");
     const resultAdvice = document.getElementById("resultAdvice");
+
     const historySection = document.getElementById("historySection");
     const historyList = document.getElementById("historyList");
     const historyCount = document.getElementById("historyCount");
-    const shakeStatus = document.getElementById("shakeStatus");
+    const tapStatus = document.getElementById("tapStatus");
 
     let isDrawing = false;
     const history = [];
 
-    // ตัวแปรเขย่า
-    let shakeListening = false;
-    let lastX = null,
-      lastY = null,
-      lastZ = null;
-    let lastTime = 0;
-    const SHAKE_THRESHOLD = 15; // ยิ่งต่ำยิ่งไว
-    const SHAKE_INTERVAL = 800; // ms กันยิงรัว
+    // นับจำนวนครั้งที่แตะรูป
+    let tapCount = 0;
+    let tapTimer = null;
+    const TAP_RESET_DELAY = 1500; // ms ถ้าหยุดนานเกินนี้จะรีเซ็ตนับใหม่
 
     function getRandomFortune() {
       const index = Math.floor(Math.random() * fortunes.length);
@@ -612,148 +573,72 @@
       resultAdvice.textContent = fortune.advice;
 
       resultCard.classList.remove("show");
-      void resultCard.offsetWidth; // รีเซ็ต animation
+      void resultCard.offsetWidth;
       resultCard.classList.add("show");
     }
 
-    // สุ่มเซียมซี (ใช้ทั้งจากปุ่มและเขย่า)
+    // สุ่มเซียมซี (เรียกตอนครบ 5 แตะ)
     function performDraw() {
       if (isDrawing) return;
       isDrawing = true;
 
-      drawBtn.classList.add("disabled");
-      drawBtn.querySelector("span.icon").textContent = "🔮";
-      drawBtn.querySelectorAll("span")[1].textContent = "กำลังเขย่า...";
-
-      boxVisual.classList.add("shake");
+      // กล่องสั่นตอนสุ่ม
+      boxVisual.classList.add("box-shake");
+      tapStatus.textContent = "กำลังสุ่มใบเซียมซีให้คุณ... 🔮";
 
       setTimeout(() => {
         const fortune = getRandomFortune();
         showResult(fortune);
         updateHistory(fortune);
 
-        drawBtn.classList.remove("disabled");
-        drawBtn.querySelector("span.icon").textContent = "✨";
-        drawBtn.querySelectorAll("span")[1].textContent = "เขย่าเซียมซี";
+        boxVisual.classList.remove("box-shake");
+        tapStatus.textContent =
+          "แตะที่รูป 5 ครั้งภายในเวลาสั้น ๆ ระบบจะสุ่มใบเซียมซีให้คุณ 🎲";
 
-        boxVisual.classList.remove("shake");
         isDrawing = false;
       }, 900);
     }
 
-    // คลิกปุ่ม (ครั้งแรกใช้เปิดโหมดเขย่าด้วย)
-    drawBtn.addEventListener("click", () => {
-      if (!shakeListening) {
-        enableShakeMode()
-          .then(() => {
-            performDraw();
-          })
-          .catch(() => {
-            // ถ้าเปิดโหมดเขย่าไม่ได้ ก็ยังสุ่มจากปุ่มได้ปกติ
-            performDraw();
-          });
-      } else {
+    // ให้รูปสั่นทุกครั้งที่แตะ
+    function animateTapShake() {
+      seimseeImg.classList.remove("tap-shake");
+      void seimseeImg.offsetWidth;
+      seimseeImg.classList.add("tap-shake");
+    }
+
+    function handleTap() {
+      animateTapShake();
+
+      // นับแตะ
+      tapCount += 1;
+
+      // รีเซ็ต timer ถ้ามี
+      if (tapTimer) clearTimeout(tapTimer);
+
+      // ตั้งเวลารีเซ็ตถ้าหยุดแตะนานเกินไป
+      tapTimer = setTimeout(() => {
+        tapCount = 0;
+      }, TAP_RESET_DELAY);
+
+      // อัปเดต status เล็กน้อย
+      tapStatus.textContent = `แตะแล้ว ${tapCount} ครั้ง (ครบ 5 ครั้งจะสุ่มให้)`;
+
+      if (tapCount >= 5) {
+        tapCount = 0;
+        if (tapTimer) {
+          clearTimeout(tapTimer);
+          tapTimer = null;
+        }
         performDraw();
       }
+    }
+
+    // รองรับทั้ง click และ touch
+    seimseeImg.addEventListener("click", handleTap);
+    seimseeImg.addEventListener("touchend", (e) => {
+      e.preventDefault();
+      handleTap();
     });
-
-    // เปิดโหมดเขย่าโทรศัพท์
-    function enableShakeMode() {
-      return new Promise((resolve, reject) => {
-        if (shakeListening) {
-          resolve();
-          return;
-        }
-
-        if (
-          typeof window === "undefined" ||
-          typeof window.DeviceMotionEvent === "undefined"
-        ) {
-          shakeStatus.textContent =
-            "โหมดเขย่าโทรศัพท์: อุปกรณ์นี้ไม่รองรับเซนเซอร์การเคลื่อนไหว 😢";
-          shakeStatus.classList.add("error");
-          reject(new Error("DeviceMotion not supported"));
-          return;
-        }
-
-        // iOS 13+ ต้องขอ permission
-        if (
-          typeof DeviceMotionEvent !== "undefined" &&
-          typeof DeviceMotionEvent.requestPermission === "function"
-        ) {
-          DeviceMotionEvent.requestPermission()
-            .then((state) => {
-              if (state === "granted") {
-                startShakeListener();
-                resolve();
-              } else {
-                shakeStatus.textContent =
-                  "โหมดเขย่าโทรศัพท์: ผู้ใช้ไม่อนุญาตให้ใช้เซนเซอร์ 😢 ใช้ปุ่มแทนได้";
-                shakeStatus.classList.add("error");
-                reject(new Error("Permission denied"));
-              }
-            })
-            .catch((err) => {
-              shakeStatus.textContent =
-                "โหมดเขย่าโทรศัพท์: เปิดไม่ได้ (permission error) ใช้ปุ่มแทนได้";
-              shakeStatus.classList.add("error");
-              reject(err);
-            });
-        } else {
-          // Android / browser ที่ไม่ต้องขอ permission
-          startShakeListener();
-          resolve();
-        }
-      });
-    }
-
-    function startShakeListener() {
-      window.addEventListener("devicemotion", handleDeviceMotion, false);
-      shakeListening = true;
-      shakeStatus.textContent =
-        "โหมดเขย่าโทรศัพท์: เปิดแล้ว เขย่าเครื่องเพื่อเสี่ยงเซียมซีได้เลย 🎲📱";
-      shakeStatus.classList.remove("error");
-    }
-
-    function handleDeviceMotion(event) {
-      if (!event.accelerationIncludingGravity) return;
-
-      const currentTime = Date.now();
-      const diffTime = currentTime - lastTime;
-      if (diffTime < 80) return;
-
-      const acc = event.accelerationIncludingGravity;
-      const x = acc.x || 0;
-      const y = acc.y || 0;
-      const z = acc.z || 0;
-
-      if (lastX === null && lastY === null && lastZ === null) {
-        lastX = x;
-        lastY = y;
-        lastZ = z;
-        lastTime = currentTime;
-        return;
-      }
-
-      const deltaX = x - lastX;
-      const deltaY = y - lastY;
-      const deltaZ = z - lastZ;
-
-      const speed =
-        ((Math.abs(deltaX) + Math.abs(deltaY) + Math.abs(deltaZ)) / diffTime) *
-        10000;
-
-      if (speed > SHAKE_THRESHOLD && currentTime - lastTime > SHAKE_INTERVAL) {
-        lastTime = currentTime;
-        performDraw();
-      } else {
-        lastTime = currentTime;
-      }
-
-      lastX = x;
-      lastY = y;
-      lastZ = z;
-    }
 
     // ปีใน footer
     document.getElementById("yearNow").textContent =
