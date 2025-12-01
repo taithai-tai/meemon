@@ -311,20 +311,33 @@
       letter-spacing: 0.06em;
       color: rgba(148, 163, 184, 0.9);
     }
+
+    .brand-logo-img {
+      width: 46px;
+      height: 46px;
+      object-fit: contain;
+      border-radius: 12px;
+      background: #000;
+      padding: 4px;
+      box-shadow:
+        0 0 0 2px rgba(255, 215, 0, 0.2),
+        0 10px 22px rgba(0, 0, 0, 0.75),
+        0 0 25px rgba(245, 192, 86, 0.25);
+    }
+
   </style>
 </head>
 
 <body>
-  <div class="app-shell">
-    <!-- HEADER -->
-    <header class="top-bar">
+  <header class="top-bar">
       <div class="brand">
-        <div class="brand-logo">ม</div>
+        <img class="brand-logo-img" src="https://raw.githubusercontent.com/taithai-tai/meemon/main/NFCV.2/home/logo.png" alt="MEEMON Logo">
         <div>
-          <div class="brand-text-main">MEE MON</div>
-          <div class="brand-text-sub">เว็บรวมดูดวง & เสี่ยงทาย</div>
+          <div class="brand-text-main">MEEMON</div>
+          <div class="brand-text-sub">เว็บรวมดูดวง & เสี่ยงทายออนไลน์</div>
         </div>
       </div>
+    
       <div class="user-pill">
         <div class="dot-online"></div>
         <span>พร้อมดูดวงวันนี้ ✨</span>
