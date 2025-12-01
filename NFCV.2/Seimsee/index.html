@@ -4,10 +4,7 @@
   <meta charset="UTF-8" />
   <title>Taithai Seimsee | เสี่ยงเซียมซีออนไลน์</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <!-- ฟอนต์สวย ๆ จาก Google -->
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet" />
-
   <style>
     :root {
       --bg: radial-gradient(circle at top, #0f172a, #020617);
@@ -19,17 +16,11 @@
       --danger: #f87171;
       --success: #4ade80;
     }
-
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: "Kanit", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-        sans-serif;
+      font-family: "Kanit", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: var(--bg);
       color: var(--text-main);
       display: flex;
@@ -37,181 +28,414 @@
       justify-content: center;
       padding: 16px;
     }
-
-    .app {
-      width: 100%;
-      max-width: 480px;
-    }
-
+    .app { width: 100%; max-width: 480px; }
     .card {
       background: var(--card-bg);
       border-radius: 24px;
       padding: 20px 20px 24px;
-      box-shadow:
-        0 20px 40px rgba(0, 0, 0, 0.6),
-        0 0 0 1px rgba(148, 163, 184, 0.2);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(148,163,184,0.2);
       backdrop-filter: blur(16px);
     }
-
-    .header {
-      text-align: center;
-      margin-bottom: 16px;
-    }
-
+    .header { text-align: center; margin-bottom: 16px; }
     .logo-circle {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
+      width: 72px; height: 72px; border-radius: 50%;
       margin: 0 auto 12px;
       background: radial-gradient(circle at 30% 0%, #fef9c3, #f59e0b);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 10px 25px rgba(248, 250, 252, 0.3);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 10px 25px rgba(248,250,252,0.3);
       animation: float 3s ease-in-out infinite;
     }
-
-    .logo-circle span {
-      font-size: 36px;
-    }
-
-    .title {
-      font-size: 1.6rem;
-      font-weight: 600;
-      letter-spacing: 0.03em;
-    }
-
-    .subtitle {
-      font-size: 0.92rem;
-      color: var(--text-soft);
-    }
-
-    .shake-box {
-      margin: 18px 0;
-      display: flex;
-      justify-content: center;
-    }
-
+    .logo-circle span { font-size: 36px; }
+    .title { font-size: 1.6rem; font-weight: 600; letter-spacing: 0.03em; }
+    .subtitle { font-size: 0.92rem; color: var(--text-soft); }
+    .shake-box { margin: 18px 0; display: flex; justify-content: center; }
     .box-visual {
-      width: 130px;
-      height: 90px;
-      border-radius: 16px;
+      width: 130px; height: 90px; border-radius: 16px;
       background: linear-gradient(145deg, #1e293b, #020617);
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
+      border: 1px solid rgba(148,163,184,0.4);
+      position: relative; overflow: hidden;
+      display: flex; align-items: flex-end; justify-content: center;
       padding-bottom: 8px;
     }
-
     .stick {
-      width: 14px;
-      height: 55px;
-      border-radius: 999px;
+      width: 14px; height: 55px; border-radius: 999px;
       background: linear-gradient(to top, #b45309, #fbbf24);
       margin: 0 3px;
-      box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.3);
+      box-shadow: 0 0 0 1px rgba(15,23,42,0.3);
       transform-origin: bottom center;
     }
-
     .stick:nth-child(2) { height: 60px; }
     .stick:nth-child(3) { height: 50px; }
     .stick:nth-child(4) { height: 58px; }
     .stick:nth-child(5) { height: 52px; }
-
-    .shake {
-      animation: shakeBox 0.7s ease-in-out;
-    }
-
+    .shake { animation: shakeBox 0.7s ease-in-out; }
     .lamp {
-      position: absolute;
-      inset-inline: 0;
-      top: -26px;
-      margin: auto;
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
+      position: absolute; inset-inline: 0; top: -26px; margin: auto;
+      width: 72px; height: 72px; border-radius: 50%;
       background: radial-gradient(circle at 30% 0%, #fef9c3, transparent 60%);
-      opacity: 0.8;
-      pointer-events: none;
-      mix-blend-mode: screen;
+      opacity: 0.8; pointer-events: none; mix-blend-mode: screen;
     }
-
     .btn-main {
-      width: 100%;
-      border: none;
-      border-radius: 999px;
-      padding: 12px 18px;
-      font-size: 1.02rem;
-      font-weight: 600;
-      margin-bottom: 6px;
-      cursor: pointer;
+      width: 100%; border: none; border-radius: 999px;
+      padding: 12px 18px; font-size: 1.02rem; font-weight: 600;
+      margin-bottom: 6px; cursor: pointer;
       background: linear-gradient(135deg, var(--accent), var(--accent-soft));
       color: #1f2933;
-      box-shadow:
-        0 12px 20px rgba(248, 250, 252, 0.25),
-        0 0 0 1px rgba(113, 63, 18, 0.25);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition:
-        transform 0.12s ease,
-        box-shadow 0.12s ease,
-        filter 0.12s ease,
-        opacity 0.12s ease;
+      box-shadow: 0 12px 20px rgba(248,250,252,0.25), 0 0 0 1px rgba(113,63,18,0.25);
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease, opacity 0.12s ease;
     }
-
     .btn-main:active {
       transform: translateY(2px) scale(0.98);
-      box-shadow:
-        0 6px 12px rgba(0, 0, 0, 0.5),
-        0 0 0 1px rgba(113, 63, 18, 0.6);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.5), 0 0 0 1px rgba(113,63,18,0.6);
       filter: brightness(0.96);
     }
-
-    .btn-main.disabled {
-      opacity: 0.6;
-      cursor: default;
-      pointer-events: none;
-    }
-
-    .btn-main span.icon {
-      font-size: 1.2rem;
-    }
-
-    .hint {
-      text-align: center;
-      font-size: 0.8rem;
-      color: var(--text-soft);
-      margin-bottom: 4px;
-    }
-
-    .shake-status {
-      text-align: center;
-      font-size: 0.78rem;
-      color: var(--accent-soft);
-      margin-bottom: 12px;
-    }
-
-    .shake-status.error {
-      color: var(--danger);
-    }
-
+    .btn-main.disabled { opacity: 0.6; cursor: default; pointer-events: none; }
+    .btn-main span.icon { font-size: 1.2rem; }
+    .hint { text-align: center; font-size: 0.8rem; color: var(--text-soft); margin-bottom: 4px; }
+    .shake-status { text-align: center; font-size: 0.78rem; color: var(--accent-soft); margin-bottom: 12px; }
+    .shake-status.error { color: var(--danger); }
     .result-card {
-      margin-top: 4px;
-      padding: 12px 14px;
-      border-radius: 18px;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      min-height: 96px;
-      display: none;
-      opacity: 0;
+      margin-top: 4px; padding: 12px 14px; border-radius: 18px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.5);
+      min-height: 96px; display: none; opacity: 0;
+    }
+    .result-card.show { display: block; animation: fadeInUp 0.35s ease-out forwards; }
+    .result-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+    .result-number { font-weight: 600; font-size: 1rem; color: var(--accent-soft); }
+    .result-level {
+      font-size: 0.82rem; padding: 4px 10px; border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7); color: var(--text-main);
+    }
+    .result-level.good { border-color: var(--success); color: var(--success); }
+    .result-level.bad { border-color: var(--danger); color: var(--danger); }
+    .result-title { font-size: 0.98rem; font-weight: 500; margin-bottom: 4px; }
+    .result-main { font-size: 0.9rem; color: var(--text-soft); margin-bottom: 6px; }
+    .result-advice-label { font-size: 0.8rem; color: var(--accent-soft); margin-bottom: 2px; }
+    .result-advice { font-size: 0.86rem; color: var(--text-main); }
+    .history { margin-top: 16px; border-top: 1px dashed rgba(148,163,184,0.6); padding-top: 10px; }
+    .history-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 6px; font-size: 0.85rem; color: var(--text-soft);
+    }
+    .history-list { max-height: 120px; overflow-y: auto; padding-right: 4px; }
+    .history-item {
+      font-size: 0.8rem; color: var(--text-soft);
+      display: flex; justify-content: space-between; gap: 6px;
+      padding: 4px 0; border-bottom: 1px dashed rgba(30,64,175,0.4);
+    }
+    .badge-level {
+      font-size: 0.7rem; padding: 2px 8px; border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.5); white-space: nowrap;
+    }
+    .badge-level.good { border-color: var(--success); color: var(--success); }
+    .badge-level.bad { border-color: var(--danger); color: var(--danger); }
+    .footer { margin-top: 6px; text-align: center; font-size: 0.7rem; color: var(--text-soft); opacity: 0.7; }
+    .history-list::-webkit-scrollbar { width: 4px; }
+    .history-list::-webkit-scrollbar-thumb { background: rgba(148,163,184,0.6); border-radius: 999px; }
+    @keyframes float { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-4px);} }
+    @keyframes shakeBox {
+      0%{transform:translateX(0) rotate(0deg);}
+      20%{transform:translateX(-4px) rotate(-2deg);}
+      40%{transform:translateX(4px) rotate(2deg);}
+      60%{transform:translateX(-3px) rotate(-1.5deg);}
+      80%{transform:translateX(3px) rotate(1.5deg);}
+      100%{transform:translateX(0) rotate(0deg);}
+    }
+    @keyframes fadeInUp {
+      from{opacity:0;transform:translateY(6px);}
+      to{opacity:1;transform:translateY(0);}
+    }
+    @media (min-width: 600px){ .card{padding:24px 24px 26px;} }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="card">
+      <div class="header">
+        <div class="logo-circle"><span>🧧</span></div>
+        <div class="title">เสี่ยงเซียมซี Taithai</div>
+        <div class="subtitle">
+          ตั้งจิตอธิษฐานให้สงบ แล้วเขย่าโทรศัพท์<br>หรือกดปุ่มเพื่อเสี่ยงเซียมซี 💫
+        </div>
+      </div>
+
+      <div class="shake-box">
+        <div class="box-visual" id="boxVisual">
+          <div class="lamp"></div>
+          <div class="stick"></div>
+          <div class="stick"></div>
+          <div class="stick"></div>
+          <div class="stick"></div>
+          <div class="stick"></div>
+        </div>
+      </div>
+
+      <button id="drawBtn" class="btn-main">
+        <span class="icon">✨</span>
+        <span>เขย่าเซียมซี</span>
+      </button>
+
+      <div class="hint">
+        ใช้เพื่อความบันเทิงและสิริมงคลเท่านั้น ไม่ใช่การทำนายที่แน่นอน 🎋
+      </div>
+      <div id="shakeStatus" class="shake-status">
+        โหมดเขย่าโทรศัพท์: จะเปิดอัตโนมัติหลังจากกดปุ่มครั้งแรก 📱
+      </div>
+
+      <div id="resultCard" class="result-card">
+        <div class="result-header">
+          <div class="result-number" id="resultNumber"></div>
+          <div class="result-level" id="resultLevel"></div>
+        </div>
+        <div class="result-title" id="resultTitle"></div>
+        <div class="result-main" id="resultMain"></div>
+        <div class="result-advice-label">คำแนะนำเพิ่มเติม</div>
+        <div class="result-advice" id="resultAdvice"></div>
+      </div>
+
+      <div class="history" id="historySection" style="display:none;">
+        <div class="history-header">
+          <span>ประวัติการเสี่ยงล่าสุด</span>
+          <span id="historyCount"></span>
+        </div>
+        <div class="history-list" id="historyList"></div>
+      </div>
+
+      <div class="footer">
+        © <span id="yearNow"></span> Taithai Seimsee — เสี่ยงเซียมซีออนไลน์
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ---------- ข้อมูลเซียมซี ----------
+    const fortunes = [
+      { number: 1, level: "โชคดีมาก", title: "รุ่งเรืองดุจอรุณแรกของปี",
+        main: "ช่วงนี้ดวงขึ้น ทุกอย่างที่วางแผนไว้มีโอกาสสำเร็จสูง หากลงมือทำอย่างจริงจังจะเห็นผลเร็ว",
+        advice: "อย่าประมาท ใช้จังหวะที่ดีนี้ในการวางรากฐานระยะยาว เช่น การเรียน การงาน หรือการลงทุนที่ศึกษามาดีแล้ว" },
+      { number: 2, level: "โชคดี", title: "น้ำขึ้นให้รีบตัก",
+        main: "มีโอกาสดีผ่านเข้ามา ทั้งด้านการเรียน การทำโปรเจกต์ หรือโอกาสใหม่ ๆ",
+        advice: "หมั่นสังเกตโอกาสรอบตัว อย่าปล่อยผ่านเพราะความขี้เกียจ หรือความกลัวเล็ก ๆ น้อย ๆ" },
+      { number: 3, level: "ปานกลาง", title: "ค่อยเป็นค่อยไป",
+        main: "ช่วงนี้สิ่งต่าง ๆ ยังไปได้เรื่อย ๆ ไม่เร็วไม่ช้า ถ้าพยายามต่อเนื่องจะค่อย ๆ เห็นผล",
+        advice: "โฟกัสที่วินัยและการจัดเวลา อย่าเปรียบเทียบตัวเองกับคนอื่นมากเกินไป" },
+      { number: 4, level: "โชคดีเล็กน้อย", title: "แสงเล็ก ๆ ปลายทาง",
+        main: "แม้ตอนนี้อาจยังไม่เห็นผลชัดเจน แต่กำลังเดินมาถูกทางแล้ว",
+        advice: "ทบทวนแผน ปรับเล็กน้อย แล้วเดินต่อ อย่าท้อเพราะความสำเร็จมักมาช้ากว่าที่คิดเสมอ" },
+      { number: 5, level: "เสี่ยงเล็กน้อย", title: "ลมเปลี่ยนทิศ",
+        main: "อาจมีเรื่องไม่คาดคิดเกิดขึ้น ทำให้แผนที่วางไว้ต้องเปลี่ยนไปบ้าง",
+        advice: "เตรียมแผนสำรองไว้ และระวังการตัดสินใจแบบรีบเร่ง พยายามตั้งสติให้ดี" },
+      { number: 6, level: "โชคดี", title: "มีผู้ใหญ่คอยช่วยเหลือ",
+        main: "หากมีปัญหา ให้ลองถามหรือขอคำปรึกษาจากผู้ใหญ่ ครู หรือคนที่มีประสบการณ์",
+        advice: "อย่าเกรงใจที่จะขอคำแนะนำ บางครั้งคำพูดหนึ่งประโยคสามารถช่วยเปลี่ยนมุมมองทั้งชีวิตได้" },
+      { number: 7, level: "ปานกลาง", title: "สอบผ่านด้วยความพยายาม",
+        main: "เรื่องการเรียนหรือการทำงานอาจเหนื่อยหน่อย แต่ถ้าอ่านหนังสือหรือเตรียมตัวดีจะไปได้สวย",
+        advice: "แบ่งเวลาอ่านหนังสือเป็นช่วงสั้น ๆ แต่สม่ำเสมอ แล้วให้รางวัลตัวเองเล็ก ๆ หลังทำสำเร็จ" },
+      { number: 8, level: "โชคดีมาก", title: "สิ่งดี ๆ กำลังเข้ามา",
+        main: "มีข่าวดีรออยู่ อาจเกี่ยวกับโปรเจกต์ งาน เงิน หรือคนที่คุณแอบหวัง",
+        advice: "เตรียมตัวให้พร้อมรับสิ่งดี ๆ และรักษาความเป็นตัวเองที่จริงใจและขยันเอาไว้" },
+      { number: 9, level: "เสี่ยงเล็กน้อย", title: "พักก่อนแล้วค่อยลุยต่อ",
+        main: "ร่างกายและใจอาจเริ่มล้า ถ้าฝืนต่อไปอาจทำให้ผลลัพธ์ไม่ดีเท่าที่ควร",
+        advice: "พักผ่อนให้พอ จัดสมดุลระหว่างงาน การเรียน และเวลาส่วนตัว อย่าลืมดูแลสุขภาพ" },
+      { number: 10, level: "ไม่ค่อยดี", title: "เมฆหมอกชั่วคราว",
+        main: "อาจมีอุปสรรคเข้ามาทดสอบความใจแข็งและความอดทนของคุณ",
+        advice: "อย่าเพิ่งตัดสินใจเรื่องใหญ่ในช่วงนี้ ใช้เวลาไตร่ตรองให้ดี และมองหาคนที่ไว้ใจได้ไว้ปรึกษา" },
+      { number: 11, level: "โชคดี", title: "มิตรภาพช่วยเกื้อหนุน",
+        main: "เพื่อนหรือคนรอบตัวจะเป็นกุญแจสำคัญให้ผ่านเรื่องยาก ๆ ไปได้",
+        advice: "รักษาความสัมพันธ์ดี ๆ ไว้ แบ่งปัน ทั้งคำปรึกษาและน้ำใจ ยิ่งให้ยิ่งได้กลับมา" },
+      { number: 12, level: "ปานกลาง", title: "เรียนรู้จากความผิดพลาด",
+        main: "สิ่งที่ยังไม่สำเร็จไม่ได้แปลว่าล้มเหลว แต่เป็นบทเรียนสำคัญในก้าวถัดไป",
+        advice: "ลองมองสิ่งที่เกิดขึ้นแบบคนภายนอก แล้วถามตัวเองว่า ‘ฉันได้เรียนรู้อะไรจากเรื่องนี้?’" }
+    ];
+
+    const drawBtn = document.getElementById("drawBtn");
+    const boxVisual = document.getElementById("boxVisual");
+    const resultCard = document.getElementById("resultCard");
+    const resultNumber = document.getElementById("resultNumber");
+    const resultLevel = document.getElementById("resultLevel");
+    const resultTitle = document.getElementById("resultTitle");
+    const resultMain = document.getElementById("resultMain");
+    const resultAdvice = document.getElementById("resultAdvice");
+    const historySection = document.getElementById("historySection");
+    const historyList = document.getElementById("historyList");
+    const historyCount = document.getElementById("historyCount");
+    const shakeStatus = document.getElementById("shakeStatus");
+
+    let isDrawing = false;
+    const history = [];
+
+    // ตัวแปรเขย่า
+    let shakeListening = false;
+    let lastX = null, lastY = null, lastZ = null;
+    let lastTime = 0;
+    const SHAKE_THRESHOLD = 15;
+    const SHAKE_INTERVAL = 800;
+
+    function getRandomFortune() {
+      const index = Math.floor(Math.random() * fortunes.length);
+      return fortunes[index];
     }
 
-    .result-card.show {
-      display: block;
-      animation: fadeInUp 0.35s ease-out forwards;
+    function updateHistory(fortune) {
+      history.unshift({ time: new Date(), fortune });
+      if (history.length > 10) history.pop();
+
+      historyList.innerHTML = "";
+      history.forEach((item) => {
+        const li = document.createElement("div");
+        li.className = "history-item";
+
+        const left = document.createElement("span");
+        const timeStr = item.time.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" });
+        left.textContent = `ใบที่ ${item.fortune.number} · ${item.fortune.title}`;
+
+        const right = document.createElement("span");
+        const badge = document.createElement("span");
+        badge.className = "badge-level " +
+          (item.fortune.level.includes("ไม่ค่อยดี") || item.fortune.level.includes("เสี่ยง") ? "bad" : "good");
+        badge.textContent = `${item.fortune.level} · ${timeStr}`;
+        right.appendChild(badge);
+
+        li.appendChild(left);
+        li.appendChild(right);
+        historyList.appendChild(li);
+      });
+
+      historyCount.textContent = `ทั้งหมด ${history.length} ครั้ง`;
+      historySection.style.display = history.length ? "block" : "none";
     }
+
+    function showResult(fortune) {
+      resultNumber.textContent = `ใบที่ ${fortune.number}`;
+      resultLevel.textContent = fortune.level;
+      resultLevel.classList.remove("good", "bad");
+      if (fortune.level.includes("ไม่ค่อยดี") || fortune.level.includes("เสี่ยง")) {
+        resultLevel.classList.add("bad");
+      } else if (fortune.level.includes("ดี")) {
+        resultLevel.classList.add("good");
+      }
+      resultTitle.textContent = fortune.title;
+      resultMain.textContent = fortune.main;
+      resultAdvice.textContent = fortune.advice;
+
+      resultCard.classList.remove("show");
+      void resultCard.offsetWidth;
+      resultCard.classList.add("show");
+    }
+
+    function performDraw() {
+      if (isDrawing) return;
+      isDrawing = true;
+
+      drawBtn.classList.add("disabled");
+      drawBtn.querySelector("span.icon").textContent = "🔮";
+      drawBtn.querySelectorAll("span")[1].textContent = "กำลังเขย่า...";
+
+      boxVisual.classList.add("shake");
+
+      setTimeout(() => {
+        const fortune = getRandomFortune();
+        showResult(fortune);
+        updateHistory(fortune);
+
+        drawBtn.classList.remove("disabled");
+        drawBtn.querySelector("span.icon").textContent = "✨";
+        drawBtn.querySelectorAll("span")[1].textContent = "เขย่าเซียมซี";
+
+        boxVisual.classList.remove("shake");
+        isDrawing = false;
+      }, 900);
+    }
+
+    drawBtn.addEventListener("click", () => {
+      if (!shakeListening) {
+        enableShakeMode().finally(() => {
+          performDraw();
+        });
+      } else {
+        performDraw();
+      }
+    });
+
+    function enableShakeMode() {
+      return new Promise((resolve, reject) => {
+        if (shakeListening) { resolve(); return; }
+
+        if (typeof window === "undefined" || typeof window.DeviceMotionEvent === "undefined") {
+          shakeStatus.textContent = "โหมดเขย่าโทรศัพท์: อุปกรณ์นี้ไม่รองรับเซนเซอร์การเคลื่อนไหว 😢";
+          shakeStatus.classList.add("error");
+          reject(new Error("DeviceMotion not supported"));
+          return;
+        }
+
+        // iOS 13+
+        if (typeof DeviceMotionEvent !== "undefined" &&
+            typeof DeviceMotionEvent.requestPermission === "function") {
+          DeviceMotionEvent.requestPermission()
+            .then((state) => {
+              if (state === "granted") {
+                startShakeListener();
+                resolve();
+              } else {
+                shakeStatus.textContent = "โหมดเขย่าโทรศัพท์: ผู้ใช้ไม่อนุญาตให้ใช้เซนเซอร์ 😢 ใช้ปุ่มแทนได้";
+                shakeStatus.classList.add("error");
+                reject(new Error("Permission denied"));
+              }
+            })
+            .catch((err) => {
+              shakeStatus.textContent = "โหมดเขย่าโทรศัพท์: เปิดไม่ได้ (permission error) ใช้ปุ่มแทนได้";
+              shakeStatus.classList.add("error");
+              reject(err);
+            });
+        } else {
+          // Android / browser ที่ไม่ต้องขอ permission
+          startShakeListener();
+          resolve();
+        }
+      });
+    }
+
+    function startShakeListener() {
+      window.addEventListener("devicemotion", handleDeviceMotion, false);
+      shakeListening = true;
+      shakeStatus.textContent = "โหมดเขย่าโทรศัพท์: เปิดแล้ว เขย่าเครื่องเพื่อเสี่ยงเซียมซีได้เลย 🎲📱";
+      shakeStatus.classList.remove("error");
+    }
+
+    function handleDeviceMotion(event) {
+      if (!event.accelerationIncludingGravity) return;
+
+      const currentTime = Date.now();
+      const diffTime = currentTime - lastTime;
+      if (diffTime < 80) return;
+
+      const acc = event.accelerationIncludingGravity;
+      const x = acc.x || 0;
+      const y = acc.y || 0;
+      const z = acc.z || 0;
+
+      if (lastX === null && lastY === null && lastZ === null) {
+        lastX = x; lastY = y; lastZ = z; lastTime = currentTime; return;
+      }
+
+      const deltaX = x - lastX;
+      const deltaY = y - lastY;
+      const deltaZ = z - lastZ;
+      const speed = (Math.abs(deltaX) + Math.abs(deltaY) + Math.abs(deltaZ)) / diffTime * 10000;
+
+      if (speed > SHAKE_THRESHOLD && currentTime - lastTime > SHAKE_INTERVAL) {
+        lastTime = currentTime;
+        performDraw();
+      } else {
+        lastTime = currentTime;
+      }
+
+      lastX = x; lastY = y; lastZ = z;
+    }
+
+    document.getElementById("yearNow").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
