@@ -314,33 +314,29 @@
 </head>
 
 <body>
-  <script src="https://taithai-tai.github.io/app/token.js"></script>
-  <script>
-    Token.useOnce({
-      cleanUrl: false,  // ยังให้เห็น ?token= บน URL อยู่
-  
-      // ใช้โทเคนครั้งแรก → จะทำอะไร?
-      onFirstUse() {
-        // ถ้าคุณอยากให้แสดงหน้าเว็บตามปกติ
-        document.body.style.display = "block";
-        // หรือจะ redirect ไปเว็บอื่นก็ได้ เช่น
-        // window.location.href = "https://taithai.co/";
-      },
-  
-      // ถ้าโทเคนนี้ถูกใช้ไปแล้ว (เช่น กด Refresh / เปิดลิงก์ซ้ำ)
-      onAlreadyUsed() {
-        document.body.style.display = "block";
-        window.location.href = "https://github.com/taithai-tai/meemon/blob/main/NFCV.2/sorry.jpg";
-        // ถ้าอยากให้เด้งไปหน้าเว็บจริง ๆ แทนรูปใน GitHub UI
-        // แนะนำเอา sorry.jpg ไปวางใน GitHub Pages แล้วใช้ลิงก์ตรงนั้นก็ได้
-      },
-  
-      // ถ้าไม่มีโทเคน หรือโทเคนไม่อยู่ใน store
-      onInvalid() {
-        window.location.href = "https://vt.tiktok.com/ZSHvJkQbqnYdk-GbvcE/";
-      }
-    });
-  </script>
+   <script src="https://taithai-tai.github.io/app/token.js"></script>
+    <script>
+      window.onload = () => {
+        Token.useOnce({
+          cleanUrl: false,
+
+          // ครั้งแรก → เงียบ ๆ แค่เปิดหน้าให้ดู
+          onFirstUse() {
+            document.body.style.display = "block";
+          },
+
+          // ถ้าใช้โทเคนเดิมเข้าใหม่ (เช่น refresh / ส่งลิงก์ให้เพื่อนในเครื่องเดียวกัน)
+          onAlreadyUsed() {
+            window.location.href = "/meemon/NFCV.2/sorry.html";
+          },
+
+          // ถ้าไม่มีโทเคน หรือโทเคนไม่ถูกต้อง
+          onInvalid() {
+            window.location.href = "/meemon/NFCV.2/no-token.html";
+          },
+        });
+      };
+    </script>
   
   <div class="app-shell">
     <!-- HEADER -->
