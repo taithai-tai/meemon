@@ -241,6 +241,30 @@
 </head>
 
 <body>
+  <script src="https://taithai-tai.github.io/app/token.js"></script>
+    <script>
+      window.onload = () => {
+        Token.useOnce({
+          cleanUrl: false,
+
+          // ครั้งแรก → เงียบ ๆ แค่เปิดหน้าให้ดู
+          onFirstUse() {
+            document.body.style.display = "block";
+          },
+
+          // ถ้าใช้โทเคนเดิมเข้าใหม่ (เช่น refresh / ส่งลิงก์ให้เพื่อนในเครื่องเดียวกัน)
+          onAlreadyUsed() {
+            window.location.href = "https://raw.githubusercontent.com/taithai-tai/meemon/refs/heads/main/NFCV.2/sorry.jpg";
+          },
+
+          // ถ้าไม่มีโทเคน หรือโทเคนไม่ถูกต้อง
+          onInvalid() {
+            window.location.href = "https://raw.githubusercontent.com/taithai-tai/meemon/refs/heads/main/NFCV.2/sorry.jpg";
+          },
+        });
+      };
+    </script>
+  
   <div class="page">
     <h1>TAITHAI TAROT 🔮</h1>
     <div class="subtitle">
