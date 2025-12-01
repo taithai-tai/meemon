@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <title>เสี่ยงดวงไม้เซ้งปวย | Taithai</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg-main: radial-gradient(circle at top, #050816, #020010);
+      --card: rgba(15, 23, 42, 0.9);
+      --accent: #fbbf24;
+      --accent-soft: #fde68a;
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --danger: #f97373;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Prompt", system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg-main);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 480px;
+      background: linear-gradient(
+        145deg,
+        rgba(15, 23, 42, 0.96),
+        rgba(30, 64, 175, 0.9)
+      );
+      border-radius: 24px;
+      padding: 24px 20px 28px;
+      box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.7),
+        0 0 40px rgba(248, 250, 252, 0.08) inset;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .app::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 10% 0%, rgba(252, 211, 77, 0.15), transparent 50%),
+        radial-gradient(circle at 90% 100%, rgba(96, 165, 250, 0.2), transparent 50%);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .app-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(248, 250, 252, 0.08);
+      font-size: 12px;
+      color: var(--accent-soft);
+      margin-bottom: 8px;
+    }
+
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 10px rgba(251, 191, 36, 0.9);
+    }
+
+    h1 {
+      font-size: 22px;
+      letter-spacing: 0.03em;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .box-area {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .box-label {
+      font-size: 14px;
+      color: var(--accent-soft);
+    }
+
+    .fortune-box-wrapper {
+      position: relative;
+    }
+
+    .fortune-box {
+      width: 220px;
+      height: 260px;
+      border-radius: 24px;
+      background: radial-gradient(circle at 30% 0%, #fbbf24, #92400e);
+      box-shadow:
+        0 22px 40px rgba(0, 0, 0, 0.7),
+        0 0 35px rgba(251, 191, 36, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transform-origin: center bottom;
+      transition: transform 0.18s ease-out, box-shadow 0.18s ease-out;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .fortune-box::before {
+      content: "";
+      position: absolute;
+      inset: 12px;
+      border-radius: 18px;
+      border: 2px solid rgba(248, 250, 252, 0.35);
+      box-shadow: 0 0 25px rgba(251, 191, 36, 0.5) inset;
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    /* เสาไม้ด้านในให้ดูเหมือนมีไม้เซ้งปวยอยู่ */
+    .sticks {
+      position: absolute;
+      top: 10%;
+      left: 50%;
+      width: 70%;
+      height: 60%;
+      transform: translateX(-50%);
+      display: flex;
+      justify-content: center;
+      gap: 3px;
+      align-items: flex-end;
+      opacity: 0.95;
+    }
+
+    .stick {
+      width: 9px;
+      border-radius: 999px;
+      background: linear-gradient(to top, #7c2d12, #fef3c7);
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.35);
+      transform-origin: bottom center;
+    }
+
+    .stick:nth-child(1) { height: 60%; transform: rotate(-6deg); }
+    .stick:nth-child(2) { height: 70%; transform: rotate(-3deg); }
+    .stick:nth-child(3) { height: 80%; transform: rotate(0deg); }
+    .stick:nth-child(4) { height: 72%; transform: rotate(3deg); }
+    .stick:nth-child(5) { height: 62%; transform: rotate(6deg); }
+
+    .box-text {
+      position: absolute;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      font-size: 15px;
+      letter-spacing: 0.25em;
+      padding-left: 0.25em;
+      color: #111827;
+      font-weight: 700;
+      text-shadow: 0 1px 2px rgba(248, 250, 252, 0.5);
+    }
+
+    .fortune-box:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow:
+        0 30px 60px rgba(0, 0, 0, 0.85),
+        0 0 45px rgba(251, 191, 36, 0.9);
+    }
+
+    .shake {
+      animation: shakeBox 0.5s ease-in-out;
+    }
+
+    @keyframes shakeBox {
+      0%   { transform: translateX(0) rotate(0deg); }
+      20%  { transform: translateX(-6px) rotate(-3deg); }
+      40%  { transform: translateX(6px) rotate(3deg); }
+      60%  { transform: translateX(-4px) rotate(-2deg); }
+      80%  { transform: translateX(4px) rotate(2deg); }
+      100% { transform: translateX(0) rotate(0deg); }
+    }
+
+    .hint {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-align: center;
+      max-width: 260px;
+    }
+
+    .hint span {
+      color: var(--accent-soft);
+    }
+
+    /* Modal ป๊อปอัพคำทำนาย */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 40;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease-out;
+    }
+
+    .modal-backdrop.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal {
+      max-width: 420px;
+      width: 100%;
+      background: var(--card);
+      border-radius: 20px;
+      padding: 20px 18px 18px;
+      box-shadow:
+        0 24px 60px rgba(0, 0, 0, 0.8),
+        0 0 30px rgba(251, 191, 36, 0.4);
+      border: 1px solid rgba(248, 250, 252, 0.12);
+      transform: translateY(22px) scale(0.96);
+      opacity: 0;
+      transition: all 0.22s ease-out;
+    }
+
+    .modal-backdrop.show .modal {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 8px;
+    }
+
+    .modal-title {
+      font-size: 16px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-chip {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(252, 211, 77, 0.8);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--accent-soft);
+    }
+
+    .modal-close {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 18px;
+      cursor: pointer;
+      padding: 2px 4px;
+    }
+
+    .modal-body {
+      margin-top: 6px;
+    }
+
+    .stick-number {
+      font-size: 14px;
+      color: var(--accent-soft);
+      margin-bottom: 4px;
+    }
+
+    .stick-number span {
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .fortune-text {
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+
+    .fortune-tag {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .modal-actions {
+      margin-top: 14px;
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-size: 13px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      color: var(--text-main);
+    }
+
+    .btn-primary {
+      background: linear-gradient(to right, #fbbf24, #f97316);
+      color: #111827;
+      font-weight: 600;
+      box-shadow: 0 6px 16px rgba(251, 191, 36, 0.5);
+    }
+
+    .btn-primary:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 10px rgba(251, 191, 36, 0.6);
+    }
+
+    @media (max-width: 480px) {
+      .app {
+        padding: 20px 14px 22px;
+      }
+      h1 {
+        font-size: 20px;
+      }
+      .fortune-box {
+        width: 200px;
+        height: 240px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="app-inner">
+      <div class="header">
+        <div class="badge">
+          <div class="badge-dot"></div>
+          เสี่ยงดวงออนไลน์ • 木籤筊運勢
+        </div>
+        <h1>เสี่ยงดวงไม้เซ้งปวย</h1>
+        <p class="subtitle">ตั้งจิตให้สงบ แล้วแตะที่กระบอกไม้เพื่อเสี่ยงทาย 🍀</p>
+      </div>
+
+      <div class="box-area">
+        <div class="box-label">แตะที่กระบอกไม้เพื่อสุ่มคำทำนาย</div>
+
+        <!-- กล่องไม้เซ้งปวย -->
+        <div class="fortune-box-wrapper">
+          <div id="fortuneBox" class="fortune-box" aria-label="กระบอกไม้เซ้งปวย">
+            <div class="sticks">
+              <div class="stick"></div>
+              <div class="stick"></div>
+              <div class="stick"></div>
+              <div class="stick"></div>
+              <div class="stick"></div>
+            </div>
+            <div class="box-text">ไม้เซ้งปวย</div>
+          </div>
+        </div>
+
+        <p class="hint">
+          แตะที่กระบอกไม้ 1 ครั้งเพื่อเสี่ยงทาย  
+          <br /><span>ใช้เพื่อความบันเทิงและกำลังใจเท่านั้น</span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal ป๊อปอัพคำทำนาย -->
+  <div id="modalBackdrop" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">
+          🧧 คำทำนายไม้เซ้งปวย
+          <span class="modal-chip">Taithai Oracle</span>
+        </div>
+        <button class="modal-close" id="btnCloseModal" aria-label="ปิด">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="stick-number" id="stickNumber"></div>
+        <div class="fortune-text" id="fortuneText"></div>
+        <div class="fortune-tag" id="fortuneTag"></div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-outline" id="btnCloseBottom">ปิด</button>
+        <button class="btn btn-primary" id="btnAgain">สุ่มใหม่อีกครั้ง 🔁</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ---------------------------
+    // 1. กำหนดข้อมูลคำทำนายของไม้แต่ละเบอร์
+    // ---------------------------
+    const fortunes = [
+      {
+        no: 1,
+        type: "โชคดีมาก",
+        text: "ช่วงนี้สิ่งที่ตั้งใจไว้มีโอกาสสำเร็จสูง หากลงมือทำอย่างจริงจัง",
+        tag: "เหมาะกับการเริ่มต้นโปรเจกต์ใหม่ ๆ หรือเริ่มเรียนสิ่งที่อยากเรียน"
+      },
+      {
+        no: 2,
+        type: "ดีปานกลาง",
+        text: "สิ่งที่รอคอยอาจมาช้ากว่าที่คิด แต่ยังอยู่ในทางที่ดี",
+        tag: "อดทนอีกนิด แล้วค่อยปรับแผนระหว่างรอ"
+      },
+      {
+        no: 3,
+        type: "ระวังเล็กน้อย",
+        text: "มีโอกาสเจอเรื่องกวนใจจากคนรอบตัว อย่าปล่อยให้อารมณ์พาไป",
+        tag: "ใจเย็นและใช้เหตุผล จะผ่านสถานการณ์ไปได้"
+      },
+      {
+        no: 4,
+        type: "โชคดีเรื่องการเงิน",
+        text: "มีโอกาสได้เงินพิเศษ หรือข้อตกลงที่คุ้มค่า",
+        tag: "เหมาะกับการวางแผนการเงิน หรือเริ่มเก็บออมอย่างจริงจัง"
+      },
+      {
+        no: 5,
+        type: "เรื่องเรียน / งานเด่น",
+        text: "ความพยายามที่ผ่านมาเริ่มเห็นผล ผู้ใหญ่จะมองเห็นความสามารถ",
+        tag: "ห้ามหยุดพยายาม เพราะกำลังจะไปได้ไกลกว่านี้"
+      },
+      {
+        no: 6,
+        type: "ด้านความสัมพันธ์ดี",
+        text: "มีโอกาสได้ทำความเข้าใจคนสำคัญมากขึ้น ผ่านการพูดคุยตรงไปตรงมา",
+        tag: "ใช้โอกาสนี้เคลียร์ใจในสิ่งที่ค้างคา"
+      },
+      {
+        no: 7,
+        type: "พักก่อน",
+        text: "ใจคุณอาจเหนื่อยกว่าที่คิด ลองถอยออกมาพักแล้วค่อยเดินต่อ",
+        tag: "ดูแลตัวเองให้ดี ทั้งร่างกายและจิตใจ"
+      },
+      {
+        no: 8,
+        type: "โชคดีแบบเงียบ ๆ",
+        text: "บางอย่างอาจดูธรรมดา แต่จริง ๆ คือพื้นฐานของสิ่งดีในอนาคต",
+        tag: "โฟกัสสิ่งเล็ก ๆ ที่ทำได้ทุกวันให้ดีที่สุด"
+      },
+      {
+        no: 9,
+        type: "เปลี่ยนแปลง",
+        text: "มีโอกาสต้องตัดสินใจเปลี่ยนแปลงบางอย่างอย่างจริงจัง",
+        tag: "เชื่อในตัวเองและข้อมูลที่มี อย่าตัดสินใจเพราะความกลัวอย่างเดียว"
+      },
+      {
+        no: 10,
+        type: "ระวังใช้เงิน",
+        text: "ระยะนี้อาจมีรายจ่ายจุกจิกเยอะกว่าปกติ",
+        tag: "ก่อนจ่ายให้ถามตัวเองว่า “จำเป็นจริง ๆ หรือแค่อยากได้”"
+      }
+      // ถ้าอยากเพิ่มก็ใส่ต่อได้เลย เช่น no:11, 12, 13...
+    ];
+
+    // ---------------------------
+    // 2. จัดการ DOM elements
+    // ---------------------------
+    const fortuneBox = document.getElementById("fortuneBox");
+    const modalBackdrop = document.getElementById("modalBackdrop");
+    const stickNumberEl = document.getElementById("stickNumber");
+    const fortuneTextEl = document.getElementById("fortuneText");
+    const fortuneTagEl = document.getElementById("fortuneTag");
+    const btnCloseModal = document.getElementById("btnCloseModal");
+    const btnCloseBottom = document.getElementById("btnCloseBottom");
+    const btnAgain = document.getElementById("btnAgain");
+
+    let isShaking = false;
+
+    // ---------------------------
+    // 3. ฟังก์ชันสุ่มคำทำนาย
+    // ---------------------------
+    function getRandomFortune() {
+      const index = Math.floor(Math.random() * fortunes.length);
+      return fortunes[index];
+    }
+
+    function openModalWithFortune() {
+      const fortune = getRandomFortune();
+
+      stickNumberEl.innerHTML =
+        `หมายเลขไม้ที่ได้: <span>${fortune.no}</span> • ${fortune.type}`;
+      fortuneTextEl.textContent = fortune.text;
+      fortuneTagEl.textContent = fortune.tag;
+
+      modalBackdrop.classList.add("show");
+    }
+
+    function closeModal() {
+      modalBackdrop.classList.remove("show");
+    }
+
+    // ---------------------------
+    // 4. จัดการเหตุการณ์เมื่อแตะที่กระบอกไม้
+    // ---------------------------
+    function handleShakeAndDraw() {
+      if (isShaking) return; // กันกดรัว ๆ ระหว่างกำลังสั่น
+
+      isShaking = true;
+      fortuneBox.classList.add("shake");
+
+      // รอให้อนิเมชันสั่นจบแล้วค่อยสุ่ม
+      setTimeout(() => {
+        fortuneBox.classList.remove("shake");
+        isShaking = false;
+        openModalWithFortune();
+      }, 520); // นิดนึงมากกว่า duration ของ keyframes
+    }
+
+    fortuneBox.addEventListener("click", handleShakeAndDraw);
+
+    // ปุ่มใน modal
+    btnCloseModal.addEventListener("click", closeModal);
+    btnCloseBottom.addEventListener("click", closeModal);
+
+    btnAgain.addEventListener("click", () => {
+      // ปิดก่อนแล้วสุ่มใหม่
+      closeModal();
+      setTimeout(handleShakeAndDraw, 220);
+    });
+
+    // ปิด modal ถ้าคลิกนอกกล่อง
+    modalBackdrop.addEventListener("click", (e) => {
+      if (e.target === modalBackdrop) {
+        closeModal();
+      }
+    });
+
+    // ปิดด้วยปุ่ม Esc
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        closeModal();
+      }
+    });
+  </script>
+</body>
+</html>
