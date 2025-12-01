@@ -317,23 +317,27 @@
   <script src="https://taithai-tai.github.io/app/token.js"></script>
   <script>
     Token.useOnce({
-      cleanUrl: false,
+      cleanUrl: false,  // ยังให้เห็น ?token= บน URL อยู่
   
-      // ✅ ใช้โทเคนครั้งแรก → เงียบ ๆ ไม่ต้องมีข้อความ
-      onFirstUse({ token, info }) {
-        // ไม่ต้องทำอะไรเลยก็ได้
-        // หรือจะเปิดเนื้อหาเว็บ:
+      // ใช้โทเคนครั้งแรก → จะทำอะไร?
+      onFirstUse() {
+        // ถ้าคุณอยากให้แสดงหน้าเว็บตามปกติ
         document.body.style.display = "block";
+        // หรือจะ redirect ไปเว็บอื่นก็ได้ เช่น
+        // window.location.href = "https://taithai.co/";
       },
   
-      // ⛔ ใช้โทเคนเดิมซ้ำ (เช่น refresh / เปิดลิงก์ต่อ)
+      // ถ้าโทเคนนี้ถูกใช้ไปแล้ว (เช่น กด Refresh / เปิดลิงก์ซ้ำ)
       onAlreadyUsed() {
-        window.location.href = "https://taithai.co/sorry.html";
+        document.body.style.display = "block";
+        window.location.href = "https://github.com/taithai-tai/meemon/blob/main/NFCV.2/sorry.jpg";
+        // ถ้าอยากให้เด้งไปหน้าเว็บจริง ๆ แทนรูปใน GitHub UI
+        // แนะนำเอา sorry.jpg ไปวางใน GitHub Pages แล้วใช้ลิงก์ตรงนั้นก็ได้
       },
   
-      // ❌ ไม่ได้ส่ง token / token ไม่เคยสร้างในเครื่องนี้
+      // ถ้าไม่มีโทเคน หรือโทเคนไม่อยู่ใน store
       onInvalid() {
-        window.location.href = "https://taithai.co/no-token.html";
+        window.location.href = "https://vt.tiktok.com/ZSHvJkQbqnYdk-GbvcE/";
       }
     });
   </script>
