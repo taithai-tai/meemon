@@ -5,6 +5,9 @@
   <title>หน้าโฮม ดูดวงออนไลน์</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <!-- ฟอนต์ Prompt -->
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
     :root {
       --bg-main: radial-gradient(circle at top, #1a1a1a, #050509);
@@ -22,8 +25,8 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Sukhumvit Set",
-        "Prompt", sans-serif;
+      font-family: "Prompt", system-ui, -apple-system, BlinkMacSystemFont,
+        "Sukhumvit Set", sans-serif;
     }
 
     body {
@@ -54,7 +57,6 @@
       gap: 10px;
     }
 
-    /* โลโก้ใหม่ */
     .brand-logo-img {
       width: 46px;
       height: 46px;
@@ -183,7 +185,7 @@
       text-align: right;
     }
 
-    /* GRID OF FEATURES */
+    /* SECTION TITLE */
     .section-title {
       margin-top: 18px;
       margin-bottom: 10px;
@@ -201,83 +203,71 @@
       font-size: 11px;
     }
 
-    .card-grid {
+    /* ICON GRID แบบใหม่ */
+    .icon-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
+      gap: 14px;
+      margin-top: 10px;
     }
 
-    .feature-card {
+    /* ปุ่มแบบใหม่: มีแค่ไอคอน + ข้อความด้านล่าง */
+    .icon-button {
       background: var(--card-bg);
-      border-radius: var(--radius-xl);
-      padding: 12px 12px 11px;
-      border: 1px solid rgba(148, 163, 184, 0.28);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      transition: transform 0.14s ease, box-shadow 0.14s ease,
-        border-color 0.14s ease, background 0.14s ease;
+      border-radius: 22px;
+      padding: 12px 10px 10px;
+      border: 1px solid rgba(148, 163, 184, 0.32);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.7);
       text-decoration: none;
       color: inherit;
-      position: relative;
-      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: transform 0.14s ease, box-shadow 0.14s ease,
+        border-color 0.14s ease, background 0.14s ease;
     }
 
-    .feature-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at top, rgba(248, 250, 252, 0.09), transparent);
-      opacity: 0;
-      transition: opacity 0.15s ease;
-      pointer-events: none;
-    }
-
-    .feature-card:hover {
+    .icon-button:hover {
       transform: translateY(-3px);
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.8);
+      box-shadow: 0 16px 38px rgba(0, 0, 0, 0.9);
       border-color: var(--border-gold);
+      background: radial-gradient(circle at top, rgba(250, 204, 21, 0.08), #020617);
     }
 
-    .feature-card:hover::before {
-      opacity: 1;
-    }
-
-    .feature-icon-wrap {
-      width: 34px;
-      height: 34px;
-      border-radius: 14px;
+    .icon-button-icon-wrap {
+      width: 60px;
+      height: 60px;
+      border-radius: 18px;
       background: radial-gradient(circle at 25% 0, #fff7cc, #b8860b);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.9);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 17px;
-      color: #1a1305;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.7);
+      overflow: hidden;
     }
 
-    .feature-text-title {
+    .icon-button-icon-wrap img {
+      width: 95%;
+      height: 95%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .icon-button-label {
+      font-size: 11px;
+      line-height: 1.5;
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    .icon-button-label span.title {
+      display: block;
       font-size: 13px;
       font-weight: 600;
-    }
-
-    .feature-text-sub {
-      font-size: 11px;
-      color: var(--text-muted);
-      line-height: 1.4;
-    }
-
-    .feature-tag {
-      margin-top: 4px;
-      align-self: flex-start;
-      padding: 2px 8px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      font-size: 10px;
-      color: var(--gold-soft);
-      background: rgba(15, 23, 42, 0.8);
+      color: var(--text-main);
+      margin-bottom: 2px;
     }
 
     /* BOTTOM AREA */
@@ -310,107 +300,34 @@
       letter-spacing: 0.06em;
       color: rgba(148, 163, 184, 0.9);
     }
-
-    /* ICON GRID แบบใหม่ */
-      .icon-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 14px;
-        margin-top: 10px;
-      }
-      
-      /* ปุ่มแบบใหม่: มีแค่ไอคอน + ข้อความด้านล่าง */
-      .icon-button {
-        background: var(--card-bg);
-        border-radius: 22px;
-        padding: 12px 10px 10px;
-        border: 1px solid rgba(148, 163, 184, 0.32);
-        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.7);
-        text-decoration: none;
-        color: inherit;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 8px;
-        cursor: pointer;
-        transition: transform 0.14s ease, box-shadow 0.14s ease,
-          border-color 0.14s ease, background 0.14s ease;
-      }
-      
-      /* effect ตอน hover */
-      .icon-button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 16px 38px rgba(0, 0, 0, 0.9);
-        border-color: var(--border-gold);
-        background: radial-gradient(circle at top, rgba(250, 204, 21, 0.08), #020617);
-      }
-      
-      /* วงไอคอน */
-      .icon-button-icon-wrap {
-        width: 54px;
-        height: 54px;
-        border-radius: 18px;
-        background: radial-gradient(circle at 25% 0, #fff7cc, #b8860b);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.9);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-      }
-      
-      /* รูป PNG ข้างใน */
-      .icon-button-icon-wrap img {
-        width: 80%;
-        height: 80%;
-        object-fit: contain;
-        display: block;
-      }
-      
-      /* ข้อความคำอธิบายด้านล่าง */
-      .icon-button-label {
-        font-size: 11px;
-        line-height: 1.5;
-        text-align: center;
-        color: var(--text-muted);
-      }
-      
-      /* ถ้าอยากเน้นบางคำให้ดูเป็นหัวข้อ */
-      .icon-button-label span.title {
-        display: block;
-        font-size: 12px;
-        font-weight: 600;
-        color: var(--text-main);
-        margin-bottom: 2px;
-      }
-
   </style>
 </head>
 
-<body>
-   <script src="https://taithai-tai.github.io/app/token.js"></script>
-    <script>
-      window.onload = () => {
-        Token.useOnce({
-          cleanUrl: false,
+<body style="display:none;">
+  <script src="https://taithai-tai.github.io/app/token.js"></script>
+  <script>
+    window.onload = () => {
+      Token.useOnce({
+        cleanUrl: false,
 
-          // ครั้งแรก → เงียบ ๆ แค่เปิดหน้าให้ดู
-          onFirstUse() {
-            document.body.style.display = "block";
-          },
+        // ครั้งแรก → เงียบ ๆ แค่เปิดหน้าให้ดู
+        onFirstUse() {
+          document.body.style.display = "block";
+        },
 
-          // ถ้าใช้โทเคนเดิมเข้าใหม่ (เช่น refresh / ส่งลิงก์ให้เพื่อนในเครื่องเดียวกัน)
-          onAlreadyUsed() {
-            window.location.href = "https://raw.githubusercontent.com/taithai-tai/meemon/refs/heads/main/NFCV.2/sorry.jpg";
-          },
+        // ถ้าใช้โทเคนเดิมเข้าใหม่ (เช่น refresh / ส่งลิงก์ให้เพื่อนในเครื่องเดียวกัน)
+        onAlreadyUsed() {
+          window.location.href = "https://raw.githubusercontent.com/taithai-tai/meemon/refs/heads/main/NFCV.2/sorry.jpg";
+        },
 
-          // ถ้าไม่มีโทเคน หรือโทเคนไม่ถูกต้อง
-          onInvalid() {
-            window.location.href = "https://raw.githubusercontent.com/taithai-tai/meemon/refs/heads/main/NFCV.2/sorry.jpg";
-          },
-        });
-      };
-    </script>
-  
+        // ถ้าไม่มีโทเคน หรือโทเคนไม่ถูกต้อง
+        onInvalid() {
+          window.location.href = "https://raw.githubusercontent.com/taithai-tai/meemon/refs/heads/main/NFCV.2/sorry.jpg";
+        },
+      });
+    };
+  </script>
+
   <div class="app-shell">
     <!-- HEADER -->
     <header class="top-bar">
@@ -457,93 +374,101 @@
       <span style="font-size:11px;color:var(--gold-soft);">เลือกหนึ่งอย่างเพื่อต่อไปยังหน้าใหม่</span>
     </div>
 
-   <section class="icon-grid">
-    <!-- ปุ่ม: ดูดวงไพ่ทาโรต์ 10 ใบ -->
-    <a href="https://taithai-tai.github.io/meemon/NFCV.2/taro/10/token.html"
-       class="icon-button">
-      <div class="icon-button-icon-wrap">
-        <!-- เดี๋ยวคุณค่อยเปลี่ยน path icon เองทีหลัง -->
-        <img src="https://taithai-tai.github.io/meemon/NFCV.2/Pictures/taro10.png" alt="ไพ่ทาโรต์ 10 ใบ">
-      </div>
-      <div class="icon-button-label">
-        <span class="title">ดูดวงไพ่ทาโรต์ 10 ใบ</span>
-        ดูดภาพรวมชีวิต การงาน ความรัก และอุปสรรค
-      </div>
-    </a>
-  
-    <!-- ปุ่ม: ดูดวงไพ่ทาโรต์ 3 ใบ -->
-    <a href="https://taithai-tai.github.io/meemon/NFCV.2/taro/3/token.html"
-       class="icon-button">
-      <div class="icon-button-icon-wrap">
-        <img src="https://taithai-tai.github.io/meemon/NFCV.2/Pictures/taro3.png" alt="ไพ่ทาโรต์ 3 ใบ">
-      </div>
-      <div class="icon-button-label">
-        <span class="title">ดูดวงไพ่ทาโรต์ 3 ใบ</span>
-        อ่านอดีต ปัจจุบัน และอนาคตในครั้งเดียว
-      </div>
-    </a>
-  
-    <!-- ปุ่ม: ดูดวงไพ่ทาโรต์ 1 ใบ -->
-    <a href="https://taithai-tai.github.io/meemon/NFCV.2/taro/1/token.html"
-       class="icon-button">
-      <div class="icon-button-icon-wrap">
-        <img src="https://taithai-tai.github.io/meemon/NFCV.2/Pictures/taro1.png" alt="ไพ่ทาโรต์ 1 ใบ">
-      </div>
-      <div class="icon-button-label">
-        <span class="title">ดูดวงไพ่ทาโรต์ 1 ใบ</span>
-        สุ่มคำแนะนำสั้น ๆ สำหรับวันนี้เท่านั้น
-      </div>
-    </a>
-  
-    <!-- ปุ่ม: สุ่มเลขมงคล -->
-    <a href="https://taithai-tai.github.io/meemon/NFCV.2/number/token.html"
-       class="icon-button">
-      <div class="icon-button-icon-wrap">
-        <img src="https://taithai-tai.github.io/meemon/NFCV.2/icons/number.png" alt="สุ่มเลขมงคล">
-      </div>
-      <div class="icon-button-label">
-        <span class="title">สุ่มเลขมงคล</span>
-        หาเลขเสี่ยงโชคประจำวันของคุณ
-      </div>
-    </a>
-      <!-- ปุ่มเสี่ยงเซียมซี -->
-      <a href="https://taithai-tai.github.io/meemon/NFCV.2/Seimsee/token.html" class="feature-card">
-        <div class="feature-icon-wrap">📜</div>
-        <div class="feature-text-title">เสี่ยงเซียมซี</div>
-        <div class="feature-text-sub">
-          เขย่ากระบอกเซียมซี (เวอร์ชันออนไลน์) เพื่อรับคำทำนายเป็นบทกลอน
+    <section class="icon-grid">
+      <!-- Tarot 10 -->
+      <a href="https://taithai-tai.github.io/meemon/NFCV.2/taro/10/token.html"
+         class="icon-button">
+        <div class="icon-button-icon-wrap">
+          <img src="https://taithai-tai.github.io/meemon/NFCV.2/Pictures/taro10.png" alt="ไพ่ทาโรต์ 10 ใบ">
         </div>
-        <div class="feature-tag">เซียมซี 1–24 ใบ</div>
+        <div class="icon-button-label">
+          <span class="title">ดูดวงไพ่ทาโรต์ 10 ใบ</span>
+          ดูภาพรวมชีวิต การงาน ความรัก และอุปสรรค
+        </div>
       </a>
 
-      <!-- ปุ่มเสี่ยงทายโยนไม้เซ้งปวย -->
-      <a href="https://taithai-tai.github.io/meemon/NFCV.2/Wood/token.html" class="feature-card">
-        <div class="feature-icon-wrap">🪵</div>
-        <div class="feature-text-title">เสี่ยงทายโยนไม้เซ้งปวย</div>
-        <div class="feature-text-sub">
-          ลากไม้ขึ้นด้านบนเพื่อ “โยน” แล้วดูผล: หงาย–คว่ำ–คนละด้าน พร้อมคำทำนาย
+      <!-- Tarot 3 -->
+      <a href="https://taithai-tai.github.io/meemon/NFCV.2/taro/3/token.html"
+         class="icon-button">
+        <div class="icon-button-icon-wrap">
+          <img src="https://taithai-tai.github.io/meemon/NFCV.2/Pictures/taro3.png" alt="ไพ่ทาโรต์ 3 ใบ">
         </div>
-        <div class="feature-tag">ไม้เซ้งปวย</div>
+        <div class="icon-button-label">
+          <span class="title">ดูดวงไพ่ทาโรต์ 3 ใบ</span>
+          อ่านอดีต ปัจจุบัน และอนาคตในครั้งเดียว
+        </div>
       </a>
 
-      <!-- ปุ่มดูดวงรายวัน -->
-      <a href="https://raw.githubusercontent.com/taithai-tai/meemon/refs/heads/main/NFCV.2/sorry%20not%20fin.jpg" class="feature-card">
-        <div class="feature-icon-wrap">📆</div>
-        <div class="feature-text-title">ดวงประจำวัน</div>
-        <div class="feature-text-sub">
-          สรุปดวงวันนี้แบบสั้น ๆ ทั้งการงาน การเงิน ความรัก และสุขภาพ
+      <!-- Tarot 1 -->
+      <a href="https://taithai-tai.github.io/meemon/NFCV.2/taro/1/token.html"
+         class="icon-button">
+        <div class="icon-button-icon-wrap">
+          <img src="https://taithai-tai.github.io/meemon/NFCV.2/Pictures/taro1.png" alt="ไพ่ทาโรต์ 1 ใบ">
         </div>
-        <div class="feature-tag">Today Summary</div>
+        <div class="icon-button-label">
+          <span class="title">ดูดวงไพ่ทาโรต์ 1 ใบ</span>
+          รับคำแนะนำสั้น ๆ สำหรับวันนี้
+        </div>
       </a>
 
-      <!-- ปุ่มช่องทางติดต่อ -->
-      <a href="https://raw.githubusercontent.com/taithai-tai/meemon/refs/heads/main/NFCV.2/sorry%20not%20fin.jpg" class="feature-card">
-        <div class="feature-icon-wrap">📲</div>
-        <div class="feature-text-title">ช่องทางติดต่อ</div>
-        <div class="feature-text-sub">
-          ติดต่อผู้ดูแลเว็บ / จองคิวดูดวงส่วนตัว ผ่าน Line, Facebook, Instagram หรืออีเมล
+      <!-- Lucky Number -->
+      <a href="https://taithai-tai.github.io/meemon/NFCV.2/number/token.html"
+         class="icon-button">
+        <div class="icon-button-icon-wrap">
+          <img src="https://taithai-tai.github.io/meemon/NFCV.2/Pictures/number.png" alt="สุ่มเลขมงคล">
         </div>
-        <div class="feature-tag">Contact & Social</div>
+        <div class="icon-button-label">
+          <span class="title">สุ่มเลขมงคล</span>
+          หาเลขเสี่ยงโชคประจำวันของคุณ
+        </div>
+      </a>
+
+      <!-- เซียมซี -->
+      <a href="https://taithai-tai.github.io/meemon/NFCV.2/Seimsee/token.html"
+         class="icon-button">
+        <div class="icon-button-icon-wrap">
+          <img src="https://taithai-tai.github.io/meemon/NFCV.2/Pictures/seimsee.png" alt="เสี่ยงเซียมซี">
+        </div>
+        <div class="icon-button-label">
+          <span class="title">เสี่ยงเซียมซี</span>
+          เขย่ากระบอกเซียมซีแบบออนไลน์ พร้อมคำทำนายเป็นกลอน
+        </div>
+      </a>
+
+      <!-- ไม้เซ้งปวย -->
+      <a href="https://taithai-tai.github.io/meemon/NFCV.2/Wood/token.html"
+         class="icon-button">
+        <div class="icon-button-icon-wrap">
+          <img src="https://taithai-tai.github.io/meemon/NFCV.2/Pictures/wood.png" alt="ไม้เซ้งปวย">
+        </div>
+        <div class="icon-button-label">
+          <span class="title">เสี่ยงทายโยนไม้เซ้งปวย</span>
+          ลากไม้ขึ้นด้านบนเพื่อ “โยน” แล้วดูผลทำนาย
+        </div>
+      </a>
+
+      <!-- ดวงประจำวัน -->
+      <a href="https://raw.githubusercontent.com/taithai-tai/meemon/refs/heads/main/NFCV.2/sorry%20not%20fin.jpg"
+         class="icon-button">
+        <div class="icon-button-icon-wrap">
+          <img src="https://taithai-tai.github.io/meemon/NFCV.2/Pictures/daily.png" alt="ดวงประจำวัน">
+        </div>
+        <div class="icon-button-label">
+          <span class="title">ดวงประจำวัน</span>
+          สรุปดวงวันนี้ ทั้งการงาน การเงิน ความรัก และสุขภาพ
+        </div>
+      </a>
+
+      <!-- ช่องทางติดต่อ -->
+      <a href="https://raw.githubusercontent.com/taithai-tai/meemon/refs/heads/main/NFCV.2/sorry%20not%20fin.jpg"
+         class="icon-button">
+        <div class="icon-button-icon-wrap">
+          <img src="https://taithai-tai.github.io/meemon/NFCV.2/Pictures/contact.png" alt="ช่องทางติดต่อ">
+        </div>
+        <div class="icon-button-label">
+          <span class="title">ช่องทางติดต่อ</span>
+          ติดต่อผู้ดูแลเว็บ / จองคิวดูดวงส่วนตัว
+        </div>
       </a>
     </section>
 
