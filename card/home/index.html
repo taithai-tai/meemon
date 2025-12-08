@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mutelu Card - บัตรมูทำนายดวง</title>
+    <title>Meemon - บัตรมูทำนายดวง</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
@@ -190,9 +190,17 @@
     <!-- Header -->
     <header class="w-full text-center py-6 z-10">
         <div class="inline-flex items-center gap-3 mb-2">
-            <i data-lucide="moon" class="text-yellow-500 w-5 h-5 fill-yellow-500/20"></i>
-            <h1 class="text-3xl font-bold tracking-widest text-gold-gradient drop-shadow-md">MUTELU</h1>
-            <i data-lucide="star" class="text-yellow-500 w-5 h-5 fill-yellow-500/20"></i>
+            <!-- Small Logo Icon (Left) - NEW LOGO - Made Bigger (w-16 h-16) -->
+            <img src="https://raw.githubusercontent.com/taithai-tai/meemon/refs/heads/main/Picture/logo.png" 
+                 alt="Logo Left" 
+                 class="w-16 h-16 object-contain drop-shadow-md hover:scale-110 transition-transform">
+            
+            <h1 class="text-5xl font-bold tracking-widest text-gold-gradient drop-shadow-md mt-2">MEEMON</h1>
+            
+            <!-- Small Logo Icon (Right) - NEW LOGO - Made Bigger (w-16 h-16) -->
+            <img src="https://raw.githubusercontent.com/taithai-tai/meemon/refs/heads/main/Picture/logo.png" 
+                 alt="Logo Right" 
+                 class="w-16 h-16 object-contain drop-shadow-md hover:scale-110 transition-transform">
         </div>
         <div class="flex items-center justify-center gap-2 opacity-60">
             <div class="h-[1px] w-8 bg-gradient-to-r from-transparent to-yellow-500"></div>
@@ -209,11 +217,16 @@
             <div class="mystic-panel p-8 text-center relative overflow-hidden group">
                 <div class="absolute inset-0 bg-gradient-to-b from-purple-500/5 to-transparent pointer-events-none"></div>
                 <div class="relative z-10">
-                    <div class="w-20 h-20 mx-auto mb-4 rounded-full border border-yellow-500/50 p-1 bg-black/40 shadow-[0_0_20px_rgba(212,175,55,0.2)]">
-                        <img src="https://api.dicebear.com/9.x/glass/svg?seed=witch" alt="Mascot" class="w-full h-full rounded-full opacity-80">
+                    
+                    <!-- *** MAIN LOGO DISPLAY (NEW LOGO) - Made Bigger (w-56 h-56) *** -->
+                    <div class="w-56 h-56 mx-auto mb-6 drop-shadow-[0_0_25px_rgba(212,175,55,0.4)]">
+                        <img src="https://raw.githubusercontent.com/taithai-tai/meemon/refs/heads/main/Picture/logo.png" 
+                             alt="Meemon Logo" 
+                             class="w-full h-full object-contain">
                     </div>
-                    <h2 class="text-xl font-bold text-yellow-100 mb-2">ยินดีต้อนรับผู้ศรัทธา</h2>
-                    <p class="text-xs text-gray-400 font-light leading-relaxed">
+                    
+                    <h2 class="text-2xl font-bold text-yellow-100 mb-2">ยินดีต้อนรับสู่ MEEMON</h2>
+                    <p class="text-sm text-gray-400 font-light leading-relaxed">
                         ดวงชะตาฟ้าลิขิต หรือจิตท่านกำหนด<br>
                         เลือกหนทางที่ท่านปรารถนาจะรู้แจ้ง
                     </p>
@@ -261,9 +274,13 @@
                     <div class="card-front">
                         <div class="card-symbol">
                             <div class="text-center transform translate-y-2">
-                                <i data-lucide="sparkles" class="w-8 h-8 text-yellow-600/50 mx-auto mb-4 animate-pulse"></i>
-                                <span class="mystic-font text-yellow-600/80 font-bold tracking-[0.3em] text-xl block">FATE</span>
-                                <div class="mt-4 w-16 h-[1px] bg-yellow-600/30 mx-auto"></div>
+                                <!-- Card Back Icon using NEW LOGO - Made Bigger (w-32 h-32) -->
+                                <img src="https://raw.githubusercontent.com/taithai-tai/meemon/refs/heads/main/Picture/logo.png" 
+                                     alt="Fate Icon" 
+                                     class="w-32 h-32 mx-auto mb-4 object-contain opacity-90 drop-shadow-md">
+                                
+                                <span class="mystic-font text-yellow-600/80 font-bold tracking-[0.3em] text-2xl block">FATE</span>
+                                <div class="mt-4 w-20 h-[2px] bg-yellow-600/30 mx-auto"></div>
                             </div>
                         </div>
                     </div>
@@ -297,9 +314,14 @@
 
         <!-- WALLPAPER PAGE -->
         <div id="wallpaper-view" class="w-full hidden flex-col items-center">
-            <button onclick="goHome()" class="self-start mb-6 flex items-center text-xs text-yellow-500/70 hover:text-yellow-400 uppercase tracking-widest transition-colors">
-                <i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i> Back
+            <button onclick="window.location.href='https://taithai-tai.github.io/meemon/card/Wallpaper/';"
+                    class="mt-6 w-full bg-gradient-to-r from-yellow-700 to-yellow-600 hover:from-yellow-600 hover:to-yellow-500 text-white font-bold py-3 rounded-lg shadow-lg shadow-yellow-900/20 transition-all border border-yellow-400/20 active:scale-95">
+                <span class="flex items-center justify-center gap-2">
+                    <i data-lucide="pen-tool" class="w-4 h-4"></i>
+                    ปลุกเสกวอลเปเปอร์
+                </span>
             </button>
+
 
             <div class="mystic-panel w-full p-6 mb-6">
                 <label class="block text-xs text-yellow-100/70 uppercase tracking-wider mb-3">สิ่งที่ท่านปรารถนา:</label>
@@ -341,7 +363,7 @@
     </main>
 
     <footer class="mt-8 text-center pb-4">
-        <p class="text-[10px] text-white/20 uppercase tracking-[0.3em]">Mutelu Card</p>
+        <p class="text-[10px] text-white/20 uppercase tracking-[0.3em]">MEEMON Card</p>
     </footer>
 
     <script>
@@ -560,7 +582,7 @@
             // Footer
             ctx.font = '30px Cinzel';
             ctx.fillStyle = 'rgba(255,255,255,0.4)';
-            ctx.fillText("MUTELU CARD OFFICIAL", canvas.width/2, canvas.height - 100);
+            ctx.fillText("MEEMON OFFICIAL", canvas.width/2, canvas.height - 100);
 
             // Convert to Image
             const dataUrl = canvas.toDataURL('image/png');
