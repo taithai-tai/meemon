@@ -4,10 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meemon - บัตรมูทำนายดวง</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-
+    
     <style>
         :root {
             --gold: #d4af37;
@@ -28,6 +31,7 @@
             font-family: 'Cinzel', serif;
         }
 
+        /* Ambient Animation Background */
         .fog-container {
             position: fixed;
             top: 0;
@@ -36,8 +40,9 @@
             height: 100%;
             pointer-events: none;
             z-index: -1;
+            overflow: hidden;
         }
-
+        
         .star {
             position: absolute;
             background: white;
@@ -53,40 +58,121 @@
             100% { opacity: 0; transform: scale(0.5); }
         }
 
+        /* Card Flip Animation */
         .perspective-1000 {
             perspective: 1000px;
         }
-
+        
         .card-inner {
             position: relative;
             width: 100%;
             height: 100%;
-            transition: transform 0.8s;
+            text-align: center;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             transform-style: preserve-3d;
         }
-
+        
         .card-inner.flipped {
             transform: rotateY(180deg);
         }
-
+        
         .card-front, .card-back {
             position: absolute;
             width: 100%;
             height: 100%;
+            -webkit-backface-visibility: hidden;
             backface-visibility: hidden;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+        }
+        
+        /* Mystic Card Back */
+        .card-front {
+            background: #1a1a1a;
+            border: 2px solid var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Complex Pattern */
+            background-image: 
+                radial-gradient(circle at center, transparent 0%, #1a1a1a 100%),
+                repeating-linear-gradient(45deg, rgba(212, 175, 55, 0.1) 0px, rgba(212, 175, 55, 0.1) 2px, transparent 2px, transparent 10px);
         }
 
+        .card-symbol {
+            width: 80%;
+            height: 80%;
+            border: 1px solid rgba(212, 175, 55, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .card-symbol::before {
+            content: '';
+            position: absolute;
+            width: 70%;
+            height: 70%;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            transform: rotate(45deg);
+        }
+        
+        .card-back {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            color: #1e1b4b;
+            transform: rotateY(180deg);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            border: 4px double var(--gold);
+        }
+
+        /* Dark Mystic Panel */
+        .mystic-panel {
+            background: rgba(10, 5, 20, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            border-radius: 1rem;
+        }
+
+        /* Button Glow */
         .btn-mystic {
             background: linear-gradient(180deg, #2d1b4e 0%, #1a0b2e 100%);
             border: 1px solid rgba(212, 175, 55, 0.4);
-            transition: .3s;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
-
+        
         .btn-mystic:hover {
             border-color: var(--gold);
             box-shadow: var(--gold-glow);
+            transform: translateY(-2px);
+        }
+        
+        .btn-mystic::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            opacity: 0;
+            transform: scale(0.5);
+            transition: opacity 0.5s, transform 0.5s;
+        }
+        
+        .btn-mystic:active::after {
+            opacity: 1;
+            transform: scale(1);
+            transition: 0s;
         }
 
+        /* Text Gradients */
         .text-gold-gradient {
             background: linear-gradient(to bottom, #ffd700, #b8860b);
             -webkit-background-clip: text;
@@ -94,143 +180,419 @@
         }
     </style>
 </head>
-
 <body class="flex flex-col items-center justify-between p-4">
 
-    <div class="fog-container" id="stars-container"></div>
+    <!-- Ambient Background -->
+    <div class="fog-container" id="stars-container">
+        <!-- Stars will be injected by JS -->
+    </div>
 
+    <!-- Header -->
     <header class="w-full text-center py-6 z-10">
         <div class="inline-flex items-center gap-3 mb-2">
-            <img src="https://raw.githubusercontent.com/taithai-tai/meemon/refs/heads/main/Picture/logo.png" class="w-16 h-16">
-            <h1 class="text-5xl font-bold text-gold-gradient">MEEMON</h1>
-            <img src="https://raw.githubusercontent.com/taithai-tai/meemon/refs/heads/main/Picture/logo.png" class="w-16 h-16">
+            <!-- Small Logo Icon (Left) -->
+            <img src="https://raw.githubusercontent.com/taithai-tai/meemon/refs/heads/main/Picture/logo.png" 
+                 alt="Logo Left" 
+                 class="w-16 h-16 object-contain drop-shadow-md hover:scale-110 transition-transform">
+            
+            <h1 class="text-5xl font-bold tracking-widest text-gold-gradient drop-shadow-md mt-2">MEEMON</h1>
+            
+            <!-- Small Logo Icon (Right) -->
+            <img src="https://raw.githubusercontent.com/taithai-tai/meemon/refs/heads/main/Picture/logo.png" 
+                 alt="Logo Right" 
+                 class="w-16 h-16 object-contain drop-shadow-md hover:scale-110 transition-transform">
+        </div>
+        <div class="flex items-center justify-center gap-2 opacity-60">
+            <div class="h-[1px] w-8 bg-gradient-to-r from-transparent to-yellow-500"></div>
+            <p class="text-[10px] tracking-[0.2em] text-yellow-100 uppercase font-light">Destiny & Faith</p>
+            <div class="h-[1px] w-8 bg-gradient-to-l from-transparent to-yellow-500"></div>
         </div>
     </header>
 
+    <!-- Main Content Area -->
     <main id="app-container" class="w-full max-w-md flex-grow flex flex-col items-center justify-center relative z-10">
+        
+        <!-- HOME PAGE -->
+        <div id="home-view" class="w-full flex flex-col gap-6 animate-fade-in">
+            <div class="mystic-panel p-8 text-center relative overflow-hidden group">
+                <div class="absolute inset-0 bg-gradient-to-b from-purple-500/5 to-transparent pointer-events-none"></div>
+                <div class="relative z-10">
+                    
+                    <!-- *** MAIN LOGO DISPLAY *** -->
+                    <div class="w-56 h-56 mx-auto mb-6 drop-shadow-[0_0_25px_rgba(212,175,55,0.4)]">
+                        <img src="https://raw.githubusercontent.com/taithai-tai/meemon/refs/heads/main/Picture/logo.png" 
+                             alt="Meemon Logo" 
+                             class="w-full h-full object-contain">
+                    </div>
+                    
+                    <h2 class="text-2xl font-bold text-yellow-100 mb-2">ยินดีต้อนรับสู่ MEEMON</h2>
+                    <p class="text-sm text-gray-400 font-light leading-relaxed">
+                        ดวงชะตาฟ้าลิขิต หรือจิตท่านกำหนด<br>
+                        เลือกหนทางที่ท่านปรารถนาจะรู้แจ้ง
+                    </p>
+                </div>
+            </div>
 
-        <!-- HOME -->
-        <div id="home-view" class="w-full flex flex-col gap-6">
             <div class="space-y-4">
                 <button onclick="goToFortune()" class="btn-mystic w-full p-5 rounded-xl flex items-center justify-between group">
                     <div class="flex items-center gap-4">
-                        <div class="bg-black/30 p-3 rounded-lg">
-                            <i data-lucide="eye" class="text-purple-300 w-6 h-6"></i>
+                        <div class="bg-black/40 border border-purple-500/30 p-3 rounded-lg group-hover:border-yellow-500/50 transition-colors">
+                            <i data-lucide="eye" class="text-purple-300 w-6 h-6 group-hover:text-yellow-400 transition-colors"></i>
                         </div>
                         <div class="text-left">
                             <h3 class="font-bold text-lg text-yellow-50">ทำนายดวงชะตา</h3>
+                            <p class="text-[10px] text-purple-200/60 uppercase tracking-wide">Pick a Card</p>
                         </div>
                     </div>
+                    <i data-lucide="chevron-right" class="text-purple-500/50 group-hover:text-yellow-500 transition-colors"></i>
                 </button>
 
-                <!-- 🟡 ปุ่มที่แก้ให้ -->
-                <button onclick="window.open('https://www.google.com', '_blank');"
-                        class="btn-mystic w-full p-5 rounded-xl flex items-center justify-between group">
+                <button onclick="goToWallpaper()" class="btn-mystic w-full p-5 rounded-xl flex items-center justify-between group">
                     <div class="flex items-center gap-4">
-                        <div class="bg-black/30 p-3 rounded-lg">
-                            <i data-lucide="smartphone" class="text-teal-300 w-6 h-6"></i>
+                        <div class="bg-black/40 border border-teal-500/30 p-3 rounded-lg group-hover:border-yellow-500/50 transition-colors">
+                            <i data-lucide="smartphone" class="text-teal-300 w-6 h-6 group-hover:text-yellow-400 transition-colors"></i>
                         </div>
                         <div class="text-left">
                             <h3 class="font-bold text-lg text-yellow-50">ยันต์วอลเปเปอร์</h3>
+                            <p class="text-[10px] text-teal-200/60 uppercase tracking-wide">Sacred Wallpaper</p>
                         </div>
                     </div>
+                    <i data-lucide="chevron-right" class="text-teal-500/50 group-hover:text-yellow-500 transition-colors"></i>
                 </button>
             </div>
         </div>
 
-        <!-- FORTUNE -->
+        <!-- FORTUNE PAGE -->
         <div id="fortune-view" class="w-full hidden flex-col items-center">
-            <button onclick="goHome()" class="text-xs text-yellow-500/70">Back</button>
+            <button onclick="goHome()" class="self-start mb-6 flex items-center text-xs text-yellow-500/70 hover:text-yellow-400 uppercase tracking-widest transition-colors">
+                <i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i> Back
+            </button>
 
-            <div class="perspective-1000 w-64 h-96 cursor-pointer" onclick="flipCard()">
+            <div class="perspective-1000 w-64 h-96 cursor-pointer group mb-4" onclick="flipCard()">
                 <div id="the-card" class="card-inner">
-                    <div class="card-front bg-black"></div>
-                    <div class="card-back bg-yellow-50 text-black p-4 rotate-y-180">
-                        <h3 id="card-title">Name</h3>
-                        <div id="card-icon" class="text-5xl">🔮</div>
-                        <p id="card-desc">Meaning...</p>
-                        <p id="card-lucky">88</p>
+                    <!-- Front (Hidden) -->
+                    <div class="card-front">
+                        <div class="card-symbol">
+                            <div class="text-center transform translate-y-2">
+                                <!-- Card Back Icon -->
+                                <img src="https://raw.githubusercontent.com/taithai-tai/meemon/refs/heads/main/Picture/logo.png" 
+                                     alt="Fate Icon" 
+                                     class="w-32 h-32 mx-auto mb-4 object-contain opacity-90 drop-shadow-md">
+                                
+                                <span class="mystic-font text-yellow-600/80 font-bold tracking-[0.3em] text-2xl block">FATE</span>
+                                <div class="mt-4 w-20 h-[2px] bg-yellow-600/30 mx-auto"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Back (Revealed) -->
+                    <div class="card-back">
+                        <div class="w-full text-center border-b border-yellow-200 pb-2">
+                            <div class="text-[10px] text-gray-500 uppercase tracking-[0.2em] mb-1">The Oracle Says</div>
+                            <h3 id="card-title" class="text-xl font-bold text-slate-800 mystic-font">Name</h3>
+                        </div>
+                        
+                        <div id="card-icon" class="text-5xl my-2 opacity-90 drop-shadow-sm filter hue-rotate-15">🔮</div>
+                        
+                        <div class="text-center px-1 flex-grow flex items-center">
+                            <p id="card-desc" class="text-sm text-slate-600 leading-7 font-light">Meaning goes here...</p>
+                        </div>
+
+                        <div class="w-full border-t border-yellow-200 pt-2 flex justify-between items-center px-4">
+                            <span class="text-[10px] text-gray-400 uppercase">Lucky No.</span>
+                            <span id="card-lucky" class="text-lg font-bold text-yellow-700 mystic-font">88</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <button id="reset-card-btn" onclick="resetCard()" class="btn-mystic px-8 py-3 rounded-full text-sm font-bold text-yellow-100 opacity-0 pointer-events-none">
-                สุ่มใหม่
+            <p class="text-xs text-purple-300/50 mb-6 italic" id="tap-hint">แตะที่ไพ่เพื่อเปิดคำทำนาย</p>
+
+            <button id="reset-card-btn" onclick="resetCard()" class="btn-mystic px-8 py-3 rounded-full text-sm font-bold text-yellow-100 border border-yellow-500/30 opacity-0 pointer-events-none transition-all hover:text-white hover:border-yellow-400">
+                สุ่มชะตาใหม่
             </button>
+        </div>
+
+        <!-- WALLPAPER PAGE -->
+        <div id="wallpaper-view" class="w-full hidden flex-col items-center">
+            <button onclick="goHome()" class="self-start mb-6 flex items-center text-xs text-yellow-500/70 hover:text-yellow-400 uppercase tracking-widest transition-colors">
+                <i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i> Back
+            </button>
+
+            <div class="mystic-panel w-full p-6 mb-6">
+                <label class="block text-xs text-yellow-100/70 uppercase tracking-wider mb-3">สิ่งที่ท่านปรารถนา:</label>
+                <div class="relative">
+                    <select id="wallpaper-topic" class="w-full appearance-none bg-black/50 border border-purple-500/30 text-gray-200 text-sm rounded-lg p-3 pr-10 focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500/50 transition-all">
+                        <option value="wealth">💰 มหาเศรษฐี (Wealth)</option>
+                        <option value="love">💘 เสน่หา (Love)</option>
+                        <option value="work">🦁 อำนาจ บารมี (Power)</option>
+                        <option value="health">🌿 อายุวัฒนะ (Health)</option>
+                    </select>
+                    <i data-lucide="chevron-down" class="absolute right-3 top-3.5 w-4 h-4 text-purple-400 pointer-events-none"></i>
+                </div>
+                
+                <button onclick="generateWallpaper()" class="mt-6 w-full bg-gradient-to-r from-yellow-700 to-yellow-600 hover:from-yellow-600 hover:to-yellow-500 text-white font-bold py-3 rounded-lg shadow-lg shadow-yellow-900/20 transition-all border border-yellow-400/20 active:scale-95">
+                    <span class="flex items-center justify-center gap-2">
+                        <i data-lucide="pen-tool" class="w-4 h-4"></i>
+                        ปลุกเสกวอลเปเปอร์
+                    </span>
+                </button>
+            </div>
+
+            <!-- Canvas Container (Hidden but used for generation) -->
+            <canvas id="wp-canvas" width="1080" height="1920" style="display: none;"></canvas>
+
+            <!-- Result Display -->
+            <div id="wallpaper-result" class="hidden flex-col items-center w-full animate-fade-in pb-10">
+                <div class="relative w-2/3 group">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-yellow-600 to-purple-600 rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
+                    <img id="generated-image" class="relative w-full rounded-xl shadow-2xl border border-white/10" alt="Wallpaper">
+                </div>
+                
+                <div class="mt-6 text-center space-y-1">
+                    <p class="text-xs text-yellow-200/80">แตะค้างที่รูปเพื่อบันทึก</p>
+                    <p class="text-[10px] text-gray-500 uppercase tracking-widest">Sacred Image Generated</p>
+                </div>
+            </div>
         </div>
 
     </main>
 
-    <footer class="mt-8 text-center pb-4 text-[10px] text-white/20">
-        MEEMON Card
+    <footer class="mt-8 text-center pb-4">
+        <p class="text-[10px] text-white/20 uppercase tracking-[0.3em]">MEEMON Card</p>
     </footer>
 
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
 
-<script>
-// icons
-lucide.createIcons();
+        // Create Star Background
+        const starsContainer = document.getElementById('stars-container');
+        const starCount = 30;
+        
+        for (let i = 0; i < starCount; i++) {
+            const star = document.createElement('div');
+            star.classList.add('star');
+            
+            // Random properties
+            const x = Math.random() * 100;
+            const y = Math.random() * 100;
+            const size = Math.random() * 3 + 1; // 1-4px
+            const duration = Math.random() * 3 + 2; // 2-5s
+            const delay = Math.random() * 5;
+            const opacity = Math.random() * 0.5 + 0.3;
 
-// stars background
-const starsContainer = document.getElementById('stars-container');
-for (let i = 0; i < 30; i++) {
-    const star = document.createElement('div');
-    star.classList.add('star');
-    star.style.left = Math.random() * 100 + '%';
-    star.style.top = Math.random() * 100 + '%';
-    star.style.width = star.style.height = Math.random() * 3 + 1 + 'px';
-    star.style.setProperty('--duration', (Math.random() * 3 + 2) + 's');
-    star.style.setProperty('--delay', (Math.random() * 5) + 's');
-    star.style.setProperty('--opacity', (Math.random() * .5 + .3));
-    starsContainer.appendChild(star);
-}
+            star.style.left = `${x}%`;
+            star.style.top = `${y}%`;
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+            star.style.setProperty('--duration', `${duration}s`);
+            star.style.setProperty('--delay', `${delay}s`);
+            star.style.setProperty('--opacity', opacity);
 
-const cards = [
-    { name:"The Sun", icon:"☀️", meaning:"สำเร็จ", lucky:"1,9" },
-    { name:"The Star", icon:"✨", meaning:"ความหวัง", lucky:"17" }
-];
+            starsContainer.appendChild(star);
+        }
 
-function goHome() {
-    hideAll();
-    show("home-view");
-}
+        // Data: Cards (Updated with darker/mystic tone)
+        const cards = [
+            { name: "The Sun", icon: "☀️", meaning: "แสงสว่างแห่งปัญญาจักส่องทาง ความสำเร็จอันรุ่งโรจน์รออยู่เบื้องหน้า อุปสรรคจักมลายสิ้น", lucky: "1, 9" },
+            { name: "The Lovers", icon: "❤️‍🔥", meaning: "ทางแยกแห่งโชคชะตา หัวใจจักนำทางเจ้า จงเลือกด้วยความรักมิใช่ความกลัว", lucky: "2, 6" },
+            { name: "Wheel of Fortune", icon: "☸️", meaning: "กงล้อแห่งกรรมกำลังหมุน สิ่งใดที่ทำไว้จักย้อนคืน โอกาสใหม่จักปรากฏดั่งปาฏิหาริย์", lucky: "10" },
+            { name: "The Magician", icon: "🔮", meaning: "อำนาจอยู่ในมือเจ้า ธาตุทั้งสี่จักเกื้อหนุน จงลงมือทำสิ่งที่คิดฝันให้เป็นจริง", lucky: "1, 5" },
+            { name: "The Star", icon: "✨", meaning: "ความหวังดั่งดาราบนฟากฟ้า การเยียวยาจิตวิญญาณ ความสงบสุขจักบังเกิด", lucky: "17" },
+            { name: "The Empress", icon: "👑", meaning: "ความอุดมสมบูรณ์พูนสุข เสน่ห์อันเหลือล้น ลาภยศสรรเสริญจักหลั่งไหลเข้ามา", lucky: "3" },
+            { name: "Ace of Pentacles", icon: "💎", meaning: "ประตูขุมทรัพย์เปิดออก ลาภลอยหรือโอกาสทองทางการเงินจักเข้ามา จงไขว่คว้าไว้", lucky: "8" },
+            { name: "The Moon", icon: "🌙", meaning: "ความลึกลับซ่อนเร้น จงเชื่อในสัญชาตญาณ ระวังภาพลวงตา แต่ความจริงจักเปิดเผยในไม่ช้า", lucky: "18" },
+            { name: "Death", icon: "💀", meaning: "จุดจบคือการเริ่มต้นใหม่ การเปลี่ยนแปลงครั้งใหญ่จักนำพาชีวิตไปสู่หนทางที่ดีกว่าเดิม", lucky: "13" }
+        ];
 
-function goToFortune() {
-    hideAll();
-    show("fortune-view");
-}
+        // Navigation Functions
+        function goHome() {
+            hideAllViews();
+            document.getElementById('home-view').classList.remove('hidden');
+            document.getElementById('home-view').classList.add('flex');
+            const cardInner = document.getElementById('the-card');
+            if(cardInner.classList.contains('flipped')) {
+                setTimeout(resetCard, 300);
+            }
+        }
 
-function show(id) {
-    document.getElementById(id).classList.remove("hidden");
-    document.getElementById(id).classList.add("flex");
-}
+        function goToFortune() {
+            hideAllViews();
+            document.getElementById('fortune-view').classList.remove('hidden');
+            document.getElementById('fortune-view').classList.add('flex');
+        }
 
-function hideAll() {
-    ["home-view","fortune-view"].forEach(id=>{
-        document.getElementById(id).classList.add("hidden");
-        document.getElementById(id).classList.remove("flex");
-    });
-}
+        function goToWallpaper() {
+            hideAllViews();
+            document.getElementById('wallpaper-view').classList.remove('hidden');
+            document.getElementById('wallpaper-view').classList.add('flex');
+        }
 
-let flipped = false;
+        function hideAllViews() {
+            ['home-view', 'fortune-view', 'wallpaper-view'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+                document.getElementById(id).classList.remove('flex');
+            });
+        }
 
-function flipCard() {
-    if (flipped) return;
-    const card = cards[Math.floor(Math.random() * cards.length)];
-    the-card.classList.add("flipped");
-    document.getElementById("card-title").innerText = card.name;
-    document.getElementById("card-icon").innerText = card.icon;
-    document.getElementById("card-desc").innerText = card.meaning;
-    document.getElementById("card-lucky").innerText = card.lucky;
-    document.getElementById("reset-card-btn").classList.remove("opacity-0","pointer-events-none");
-    flipped = true;
-}
+        // Fortune Feature Logic
+        let isFlipped = false;
 
-function resetCard() {
-    the-card.classList.remove("flipped");
-    document.getElementById("reset-card-btn").classList.add("opacity-0","pointer-events-none");
-    flipped = false;
-}
-</script>
+        function flipCard() {
+            if (isFlipped) return;
+            
+            // Hide hint
+            document.getElementById('tap-hint').style.opacity = '0';
+            
+            // Randomize Card
+            const card = cards[Math.floor(Math.random() * cards.length)];
+            
+            // Update UI
+            document.getElementById('card-title').innerText = card.name;
+            document.getElementById('card-icon').innerText = card.icon;
+            document.getElementById('card-desc').innerText = card.meaning;
+            document.getElementById('card-lucky').innerText = card.lucky;
 
+            // Flip Animation
+            const cardInner = document.getElementById('the-card');
+            cardInner.classList.add('flipped');
+            isFlipped = true;
+
+            // Show Reset Button
+            const resetBtn = document.getElementById('reset-card-btn');
+            resetBtn.classList.remove('opacity-0', 'pointer-events-none');
+        }
+
+        function resetCard() {
+            const cardInner = document.getElementById('the-card');
+            cardInner.classList.remove('flipped');
+            isFlipped = false;
+            
+            // Show hint back
+            document.getElementById('tap-hint').style.opacity = '1';
+            
+            const resetBtn = document.getElementById('reset-card-btn');
+            resetBtn.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        // Wallpaper Feature Logic
+        function generateWallpaper() {
+            const canvas = document.getElementById('wp-canvas');
+            const ctx = canvas.getContext('2d');
+            const topic = document.getElementById('wallpaper-topic').value;
+
+            // Colors based on topic (Darker theme)
+            let colors = [];
+            let text = "";
+            let emoji = "";
+            let subtext = "";
+
+            switch(topic) {
+                case 'wealth':
+                    colors = ['#0f2027', '#203a43', '#2c5364']; // Dark Teal
+                    text = "มหาเศรษฐี";
+                    subtext = "WEALTH & FORTUNE";
+                    emoji = "💰";
+                    break;
+                case 'love':
+                    colors = ['#2b0a1a', '#4a1228', '#851e3e']; // Dark Crimson
+                    text = "เมตตามหานิยม";
+                    subtext = "LOVE & ATTRACTION";
+                    emoji = "💘";
+                    break;
+                case 'work':
+                    colors = ['#000000', '#1a0b2e', '#4338ca']; // Deep Indigo
+                    text = "อำนาจ วาสนา";
+                    subtext = "POWER & GLORY";
+                    emoji = "🦁";
+                    break;
+                case 'health':
+                    colors = ['#051c14', '#0d3626', '#145239']; // Deep Forest
+                    text = "อายุวัฒนะ";
+                    subtext = "HEALTH & VITALITY";
+                    emoji = "🌿";
+                    break;
+            }
+
+            // 1. Background
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            colors.forEach((color, index) => {
+                gradient.addColorStop(index / (colors.length - 1), color);
+            });
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 2. Mystic Geometry (Circles)
+            ctx.strokeStyle = 'rgba(255, 215, 0, 0.1)'; // Gold faint
+            ctx.lineWidth = 2;
+            
+            // Concentric circles
+            for(let i=1; i<=5; i++) {
+                ctx.beginPath();
+                ctx.arc(canvas.width/2, canvas.height/2, 150 * i, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+            
+            // Rotate square
+            ctx.save();
+            ctx.translate(canvas.width/2, canvas.height/2);
+            ctx.rotate(Math.PI / 4);
+            ctx.strokeRect(-400, -400, 800, 800);
+            ctx.restore();
+
+            // 3. Central Glow
+            const glow = ctx.createRadialGradient(canvas.width/2, canvas.height/2, 50, canvas.width/2, canvas.height/2, 600);
+            glow.addColorStop(0, 'rgba(255, 215, 0, 0.1)');
+            glow.addColorStop(1, 'transparent');
+            ctx.fillStyle = glow;
+            ctx.fillRect(0,0, canvas.width, canvas.height);
+
+            // 4. Content
+            ctx.fillStyle = '#FFFFFF';
+            ctx.textAlign = 'center';
+            
+            // Emoji Background
+            ctx.fillStyle = 'rgba(0,0,0,0.3)';
+            ctx.beginPath();
+            ctx.arc(canvas.width/2, canvas.height/2 - 120, 180, 0, Math.PI*2);
+            ctx.fill();
+            
+            // Emoji
+            ctx.font = '220px serif';
+            ctx.fillStyle = '#fff';
+            ctx.fillText(emoji, canvas.width/2, canvas.height/2 - 50);
+
+            // Main Text (Prompt Font)
+            ctx.font = 'bold 90px Prompt'; 
+            ctx.shadowColor = 'rgba(0,0,0,0.8)';
+            ctx.shadowBlur = 20;
+            ctx.fillText(text, canvas.width/2, canvas.height/2 + 150);
+
+            // Sub Text (Cinzel)
+            ctx.font = '40px Cinzel'; // Serif for mystic feel
+            ctx.fillStyle = '#FFD700'; // Gold
+            ctx.letterSpacing = '10px';
+            ctx.fillText(subtext, canvas.width/2, canvas.height/2 + 230);
+
+            // Footer
+            ctx.font = '30px Cinzel';
+            ctx.fillStyle = 'rgba(255,255,255,0.4)';
+            ctx.fillText("MEEMON OFFICIAL", canvas.width/2, canvas.height - 100);
+
+            // Convert to Image
+            const dataUrl = canvas.toDataURL('image/png');
+            const img = document.getElementById('generated-image');
+            img.src = dataUrl;
+
+            // Show Result
+            document.getElementById('wallpaper-result').classList.remove('hidden');
+            document.getElementById('wallpaper-result').classList.add('flex');
+            
+            // Scroll to image
+            setTimeout(() => {
+                img.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
+    </script>
 </body>
 </html>
