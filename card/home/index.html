@@ -387,14 +387,14 @@
                 </div>
             </div>
             <div class="space-y-4">
-                <button onclick="goToFortune()" class="btn-mystic w-full p-5 rounded-xl flex items-center justify-between group">
+                <button onclick="playSound(clickSound); goToFortune()" class="btn-mystic w-full p-5 rounded-xl flex items-center justify-between group">
                     <div class="flex items-center gap-4">
                         <div class="bg-black/40 border border-purple-500/30 p-3 rounded-lg"><i data-lucide="eye" class="text-purple-300 w-6 h-6"></i></div>
                         <div class="text-left"><h3 class="font-bold text-lg text-yellow-50">ทำนายดวงชะตา</h3><p class="text-[10px] text-purple-200/60">Pick a Card</p></div>
                     </div>
                     <i data-lucide="chevron-right" class="text-purple-500/50"></i>
                 </button>
-                <button onclick="goToWallpaper()" class="btn-mystic w-full p-5 rounded-xl flex items-center justify-between group">
+                <button onclick="playSound(clickSound); goToWallpaper()" class="btn-mystic w-full p-5 rounded-xl flex items-center justify-between group">
                     <div class="flex items-center gap-4">
                         <div class="bg-black/40 border border-teal-500/30 p-3 rounded-lg"><i data-lucide="smartphone" class="text-teal-300 w-6 h-6"></i></div>
                         <div class="text-left"><h3 class="font-bold text-lg text-yellow-50">ยันต์วอลเปเปอร์</h3><p class="text-[10px] text-teal-200/60">Sacred Wallpaper</p></div>
@@ -406,7 +406,7 @@
 
         <!-- FORTUNE PAGE -->
         <div id="fortune-view" class="w-full hidden flex-col items-center">
-            <button onclick="goHome()" class="self-start mb-6 flex items-center text-xs text-yellow-500/70 hover:text-yellow-400 uppercase tracking-widest"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i> Back</button>
+            <button onclick="playSound(clickSound); goHome()" class="self-start mb-6 flex items-center text-xs text-yellow-500/70 hover:text-yellow-400 uppercase tracking-widest"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i> Back</button>
             <div class="perspective-1000 w-64 h-96 cursor-pointer group mb-4" onclick="flipCard()">
                 <div id="the-card" class="card-inner">
                     <div class="card-front">
@@ -430,12 +430,12 @@
                 </div>
             </div>
             <p class="text-xs text-purple-300/50 mb-6 italic" id="tap-hint">แตะที่ไพ่เพื่อเปิดคำทำนาย</p>
-            <button id="reset-card-btn" onclick="resetCard()" class="btn-mystic px-8 py-3 rounded-full text-sm font-bold text-yellow-100 border border-yellow-500/30 opacity-0 pointer-events-none">สุ่มชะตาใหม่</button>
+            <button id="reset-card-btn" onclick="playSound(clickSound); resetCard()" class="btn-mystic px-8 py-3 rounded-full text-sm font-bold text-yellow-100 border border-yellow-500/30 opacity-0 pointer-events-none">สุ่มชะตาใหม่</button>
         </div>
 
         <!-- WALLPAPER PAGE: Step 1 Select Day -->
         <div id="wallpaper-view" class="w-full hidden flex-col items-center">
-            <button onclick="goHome()" class="self-start mb-6 flex items-center text-xs text-yellow-500/70 hover:text-yellow-400 uppercase tracking-widest"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i> Back</button>
+            <button onclick="playSound(clickSound); goHome()" class="self-start mb-6 flex items-center text-xs text-yellow-500/70 hover:text-yellow-400 uppercase tracking-widest"><i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i> Back</button>
             <div id="day-selection-panel" class="mystic-panel w-full p-6 mb-6">
                 <label class="block text-center text-sm text-yellow-100/90 uppercase tracking-wider mb-4 font-bold">เลือกวันเกิดของท่าน</label>
                 <div class="day-grid mb-2">
@@ -471,11 +471,11 @@
 
             <!-- ASPECT SELECTION: Step 2 Stack Carousel -->
             <div id="aspect-selection-panel" class="hidden w-full flex-col items-center">
-                <button onclick="resetToDaySelection()" class="self-start mb-6 flex items-center text-xs text-yellow-500/70 hover:text-yellow-400 uppercase tracking-widest"><i data-lucide="arrow-left" class="w-3 h-3 mr-1"></i> เลือกวันใหม่</button>
+                <button onclick="playSound(clickSound); resetToDaySelection()" class="self-start mb-6 flex items-center text-xs text-yellow-500/70 hover:text-yellow-400 uppercase tracking-widest"><i data-lucide="arrow-left" class="w-3 h-3 mr-1"></i> เลือกวันใหม่</button>
                 
                 <div class="flex items-center justify-between w-full max-w-xs mb-2">
                     <button onclick="prevCard()" class="nav-btn"><i data-lucide="chevron-left"></i></button>
-                    <h3 class="text-gold-gradient font-bold text-lg tracking-widest">กดที่ไพ่เพื่อเลือก</h3>
+                    <h3 class="text-gold-gradient font-bold text-lg tracking-widest">เลือกไพ่ที่ปรารถนา</h3>
                     <button onclick="nextCard()" class="nav-btn"><i data-lucide="chevron-right"></i></button>
                 </div>
 
@@ -495,7 +495,7 @@
 
             <!-- RESULT DISPLAY -->
             <div id="wallpaper-result" class="hidden flex-col items-center w-full animate-fade-in pb-10">
-                <button onclick="resetToAspectSelection()" class="self-start mb-4 flex items-center text-xs text-yellow-500/70 hover:text-yellow-400 uppercase tracking-widest"><i data-lucide="arrow-left" class="w-3 h-3 mr-1"></i> เปลี่ยนคำขอ</button>
+                <button onclick="playSound(clickSound); resetToAspectSelection()" class="self-start mb-4 flex items-center text-xs text-yellow-500/70 hover:text-yellow-400 uppercase tracking-widest"><i data-lucide="arrow-left" class="w-3 h-3 mr-1"></i> เปลี่ยนคำขอ</button>
                 <div class="relative w-2/3 group mb-4">
                     <div class="absolute -inset-1 bg-gradient-to-r from-yellow-600 to-purple-600 rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
                     <!-- The generated image will populate here -->
@@ -513,6 +513,19 @@
 
     <script>
         lucide.createIcons();
+        
+        // --- SOUNDS ---
+        const clickSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
+        const flipSound = new Audio('https://cdn.pixabay.com/audio/2022/03/10/audio_71e4fc8a6e.mp3');
+        const magicSound = new Audio('https://cdn.pixabay.com/audio/2024/12/20/audio_d3efed8c6c.mp3');
+        const successSound = new Audio('https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3');
+        
+        // Helper to play sound with reset
+        function playSound(audio) {
+            audio.currentTime = 0;
+            audio.play().catch(e => console.log("Audio play failed:", e));
+        }
+
         const starsContainer = document.getElementById('stars-container');
         for(let i=0; i<30; i++) {
             const star=document.createElement('div'); star.classList.add('star');
@@ -589,13 +602,13 @@
             anyday: {
                 wealth: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908240_0.jpg?raw=true",
                 work: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908241_0.jpg?raw=true",
-                love: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908251.jpg?raw=true",
+                love: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908242_0.jpg?raw=true",
                 health: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908243_0.jpg?raw=true",
                 power: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908244_0.jpg?raw=true",
                 trade: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908245_0.jpg?raw=true",
                 education: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908246_0.jpg?raw=true",
                 mercy: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908248.jpg?raw=true",
-                luck: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908242_0.jpg?raw=true"
+                luck: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908251.jpg?raw=true"
             }
         };
 
@@ -607,6 +620,7 @@
         let isFlipped = false;
         function flipCard() {
             if(isFlipped) return;
+            playSound(flipSound);
             document.getElementById('tap-hint').style.opacity='0';
             const c=cards[Math.floor(Math.random()*cards.length)];
             document.getElementById('card-title').innerText=c.name;
@@ -616,7 +630,13 @@
             document.getElementById('the-card').classList.add('flipped'); isFlipped=true;
             document.getElementById('reset-card-btn').classList.remove('opacity-0','pointer-events-none');
         }
-        function resetCard() { document.getElementById('the-card').classList.remove('flipped'); isFlipped=false; document.getElementById('tap-hint').style.opacity='1'; document.getElementById('reset-card-btn').classList.add('opacity-0','pointer-events-none'); }
+        function resetCard() { 
+            playSound(flipSound);
+            document.getElementById('the-card').classList.remove('flipped'); 
+            isFlipped=false; 
+            document.getElementById('tap-hint').style.opacity='1'; 
+            document.getElementById('reset-card-btn').classList.add('opacity-0','pointer-events-none'); 
+        }
 
         // --- STACK & ANIMATION LOGIC ---
         let selectedDay = '';
@@ -624,6 +644,7 @@
         let activeCardIndex = 0;
 
         function selectDay(day) {
+            playSound(clickSound);
             selectedDay = day;
             document.getElementById('day-selection-panel').classList.add('hidden');
             document.getElementById('aspect-selection-panel').classList.remove('hidden');
@@ -676,7 +697,11 @@
                 
                 el.onclick = () => {
                     if(index === activeCardIndex) { nextCard(); }
-                    else { activeCardIndex = index; updateStackVisuals(); }
+                    else { 
+                        playSound(flipSound);
+                        activeCardIndex = index; 
+                        updateStackVisuals(); 
+                    }
                 };
                 
                 updateCardPosition(el, index);
@@ -696,8 +721,16 @@
         function updateStackVisuals() {
             document.querySelectorAll('.stack-card').forEach((el, idx) => updateCardPosition(el, idx));
         }
-        function nextCard() { activeCardIndex = (activeCardIndex + 1) % aspectCards.length; updateStackVisuals(); }
-        function prevCard() { activeCardIndex = (activeCardIndex - 1 + aspectCards.length) % aspectCards.length; updateStackVisuals(); }
+        function nextCard() { 
+            playSound(flipSound);
+            activeCardIndex = (activeCardIndex + 1) % aspectCards.length; 
+            updateStackVisuals(); 
+        }
+        function prevCard() { 
+            playSound(flipSound);
+            activeCardIndex = (activeCardIndex - 1 + aspectCards.length) % aspectCards.length; 
+            updateStackVisuals(); 
+        }
 
         // --- CONSECRATION FLOW ---
         async function generateFromStack() {
@@ -711,13 +744,22 @@
             const backFace = activeCard.querySelector('.stack-card-back');
             backFace.innerHTML = `<img src="${imageUrl}" class="w-full h-full object-cover rounded-xl" />`;
 
-            // 3. Trigger Animation & Magic
+            // 3. Play Sound & Trigger Animation & Magic
+            try {
+                // Reset audio to start to allow replay
+                magicSound.currentTime = 0;
+                magicSound.play().catch(e => console.log("Audio play failed:", e));
+            } catch (e) {
+                console.log("Audio error", e);
+            }
+
             document.getElementById('magic-overlay').classList.add('active');
             activeCard.classList.add('consecrating');
 
             // 4. Wait for animation
             setTimeout(() => {
                 // Show Toast
+                playSound(successSound);
                 const toast = document.getElementById('toast');
                 toast.classList.add('show');
                 setTimeout(() => toast.classList.remove('show'), 3000);
