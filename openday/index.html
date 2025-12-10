@@ -345,21 +345,36 @@
 
         // --- Core Logic ---
         function getMoonPhase(date) {
-            let year = date.getFullYear();
-            let month = date.getMonth() + 1;
-            let day = date.getDate();
-            let c = 0, e = 0, jd = 0, b = 0;
+            // ใช้ UTC เพื่อป้องกันปัญหา Timezone ทำให้วันที่เพี้ยน
+            let year = date.getUTCFullYear();
+            let month = date.getUTCMonth() + 1;
+            let day = date.getUTCDate();
 
-            if (month < 3) { year--; month += 12; }
-            ++month;
-            c = 365.25 * year;
-            e = 30.6 * month;
-            jd = c + e + day - 694039.09; 
-            jd /= 29.5305882; 
-            b = parseInt(jd); 
-            jd -= b; 
+            // สูตรคำนวณ Julian Day (ความแม่นยำสูง)
+            if (month < 3) {
+                year--;
+                month += 12;
+            }
+
+            let A = Math.floor(year / 100);
+            let B = 2 - A + Math.floor(A / 4);
+            let JD = Math.floor(365.25 * (year + 4716)) + Math.floor(30.6001 * (month + 1)) + day + B - 1524.5;
+
+            // คำนวณเฟสดวงจันทร์จากวันที่อ้างอิง (Known New Moon: 2000 Jan 6)
+            let daysSinceNew = JD - 2451550.1;
+            let cycles = daysSinceNew / 29.53058867;
+            let phase = cycles - Math.floor(cycles);
+
+            // ปรับ phase ให้อยู่ในช่วง 0-1 เสมอ
+            if (phase < 0) phase += 1;
             
-            return { phase: jd, age: Math.round(jd * 29.53) };
+            // คำนวณอายุจันทร์ (0 - 29.5)
+            let age = phase * 29.53058867;
+
+            return { 
+                phase: phase, 
+                age: Math.round(age) 
+            };
         }
 
         function getLunarPhaseName(age) {
