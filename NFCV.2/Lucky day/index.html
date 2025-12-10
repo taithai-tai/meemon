@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>มหาทักษาพยากรณ์</title>
+    <!-- Tailwind CSS (ผ่าน CDN เพื่อความสวยงาม) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* CSS เพิ่มเติมสำหรับ Animation */
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 15px rgba(250, 204, 21, 0.5); transform: scale(1.05); }
+            50% { box-shadow: 0 0 5px rgba(250, 204, 21, 0.2); transform: scale(1); }
+        }
+        .cell-highlight {
+            border-color: #facc15 !important;
+            background-color: rgba(113, 63, 18, 0.8) !important;
+            color: #fef9c3 !important;
+            animation: pulse-glow 0.5s infinite;
+            z-index: 10;
+        }
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        .slide-up { animation: slideUp 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        body {
+            font-family: 'Sarabun', sans-serif; /* แนะนำฟอนต์ไทย */
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-[#0f0c29] bg-gradient-to-b from-[#0f0c29] via-[#302b63] to-[#24243e] text-white flex flex-col items-center p-4 overflow-y-auto">
+
+    <!-- Screen 1: เลือกวันเกิด -->
+    <div id="screen-home" class="flex flex-col items-center justify-center min-h-[80vh] w-full max-w-md text-center space-y-8">
+        <div class="space-y-4">
+            <div class="flex justify-center mb-6 relative">
+                <div class="absolute inset-0 bg-yellow-400 blur-3xl opacity-20 animate-pulse rounded-full"></div>
+                <i data-lucide="sparkles" class="w-20 h-20 text-yellow-300 relative z-10"></i>
+            </div>
+            <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 to-amber-500">
+                ดูดวงประจำวัน
+            </h1>
+            <p class="text-purple-200 text-lg font-light">ของดีมีแรงครู</p>
+        </div>
+
+        <div class="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/10 shadow-2xl w-full">
+            <h2 class="text-xl mb-6 font-semibold text-white/90">เลือกวันเกิดของคุณ</h2>
+            <div class="grid grid-cols-2 gap-4" id="day-buttons">
+                <!-- ปุ่มจะถูกสร้างด้วย JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen 2: ดูดวง -->
+    <div id="screen-horoscope" class="hidden flex-col items-center w-full max-w-md space-y-6 pb-12">
+        
+        <!-- Header -->
+        <div class="w-full flex justify-between items-center mb-2 pt-4 px-2">
+            <button onclick="resetApp()" class="text-gray-400 hover:text-white flex items-center gap-2 text-sm transition-colors py-2 px-3 rounded-lg hover:bg-white/10">
+                ← เปลี่ยนวันเกิด
+            </button>
+            <div class="text-right">
+                <h2 id="user-day-display" class="text-lg font-bold px-3 py-1 rounded-lg bg-opacity-20 text-white inline-block">
+                    <!-- วันเกิดผู้ใช้ -->
+                </h2>
+                <div class="text-xs text-purple-200 flex items-center justify-end gap-1 mt-1 opacity-70">
+                    <i data-lucide="moon" size="12"></i> แรม 5 ค่ำ
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Box -->
+        <div class="bg-gradient-to-r from-purple-900/50 to-blue-900/50 backdrop-blur border border-white/10 rounded-2xl p-6 text-center min-h-[100px] flex items-center justify-center shadow-lg w-full relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-purple-400 to-transparent opacity-50"></div>
+            <div id="status-text" class="space-y-1">
+                <p class="text-lg font-medium text-white">พร้อมทำนายดวงชะตาหรือยัง?</p>
+                <p class="text-sm text-purple-300">กดปุ่มด้านล่างเพื่อหมุนวงล้อทักษา</p>
+            </div>
+        </div>
+
+        <!-- The Grid -->
+        <div class="bg-black/40 p-4 rounded-3xl border border-white/10 shadow-[0_0_50px_rgba(139,92,246,0.15)] relative w-full">
+            <div id="grid-container" class="grid grid-cols-3 gap-3 relative z-10">
+                <!-- Grid Cells จะถูกสร้างด้วย JS -->
+            </div>
+        </div>
+
+        <!-- Controls / Results -->
+        <div id="action-area" class="w-full">
+            <button onclick="startPrediction()" class="w-full bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 hover:from-yellow-400 hover:to-red-400 text-white font-bold py-4 rounded-2xl shadow-lg transform hover:scale-[1.02] active:scale-95 transition-all text-xl flex items-center justify-center gap-3 group relative overflow-hidden">
+                <i data-lucide="sparkles"></i> เริ่มทำนายดวงชะตา
+            </button>
+        </div>
+
+        <!-- Result Card (Hidden by default) -->
+        <div id="result-card" class="hidden w-full space-y-4 slide-up">
+            <div id="result-box" class="p-6 rounded-3xl border-2 shadow-2xl relative overflow-hidden bg-gradient-to-br from-purple-900/60 to-indigo-950/60 border-purple-500">
+                <div class="flex items-center justify-between mb-6 relative z-10">
+                    <div>
+                        <p class="text-sm opacity-80 font-medium tracking-wide mb-1">วันนี้ดวงของคุณตกที่ภูมิ</p>
+                        <h3 id="result-label" class="text-4xl font-extrabold text-white tracking-tight drop-shadow-md">
+                            -
+                        </h3>
+                    </div>
+                    <div id="result-icon-bg" class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-inner bg-yellow-400 text-yellow-900">
+                        <i data-lucide="star" class="w-8 h-8"></i>
+                    </div>
+                </div>
+                <div class="bg-black/30 backdrop-blur-sm rounded-xl p-5 mb-4 border border-white/5 relative z-10">
+                    <p id="result-meaning" class="text-lg leading-relaxed text-gray-100 font-light">-</p>
+                </div>
+                <div id="result-ref" class="text-xs opacity-50 text-center font-mono"></div>
+            </div>
+
+            <div class="bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/10 text-sm shadow-xl">
+                <h4 class="font-bold text-lg text-yellow-400 mb-3 flex items-center gap-2">
+                    <span class="w-1 h-6 bg-yellow-400 rounded-full inline-block"></span>
+                    คำแนะนำประจำวัน
+                </h4>
+                <div id="result-advice" class="text-gray-200 leading-relaxed text-base"></div>
+            </div>
+
+            <button onclick="resetApp()" class="w-full py-4 text-gray-400 hover:text-white border border-white/10 bg-white/5 rounded-2xl hover:bg-white/10 transition-all flex items-center justify-center gap-2 mt-4">
+                <i data-lucide="refresh-cw" class="w-4 h-4"></i> ดูดวงใหม่อีกครั้ง
+            </button>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- DATA ---
+        const DAYS = [
+            { id: 1, name: 'วันอาทิตย์', color: 'bg-red-500' },
+            { id: 2, name: 'วันจันทร์', color: 'bg-yellow-400' },
+            { id: 3, name: 'วันอังคาร', color: 'bg-pink-500' },
+            { id: 4, name: 'วันพุธ (กลางวัน)', color: 'bg-green-500' },
+            { id: 8, name: 'วันพุธ (กลางคืน)', color: 'bg-gray-700' },
+            { id: 5, name: 'วันพฤหัสบดี', color: 'bg-orange-500' },
+            { id: 6, name: 'วันศุกร์', color: 'bg-blue-500' },
+            { id: 7, name: 'วันเสาร์', color: 'bg-purple-700' },
+        ];
+
+        const GRID_LAYOUT = [
+            [8, 1, 6],
+            [3, null, 4],
+            [5, 7, 2]
+        ];
+
+        const PATH_CW = [1, 6, 4, 2, 7, 5, 3, 8];
+        
+        const THAKSA_ATTRIBUTES = {
+            'borivan': { label: 'บริวาร', meaning: 'คนใกล้ชิด, ครอบครัว, ลูกน้อง', type: 'neutral' },
+            'ayu': { label: 'อายุ', meaning: 'สุขภาพ, ความเป็นอยู่, วิถีชีวิต', type: 'good' },
+            'dech': { label: 'เดช', meaning: 'อำนาจ, ชื่อเสียง, บารมี', type: 'good' },
+            'si': { label: 'ศรี', meaning: 'โชคลาภ, ความสำเร็จ, เงินทอง (ดีมาก)', type: 'very_good' },
+            'mula': { label: 'มูลละ', meaning: 'ทรัพย์สิน, มรดก, ความมั่นคง', type: 'good' },
+            'utsaha': { label: 'อุตสาหะ', meaning: 'หน้าที่การงาน, ความพยายาม', type: 'neutral' },
+            'montri': { label: 'มนตรี', meaning: 'ผู้ใหญ่เมตตา, คนอุปถัมภ์ (ดีมาก)', type: 'very_good' },
+            'kalakini': { label: 'กาลกิณี', meaning: 'อุปสรรค, โชคร้าย, สิ่งที่ควรระวัง (ไม่ดี)', type: 'bad' },
+        };
+        const ATTRIBUTE_KEYS = ['borivan', 'ayu', 'dech', 'si', 'mula', 'utsaha', 'montri', 'kalakini'];
+
+        // State
+        let selectedDay = null;
+        let finalResult = null;
+        
+        // --- INIT ---
+        window.onload = function() {
+            lucide.createIcons();
+            renderDayButtons();
+            renderGrid();
+        };
+
+        // --- RENDER FUNCTIONS ---
+        function renderDayButtons() {
+            const container = document.getElementById('day-buttons');
+            container.innerHTML = '';
+            DAYS.forEach(day => {
+                const btn = document.createElement('button');
+                btn.className = `${day.color} hover:brightness-110 hover:scale-105 active:scale-95 transition-all duration-200 text-white py-4 px-4 rounded-2xl font-medium shadow-lg flex items-center justify-center gap-2`;
+                btn.innerText = day.name;
+                btn.onclick = () => selectDay(day);
+                container.appendChild(btn);
+            });
+        }
+
+        function renderGrid(activeNum = null, showResult = false) {
+            const container = document.getElementById('grid-container');
+            container.innerHTML = '';
+
+            GRID_LAYOUT.flat().forEach(num => {
+                const div = document.createElement('div');
+                
+                if (num === null) {
+                    // Center Cell
+                    div.className = "flex items-center justify-center bg-gray-900/50 rounded-lg aspect-square border border-gray-700 relative overflow-hidden";
+                    div.innerHTML = '<div class="absolute inset-0 opacity-20 animate-pulse bg-gradient-to-tr from-purple-500 to-blue-500"></div><i data-lucide="moon" class="w-8 h-8 text-yellow-100 opacity-50"></i>';
+                } else {
+                    // Number Cell
+                    let baseClass = "flex flex-col items-center justify-center rounded-lg aspect-square border-2 transition-all duration-300 relative ";
+                    let content = `<span class="text-2xl font-bold text-purple-100">${num}</span>`;
+
+                    // Check states
+                    const isUserDay = selectedDay && selectedDay.id === num;
+                    const isActive = activeNum === num;
+                    
+                    if (isActive) {
+                        baseClass += "border-yellow-400 bg-yellow-900/80 scale-105 shadow-[0_0_15px_rgba(250,204,21,0.5)] z-10 text-yellow-100";
+                    } else if (showResult && finalResult) {
+                        // Result State
+                        const attrKey = finalResult.mapping[num];
+                        const attr = THAKSA_ATTRIBUTES[attrKey];
+                        
+                        if (isUserDay) {
+                             baseClass += "border-white bg-white/20 scale-100 ring-2 ring-white ring-offset-2 ring-offset-purple-900";
+                        } else if (finalResult.borivan === num) {
+                             baseClass += "border-blue-400 bg-blue-900/30";
+                        } else {
+                             baseClass += "border-purple-800 bg-purple-900/40 text-gray-400";
+                        }
+
+                        // Add attribute label badge
+                        if (attr) {
+                            let badgeClass = "bg-gray-800 text-gray-300";
+                            if (attrKey === 'kalakini') badgeClass = "bg-red-500 text-white font-bold";
+                            else if (attrKey === 'si') badgeClass = "bg-yellow-400 text-black font-bold";
+                            else if (attrKey === 'montri') badgeClass = "bg-pink-400 text-black font-bold";
+
+                            content += `<span class="text-[10px] px-2 py-0.5 rounded-full mt-1 ${badgeClass}">${attr.label}</span>`;
+                        }
+                    } else {
+                        // Idle State
+                        if (isUserDay) {
+                            baseClass += "border-purple-400 bg-purple-800/60";
+                            content += `<span class="text-[10px] bg-white text-purple-900 px-1 rounded mt-1 absolute bottom-1 right-1">คุณ</span>`;
+                        } else {
+                            baseClass += "border-purple-800 bg-purple-900/20";
+                        }
+                    }
+                    
+                    div.className = baseClass;
+                    div.innerHTML = content;
+                }
+                container.appendChild(div);
+            });
+            lucide.createIcons();
+        }
+
+        // --- LOGIC ---
+        function selectDay(day) {
+            selectedDay = day;
+            document.getElementById('screen-home').classList.add('hidden');
+            document.getElementById('screen-horoscope').classList.remove('hidden');
+            document.getElementById('screen-horoscope').classList.add('flex');
+            
+            // Update UI
+            const dayBadge = document.getElementById('user-day-display');
+            dayBadge.innerText = day.name;
+            dayBadge.className = `text-lg font-bold px-3 py-1 rounded-lg ${day.color} bg-opacity-20 text-white inline-block`;
+            
+            renderGrid();
+        }
+
+        function resetApp() {
+            selectedDay = null;
+            finalResult = null;
+            document.getElementById('screen-horoscope').classList.add('hidden');
+            document.getElementById('screen-horoscope').classList.remove('flex');
+            document.getElementById('screen-home').classList.remove('hidden');
+            
+            // Reset Result UI
+            document.getElementById('action-area').classList.remove('hidden');
+            document.getElementById('result-card').classList.add('hidden');
+            document.getElementById('status-text').innerHTML = `
+                <p class="text-lg font-medium text-white">พร้อมทำนายดวงชะตาหรือยัง?</p>
+                <p class="text-sm text-purple-300">กดปุ่มด้านล่างเพื่อหมุนวงล้อทักษา</p>
+            `;
+        }
+
+        function startPrediction() {
+            // Waning 5, Clockwise
+            const path = PATH_CW; 
+            const steps = 5; 
+            let stepCount = 0;
+            
+            document.getElementById('action-area').classList.add('hidden');
+            
+            const interval = setInterval(() => {
+                const currentIndex = stepCount % path.length;
+                const currentNumber = path[currentIndex];
+                
+                // Update Status text
+                document.getElementById('status-text').innerHTML = `<p class="text-yellow-300 text-xl font-medium">นับ ${stepCount + 1}... (ตกเลข ${currentNumber})</p>`;
+                
+                // Highlight Grid
+                renderGrid(currentNumber, false);
+                
+                stepCount++;
+                if (stepCount >= steps) {
+                    clearInterval(interval);
+                    calculateResult(currentNumber);
+                }
+            }, 500);
+        }
+
+        function calculateResult(borivanNumber) {
+            // Map attributes
+            const mapping = {};
+            const standardPath = PATH_CW; 
+            const startIndex = standardPath.indexOf(borivanNumber);
+            
+            let userAttrKey = null;
+
+            ATTRIBUTE_KEYS.forEach((key, i) => {
+                const numberIndex = (startIndex + i) % 8;
+                const number = standardPath[numberIndex];
+                mapping[number] = key;
+
+                if (number === selectedDay.id) {
+                    userAttrKey = key;
+                }
+            });
+
+            finalResult = { borivan: borivanNumber, mapping: mapping, userAttrKey: userAttrKey };
+            
+            // Show Final Grid
+            renderGrid(null, true);
+            showResultCard(userAttrKey, borivanNumber);
+        }
+
+        function showResultCard(attrKey, borivanNum) {
+            const attr = THAKSA_ATTRIBUTES[attrKey];
+            const card = document.getElementById('result-card');
+            const box = document.getElementById('result-box');
+            const iconBg = document.getElementById('result-icon-bg');
+            const label = document.getElementById('result-label');
+            const meaning = document.getElementById('result-meaning');
+            const advice = document.getElementById('result-advice');
+            const ref = document.getElementById('result-ref');
+
+            // Set Colors
+            box.className = `p-6 rounded-3xl border-2 shadow-2xl relative overflow-hidden ${
+                attrKey === 'kalakini' ? 'bg-gradient-to-br from-red-900/80 to-red-950/80 border-red-500' :
+                (attr.type === 'very_good' ? 'bg-gradient-to-br from-yellow-900/60 to-amber-950/60 border-yellow-500' :
+                'bg-gradient-to-br from-purple-900/60 to-indigo-950/60 border-purple-500')
+            }`;
+
+            iconBg.className = `w-14 h-14 rounded-2xl flex items-center justify-center shadow-inner ${
+                attrKey === 'kalakini' ? 'bg-red-500 text-white' : 'bg-yellow-400 text-yellow-900'
+            }`;
+            iconBg.innerHTML = attrKey === 'kalakini' ? '<span class="text-3xl">⚠️</span>' : '<i data-lucide="star" class="w-8 h-8 fill-current"></i>';
+
+            // Set Text
+            label.innerText = attr.label;
+            meaning.innerText = attr.meaning;
+            ref.innerText = `*ตำแหน่งบริวารอยู่ที่เลข ${borivanNum}`;
+
+            // Advice Text
+            let adviceText = "";
+            if (attrKey === 'kalakini') adviceText = 'วันนี้ดวงชะตาอยู่ในเกณฑ์ที่ต้อง <strong class="text-red-400">ระมัดระวังเป็นพิเศษ</strong> ควรมีสติในการใช้ชีวิตให้มาก หลีกเลี่ยงการตัดสินใจเรื่องใหญ่ๆ';
+            else if (attrKey === 'si') adviceText = 'เป็นวันดีของคุณ! ดาวศรีกำลังส่องสว่าง หากมีแผนจะทำอะไรให้ <strong class="text-green-400">รีบลงมือทำ</strong> มีเกณฑ์ได้รับโชคลาภ';
+            else if (attrKey === 'montri') adviceText = 'ดวงวันนี้โดดเด่นเรื่อง <strong class="text-pink-400">การอุปถัมภ์</strong> หากติดขัดอะไรให้เข้าหาผู้ใหญ่ หรือขอคำปรึกษา';
+            else adviceText = 'เป็นวันที่ดำเนินไปตามปกติ หมั่นทำความดีและตั้งใจทำงาน รักษาอารมณ์ให้แจ่มใส ผลลัพธ์ที่ดีจะตามมาเอง';
+            
+            advice.innerHTML = `<p>${adviceText}</p>`;
+
+            // Transition UI
+            document.getElementById('status-text').innerHTML = `
+                <p class="text-sm text-gray-300">ผลการทำนายประจำวัน</p>
+                <p class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-yellow-200">${selectedDay.name}</p>
+            `;
+            
+            card.classList.remove('hidden');
+            lucide.createIcons();
+        }
+    </script>
+</body>
+</html>
