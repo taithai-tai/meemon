@@ -1,1 +1,352 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ฤกษ์เปิดกระเป๋าเรียกทรัพย์</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
 
+        /* Moon Container Styles */
+        .moon-container {
+            width: 280px; /* เพิ่มขนาด Container รวมนิดหน่อยเพื่อให้ดูเด่นขึ้น */
+            height: 280px;
+            position: relative;
+            margin: 0 auto;
+            border-radius: 50%;
+        }
+
+        /* Glow effect behind the moon */
+        .moon-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            box-shadow: 0 0 60px rgba(255, 255, 255, 0.15);
+            z-index: 0;
+            transition: box-shadow 0.5s ease;
+        }
+
+        /* Animations for result cards */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* Toggle Switch Styling */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #68D391;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #68D391;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center py-10 px-4 bg-gradient-to-b from-slate-950 to-slate-900">
+
+    <main class="w-full max-w-md bg-white/5 backdrop-blur-xl rounded-3xl p-6 shadow-2xl border border-white/10 relative overflow-hidden">
+        
+        <!-- Decorative Background Elements inside card -->
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+            <div class="absolute -top-20 -right-20 w-40 h-40 bg-yellow-500/10 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-20 -left-20 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl"></div>
+        </div>
+
+        <!-- Header -->
+        <header class="text-center mb-8 relative z-10">
+            <h1 class="text-3xl font-bold text-yellow-100 mb-2 drop-shadow-md">🌙 ฤกษ์เปิดกระเป๋า</h1>
+            <p class="text-sm text-slate-400">เช็คฤกษ์มงคลตามพลังจันทรา</p>
+        </header>
+
+        <!-- Controls -->
+        <div class="mb-8 space-y-4 relative z-10">
+            <!-- Date Picker -->
+            <div class="flex flex-col">
+                <label class="text-xs text-slate-400 mb-1 ml-1">เลือกวันที่ต้องการเช็ค</label>
+                <input type="date" id="datePicker" class="w-full bg-slate-800/80 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-yellow-400 text-center shadow-inner">
+            </div>
+
+            <!-- User Type Toggle -->
+            <div class="flex items-center justify-between bg-slate-800/80 p-3 rounded-xl border border-slate-600 shadow-inner">
+                <div class="flex flex-col">
+                    <span class="text-sm font-semibold text-white">อาชีพของคุณ</span>
+                    <span class="text-xs text-slate-400" id="careerLabel">บุคคลทั่วไป</span>
+                </div>
+                
+                <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+                    <input type="checkbox" name="toggle" id="modeToggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer transition-all duration-300 left-0 shadow-md"/>
+                    <label for="modeToggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-slate-500 cursor-pointer transition-colors duration-300"></label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Moon Visualization -->
+        <div class="relative flex justify-center items-center py-4 mb-4 z-10">
+            <div class="moon-container">
+                <div id="moonGlow" class="moon-glow"></div>
+                <!-- SVG Container for Realistic Moon -->
+                <div id="moonVisual" class="relative z-10 w-full h-full">
+                    <!-- Content injected by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Lunar Date Info -->
+        <div class="text-center mb-6 relative z-10">
+            <h2 id="lunarPhaseText" class="text-2xl font-bold text-white drop-shadow-sm">กำลังคำนวณ...</h2>
+            <p id="moonAgeText" class="text-sm text-slate-400 mt-1 font-mono tracking-wide">Age: - | Phase: -%</p>
+        </div>
+
+        <!-- Result Card -->
+        <div id="resultCard" class="relative z-10 rounded-xl p-5 text-center opacity-0 transform scale-95 border-2 bg-slate-800/50 backdrop-blur-sm">
+            <div id="resultIcon" class="text-5xl mb-3 drop-shadow-md"></div>
+            <h3 id="resultTitle" class="text-2xl font-bold mb-2"></h3>
+            <p id="resultDesc" class="text-sm opacity-90 leading-relaxed"></p>
+        </div>
+
+    </main>
+
+    <!-- Logic Explanation -->
+    <footer class="mt-8 max-w-md text-center text-slate-600 text-xs px-4">
+        <p>หลักการคำนวณ:</p>
+        <p>• บุคคลทั่วไป: เหมาะกับ "ข้างขึ้น" (พลังสะสม)</p>
+        <p>• สายเทา: เหมาะกับ "ข้างแรม" (พลังซ่อนเร้น)</p>
+    </footer>
+
+    <script>
+        // DOM Elements
+        const datePicker = document.getElementById('datePicker');
+        const modeToggle = document.getElementById('modeToggle');
+        const careerLabel = document.getElementById('careerLabel');
+        const moonVisual = document.getElementById('moonVisual');
+        const moonGlow = document.getElementById('moonGlow');
+        const lunarPhaseText = document.getElementById('lunarPhaseText');
+        const moonAgeText = document.getElementById('moonAgeText');
+        const resultCard = document.getElementById('resultCard');
+        const resultTitle = document.getElementById('resultTitle');
+        const resultDesc = document.getElementById('resultDesc');
+        const resultIcon = document.getElementById('resultIcon');
+
+        // Config
+        // Using a high quality moon texture from Unsplash (Creative Commons/Free use allowed for demo)
+        const MOON_IMAGE_URL = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Full_moon.png/1200px-Full_moon.png";
+
+        // State
+        let currentMode = 'normal'; // 'normal' or 'gray'
+        
+        // Initialize Date to Today
+        const today = new Date();
+        datePicker.valueAsDate = today;
+
+        // --- Moon Calculation Logic ---
+        function getMoonPhase(date) {
+            let year = date.getFullYear();
+            let month = date.getMonth() + 1;
+            let day = date.getDate();
+
+            let c = 0, e = 0, jd = 0, b = 0;
+
+            if (month < 3) {
+                year--;
+                month += 12;
+            }
+
+            ++month;
+
+            c = 365.25 * year;
+            e = 30.6 * month;
+            jd = c + e + day - 694039.09; 
+            jd /= 29.5305882; 
+            b = parseInt(jd); 
+            jd -= b; 
+            
+            let moonAge = Math.round(jd * 29.53);
+            return {
+                phase: jd,
+                age: moonAge
+            };
+        }
+
+        function getLunarPhaseName(age) {
+            if (age === 0 || age === 29 || age === 30) return { name: "🌑 เดือนดับ (New Moon)", type: "new" };
+            if (age === 15) return { name: "🌕 จันทร์เพ็ญ (Full Moon)", type: "full" };
+            
+            if (age < 15) {
+                return { name: `🌒 ข้างขึ้น ${age} ค่ำ`, type: "waxing" };
+            } else {
+                return { name: `🌘 ข้างแรม ${age - 15} ค่ำ`, type: "waning" };
+            }
+        }
+
+        // --- Realistic Moon Rendering with SVG Mask ---
+        function renderRealMoon(phase) {
+            // ViewBox Size
+            const s = 250;
+            const r = s / 2; // 125
+            
+            // Adjust phase for calculation (0.0 - 1.0)
+            // 0.0 = New Moon (Dark)
+            // 0.5 = Full Moon (Bright)
+            // 1.0 = New Moon (Dark)
+
+            let path = "";
+            let glowIntensity = 0.1;
+
+            // Handle extremes to avoid rendering glitches
+            if (phase <= 0.01 || phase >= 0.99) {
+                path = `M ${r},${r} m 0,0 z`; // Empty path
+                glowIntensity = 0.05;
+            } else if (Math.abs(phase - 0.5) <= 0.01) {
+                // Full Moon: Full Circle
+                path = `M ${r},0 A ${r},${r} 0 1,1 ${r},${s} A ${r},${r} 0 1,1 ${r},0`;
+                glowIntensity = 0.8;
+            } else {
+                // Complex Phase Calculation
+                const isWaxing = phase < 0.5;
+                const lighting = isWaxing ? 1 : 0; // 1 = Right, 0 = Left
+                
+                let p = isWaxing ? phase * 2 : (phase - 0.5) * 2;
+                let rx = r * Math.cos(p * Math.PI); 
+                
+                let sweepInner = 0;
+                if (isWaxing) {
+                    sweepInner = phase < 0.25 ? 1 : 0;
+                } else {
+                    sweepInner = phase < 0.75 ? 1 : 0;
+                }
+
+                if (isWaxing) {
+                    path = `M ${r},0 A ${r},${r} 0 0,1 ${r},${s} A ${Math.abs(rx)},${r} 0 0,${sweepInner} ${r},0`;
+                } else {
+                    path = `M ${r},0 A ${r},${r} 0 0,0 ${r},${s} A ${Math.abs(rx)},${r} 0 0,${sweepInner} ${r},0`;
+                }
+
+                let fullness = 1 - (Math.abs(phase - 0.5) * 2); 
+                glowIntensity = 0.1 + (fullness * 0.5);
+            }
+
+            // Update Glow
+            moonGlow.style.boxShadow = `0 0 ${40 + (glowIntensity * 40)}px rgba(255, 255, 255, ${glowIntensity * 0.4})`;
+
+            // --- ZOOM LOGIC HERE ---
+            // Scale up the image to remove borders (Zoom 1.25x)
+            // and shift it slightly to center it
+            const scale = 1.25;
+            const size = s * scale;
+            const offset = (size - s) / 2;
+
+            moonVisual.innerHTML = `
+                <svg width="100%" height="100%" viewBox="0 0 ${s} ${s}">
+                    <defs>
+                        <!-- Filter for soft terminator edge -->
+                        <filter id="softEdge">
+                            <feGaussianBlur stdDeviation="4" />
+                        </filter>
+                        
+                        <mask id="moonMask">
+                            <rect x="0" y="0" width="${s}" height="${s}" fill="black" />
+                            <!-- Apply filter to the path for soft edge -->
+                            <path d="${path}" fill="white" filter="url(#softEdge)" />
+                        </mask>
+                    </defs>
+                    <!-- The Dark Side (Solid Black with slight inset to prevent bleed) -->
+                    <circle cx="${r}" cy="${r}" r="${r - 1}" fill="#000000" />
+                    
+                    <!-- The Lit Side (Real Texture - Zoomed) -->
+                    <image href="${MOON_IMAGE_URL}" 
+                           x="${-offset}" y="${-offset}" 
+                           width="${size}" height="${size}" 
+                           mask="url(#moonMask)" 
+                           preserveAspectRatio="xMidYMid slice" />
+                    
+                    <!-- Optional: Inner Shadow ring to make it look spherical -->
+                    <circle cx="${r}" cy="${r}" r="${r}" fill="none" stroke="black" stroke-opacity="0.3" stroke-width="2" />
+                </svg>
+            `;
+        }
+
+        // --- Main App Logic ---
+        function updateApp() {
+            const date = datePicker.valueAsDate;
+            if(!date) return;
+
+            const moonData = getMoonPhase(date);
+            const lunarInfo = getLunarPhaseName(moonData.age);
+            
+            renderRealMoon(moonData.phase);
+            
+            lunarPhaseText.innerText = lunarInfo.name;
+            moonAgeText.innerText = `อายุจันทร์: ${moonData.age} วัน (${Math.floor(moonData.phase*100)}%)`;
+
+            const isWaxing = moonData.age < 15;
+            let isGood = false;
+
+            if (currentMode === 'normal') {
+                isGood = isWaxing;
+            } else {
+                isGood = !isWaxing;
+            }
+
+            // Animation Reset
+            resultCard.classList.remove('fade-in');
+            void resultCard.offsetWidth;
+            
+            // Apply Styles
+            if (isGood) {
+                resultCard.className = `relative z-10 rounded-xl p-5 text-center border-2 fade-in bg-gradient-to-br from-green-900/80 to-slate-900/80 border-green-500/50 text-green-100 shadow-[0_0_20px_rgba(34,197,94,0.2)]`;
+                resultIcon.innerText = "💰";
+                resultTitle.innerText = "ฤกษ์มงคล (เปิดรับทรัพย์)";
+                resultTitle.className = "text-2xl font-bold mb-2 text-green-300";
+                resultDesc.innerText = currentMode === 'normal' 
+                    ? "ข้างขึ้น: พลังจันทรากำลังพอกพูน เหมาะแก่การเริ่มเก็บออมและเปิดรับสิ่งใหม่" 
+                    : "ข้างแรม: พลังแห่งเงาเอื้ออำนวย เหมาะแก่การเจรจาลับและธุรกิจกลางคืน";
+            } else {
+                resultCard.className = `relative z-10 rounded-xl p-5 text-center border-2 fade-in bg-gradient-to-br from-red-900/80 to-slate-900/80 border-red-500/50 text-red-100 shadow-[0_0_20px_rgba(239,68,68,0.2)]`;
+                resultIcon.innerText = "🔒";
+                resultTitle.innerText = "ควรงดเว้น (เก็บทรัพย์)";
+                resultTitle.className = "text-2xl font-bold mb-2 text-red-300";
+                resultDesc.innerText = currentMode === 'normal'
+                    ? "ข้างแรม: พลังจันทราลดถอย ทรัพย์อาจรั่วไหล ให้ระมัดระวังการใช้จ่าย"
+                    : "ข้างขึ้น: แสงสว่างจ้าเกินไป อาจเปิดเผยสิ่งที่ควรซ่อนเร้น ไม่เหมาะกับงานสีเทา";
+            }
+        }
+
+        // --- Event Listeners ---
+        datePicker.addEventListener('change', updateApp);
+        
+        modeToggle.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                currentMode = 'gray';
+                careerLabel.innerText = "สายเทา / กลางคืน";
+                careerLabel.classList.add("text-purple-400");
+                careerLabel.classList.remove("text-slate-400");
+            } else {
+                currentMode = 'normal';
+                careerLabel.innerText = "บุคคลทั่วไป";
+                careerLabel.classList.add("text-slate-400");
+                careerLabel.classList.remove("text-purple-400");
+            }
+            updateApp();
+        });
+
+        // Initial Run
+        updateApp();
+
+    </script>
+</body>
+</html>
