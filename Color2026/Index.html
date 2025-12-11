@@ -1,0 +1,445 @@
+import React, { useState, useEffect, useMemo } from 'react';
+import { ArrowLeft, Sparkles, Sun, Moon, Zap, Cloud, Star, Heart, Shield, Crown, Info, Gem, Repeat, Eye } from 'lucide-react';
+
+// --- SVG Patterns (ลวดลายเส้น) ---
+const patterns = {
+  waves: `data:image/svg+xml,%3Csvg width='20' height='10' viewBox='0 0 20 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 5c5 0 5-5 10-5s5 5 10 5c5 0 5 5 10 5s5-5 10-5' stroke='%23ffffff' stroke-width='1' fill='none' opacity='0.2'/%3E%3C/svg%3E`,
+  diamond: `data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 0l8 8-8 8-8-8z' stroke='%23ffffff' stroke-width='1' fill='none' opacity='0.15'/%3E%3C/svg%3E`,
+  circles: `data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='10' cy='10' r='8' stroke='%23ffffff' stroke-width='1' fill='none' opacity='0.15'/%3E%3Ccircle cx='10' cy='10' r='4' stroke='%23ffffff' stroke-width='0.5' fill='none' opacity='0.2'/%3E%3C/svg%3E`,
+  lines: `data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M-1 1l2 -2M0 10l10 -10M9 11l2 -2' stroke='%23ffffff' stroke-width='1' opacity='0.2'/%3E%3C/svg%3E`,
+  flower: `data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 0L14 10L24 12L14 14L12 24L10 14L0 12L10 10z' fill='%23ffffff' fill-opacity='0.1'/%3E%3C/svg%3E`
+};
+
+const getCardStyle = (patternType, baseColorHex) => {
+  const bgImage = patterns[patternType] || patterns.lines;
+  return {
+    wrapperClass: "absolute inset-0 w-full h-full bg-gradient-to-br rounded-2xl",
+    style: {
+      backgroundColor: baseColorHex,
+      backgroundImage: `url("${bgImage}"), linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.3) 100%)`,
+      backgroundSize: '30px 30px, cover'
+    }
+  };
+};
+
+// --- Data Configuration ---
+const daysData = {
+  sunday: {
+    id: 'sunday',
+    name: 'วันอาทิตย์',
+    enName: 'SUNDAY',
+    accent: 'text-red-400',
+    bgGradient: 'from-red-900/60 via-slate-950/20 to-transparent', // Adjusted for subtlety
+    deityName: 'เจ้าแม่กวนอิม',
+    worship: 'เจ้าแม่กวนอิม, เสด็จพ่อ ร.๕, พญาครุฑ, พระแม่อุมาเทวี',
+    icon: <Sun strokeWidth={1.5} className="w-8 h-8" />,
+    luckyColors: [
+      { pattern: 'circles', color: '#1a1a1a', label: 'อำนาจ บารมี', desc: 'ชื่อเสียง เงินทอง', textColor: 'text-white' },
+      { pattern: 'diamond', color: '#ea580c', label: 'โชคลาภ', desc: 'โอกาสใหม่ งาน เงิน', textColor: 'text-white' },
+      { pattern: 'waves', color: '#16a34a', label: 'เมตตา', desc: 'อุปถัมภ์ การเงิน', textColor: 'text-white' },
+      { pattern: 'lines', color: '#9333ea', label: 'การงาน', desc: 'โอกาสใหม่ เงินพิเศษ', textColor: 'text-white' },
+      { pattern: 'flower', color: '#2563eb', label: 'เสน่ห์', desc: 'เมตตา อุปถัมภ์', textColor: 'text-white' },
+    ]
+  },
+  monday: {
+    id: 'monday',
+    name: 'วันจันทร์',
+    enName: 'MONDAY',
+    accent: 'text-yellow-400',
+    bgGradient: 'from-yellow-900/60 via-slate-950/20 to-transparent',
+    deityName: 'พระแม่ลักษมี',
+    worship: 'พระแม่ลักษมี, พญานาค, สมเด็จพระพุฒาจารย์ (โต)',
+    icon: <Moon strokeWidth={1.5} className="w-8 h-8" />,
+    luckyColors: [
+      { pattern: 'circles', color: '#ca8a04', label: 'อำนาจ บารมี', desc: 'ชื่อเสียง เงินทอง', textColor: 'text-white' },
+      { pattern: 'diamond', color: '#fbbf24', label: 'โชคลาภ', desc: 'โอกาสใหม่ งาน เงิน', textColor: 'text-black' },
+      { pattern: 'waves', color: '#0ea5e9', label: 'เมตตา', desc: 'อุปถัมภ์ โชคลาภ', textColor: 'text-white' },
+      { pattern: 'lines', color: '#1e3a8a', label: 'การงาน', desc: 'โอกาสใหม่ โชค', textColor: 'text-white' },
+      { pattern: 'flower', color: '#16a34a', label: 'เสน่ห์', desc: 'เมตตา อุปถัมภ์', textColor: 'text-white' },
+    ]
+  },
+  tuesday: {
+    id: 'tuesday',
+    name: 'วันอังคาร',
+    enName: 'TUESDAY',
+    accent: 'text-pink-400',
+    bgGradient: 'from-pink-900/60 via-slate-950/20 to-transparent',
+    deityName: 'พระพรหม',
+    worship: 'พระพรหม, ปู่ฤาษีพ่อแก่, พญานาค, เสด็จพ่อ ร.๕',
+    icon: <Shield strokeWidth={1.5} className="w-8 h-8" />,
+    luckyColors: [
+      { pattern: 'circles', color: '#1a1a1a', label: 'อำนาจ บารมี', desc: 'ชื่อเสียง เงินทอง', textColor: 'text-white' },
+      { pattern: 'diamond', color: '#ea580c', label: 'โชคลาภ', desc: 'โอกาสใหม่ สิ่งใหม่ๆ', textColor: 'text-white' },
+      { pattern: 'lines', color: '#9333ea', label: 'การเงิน', desc: 'โชคลาภ เงินหลายทาง', textColor: 'text-white' },
+      { pattern: 'diamond', color: '#fbbf24', label: 'การงาน', desc: 'โชคลาภ พิเศษ', textColor: 'text-black' },
+      { pattern: 'waves', color: '#1d4ed8', label: 'เมตตา', desc: 'อุปถัมภ์ บารมี', textColor: 'text-white' },
+    ]
+  },
+  wednesdayDay: {
+    id: 'wednesdayDay',
+    name: 'วันพุธ (กลางวัน)',
+    enName: 'WEDNESDAY (DAY)',
+    accent: 'text-emerald-400',
+    bgGradient: 'from-emerald-900/60 via-slate-950/20 to-transparent',
+    deityName: 'พญานาค',
+    worship: 'พญานาค, พระพิฆเนศ, สมเด็จพระพุฒาจารย์ (โต)',
+    icon: <Cloud strokeWidth={1.5} className="w-8 h-8" />,
+    luckyColors: [
+      { pattern: 'circles', color: '#b45309', label: 'อำนาจ บารมี', desc: 'ชื่อเสียง เงินทอง', textColor: 'text-white' },
+      { pattern: 'diamond', color: '#ea580c', label: 'โอกาส', desc: 'ขยายธุรกิจ รายได้', textColor: 'text-white' },
+      { pattern: 'lines', color: '#a855f7', label: 'การเงิน', desc: 'โชคลาภ เงินพิเศษ', textColor: 'text-white' },
+      { pattern: 'diamond', color: '#fbbf24', label: 'การงาน', desc: 'ขยายธุรกิจ', textColor: 'text-black' },
+      { pattern: 'flower', color: '#dc2626', label: 'เมตตา', desc: 'ชื่อเสียง อุปถัมภ์', textColor: 'text-white' },
+    ]
+  },
+  wednesdayNight: {
+    id: 'wednesdayNight',
+    name: 'วันพุธ (กลางคืน)',
+    enName: 'WEDNESDAY (NIGHT)',
+    accent: 'text-gray-300',
+    bgGradient: 'from-slate-800/60 via-slate-950/20 to-transparent',
+    deityName: 'พระราหู',
+    worship: 'พระราหู, พญาครุฑ, เสด็จพ่อ ร.๕, พระนารายณ์',
+    icon: <Zap strokeWidth={1.5} className="w-8 h-8" />,
+    luckyColors: [
+      { pattern: 'circles', color: '#e5e7eb', label: 'อำนาจ บารมี', desc: 'ชื่อเสียง อุปถัมภ์', textColor: 'text-black' },
+      { pattern: 'diamond', color: '#dc2626', label: 'โชคลาภ', desc: 'โอกาสใหม่ เงินพิเศษ', textColor: 'text-white' },
+      { pattern: 'flower', color: '#f472b6', label: 'เสน่ห์', desc: 'เมตตา โชคการเงิน', textColor: 'text-white' },
+      { pattern: 'waves', color: '#38bdf8', label: 'ความสำเร็จ', desc: 'ชื่อเสียง บารมี', textColor: 'text-white' },
+      { pattern: 'lines', color: '#1e3a8a', label: 'การงาน', desc: 'เงินพิเศษ หลายทาง', textColor: 'text-white' },
+    ]
+  },
+  thursday: {
+    id: 'thursday',
+    name: 'วันพฤหัสบดี',
+    enName: 'THURSDAY',
+    accent: 'text-orange-400',
+    bgGradient: 'from-orange-900/60 via-slate-950/20 to-transparent',
+    deityName: 'ปู่ฤาษีพ่อแก่',
+    worship: 'ปู่ฤาษีพ่อแก่, พระพุทธชินราช, พระแม่อุมาเทวี',
+    icon: <Crown strokeWidth={1.5} className="w-8 h-8" />,
+    luckyColors: [
+      { pattern: 'waves', color: '#38bdf8', label: 'อำนาจ', desc: 'ชื่อเสียง เงินทอง', textColor: 'text-white' },
+      { pattern: 'diamond', color: '#ea580c', label: 'โอกาส', desc: 'เมตตา โชคลาภ', textColor: 'text-white' },
+      { pattern: 'lines', color: '#9333ea', label: 'การเงิน', desc: 'ค้าขาย เงินพิเศษ', textColor: 'text-white' },
+      { pattern: 'diamond', color: '#fbbf24', label: 'โชคลาภ', desc: 'เมตตา เงิน งาน', textColor: 'text-black' },
+      { pattern: 'flower', color: '#f9a8d4', label: 'เมตตา', desc: 'อุปถัมภ์ เงิน งาน', textColor: 'text-black' },
+    ]
+  },
+  friday: {
+    id: 'friday',
+    name: 'วันศุกร์',
+    enName: 'FRIDAY',
+    accent: 'text-cyan-400',
+    bgGradient: 'from-cyan-900/60 via-slate-950/20 to-transparent',
+    deityName: 'พระแม่ลักษมี',
+    worship: 'พระพุทธชินราช, พญานาค, พระแม่ลักษมี',
+    icon: <Heart strokeWidth={1.5} className="w-8 h-8" />,
+    luckyColors: [
+      { pattern: 'circles', color: '#dc2626', label: 'อำนาจ', desc: 'ชื่อเสียง บารมี', textColor: 'text-white' },
+      { pattern: 'diamond', color: '#fbbf24', label: 'โอกาส', desc: 'โชค งาน เงินพิเศษ', textColor: 'text-black' },
+      { pattern: 'waves', color: '#1a1a1a', label: 'การเงิน', desc: 'เมตตา โชคลาภ', textColor: 'text-white' },
+      { pattern: 'lines', color: '#f472b6', label: 'การงาน', desc: 'โอกาสใหม่ โชค', textColor: 'text-white' },
+      { pattern: 'flower', color: '#22c55e', label: 'เมตตา', desc: 'อุปถัมภ์ งาน เงิน', textColor: 'text-white' },
+    ]
+  },
+  saturday: {
+    id: 'saturday',
+    name: 'วันเสาร์',
+    enName: 'SATURDAY',
+    accent: 'text-purple-400',
+    bgGradient: 'from-purple-900/60 via-slate-950/20 to-transparent',
+    deityName: 'พระนารายณ์',
+    worship: 'พระพุทธชินราช, เสด็จพ่อ ร.๕, พระแก้วมรกต',
+    icon: <Star strokeWidth={1.5} className="w-8 h-8" />,
+    luckyColors: [
+      { pattern: 'waves', color: '#38bdf8', label: 'อำนาจ', desc: 'ชื่อเสียง บารมี', textColor: 'text-white' },
+      { pattern: 'flower', color: '#f472b6', label: 'โอกาส', desc: 'อะไรใหม่ๆ', textColor: 'text-white' },
+      { pattern: 'lines', color: '#9333ea', label: 'การเงิน', desc: 'โชค เงินใหม่', textColor: 'text-white' },
+      { pattern: 'diamond', color: '#dc2626', label: 'โชคลาภ', desc: 'เงิน งาน หลายทาง', textColor: 'text-white' },
+      { pattern: 'circles', color: '#1a1a1a', label: 'เมตตา', desc: 'บารมี โชคดี', textColor: 'text-white' },
+    ]
+  },
+};
+
+// --- Starry Background (Optimized) ---
+const StarryBackground = React.memo(() => {
+  const stars = useMemo(() => {
+    const arr = [];
+    for (let i = 0; i < 100; i++) {
+      arr.push({
+        id: i,
+        top: Math.random() * 100 + '%',
+        left: Math.random() * 100 + '%',
+        size: Math.random() < 0.7 ? Math.random() * 2 + 'px' : Math.random() * 3 + 1 + 'px',
+        delay: Math.random() * 5 + 's',
+        duration: Math.random() * 3 + 2 + 's',
+        opacity: Math.random() * 0.5 + 0.3
+      });
+    }
+    return arr;
+  }, []);
+
+  return (
+    <div className="fixed inset-0 pointer-events-none z-0 bg-black">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_#1e1b4b_0%,_#000000_80%)]"></div>
+      {stars.map((star) => (
+        <div
+          key={star.id}
+          className="absolute rounded-full bg-white animate-twinkle"
+          style={{
+            top: star.top,
+            left: star.left,
+            width: star.size,
+            height: star.size,
+            opacity: star.opacity,
+            '--tw-animate-duration': star.duration,
+            '--tw-animate-delay': star.delay,
+            boxShadow: `0 0 ${parseInt(star.size) * 2}px rgba(255,255,255,0.8)`
+          }}
+        />
+      ))}
+    </div>
+  );
+});
+
+// --- Flip Card Component ---
+const FlipCard = ({ item }) => {
+  const [isFlipped, setIsFlipped] = useState(false);
+  const cardStyle = getCardStyle(item.pattern, item.color);
+
+  return (
+    <div 
+      className="group relative h-56 w-full cursor-pointer perspective-1000"
+      onClick={() => setIsFlipped(!isFlipped)}
+    >
+      <div className={`relative h-full w-full transition-all duration-700 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}>
+        
+        {/* === FRONT FACE (Color ONLY + Small Hint) === */}
+        <div className="absolute inset-0 h-full w-full backface-hidden rounded-2xl overflow-hidden shadow-lg border border-white/10 bg-slate-800">
+           {/* Background & Pattern */}
+           <div className={cardStyle.wrapperClass} style={cardStyle.style}></div>
+           
+           {/* Overlays */}
+           <div className="absolute inset-1 border border-white/20 rounded-xl pointer-events-none"></div>
+           
+           {/* Content: Minimalist */}
+           <div className="absolute inset-0 p-4 flex flex-col justify-center items-center text-center z-10">
+              
+              {/* Decorative Center Icon */}
+              <div className="p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 shadow-inner animate-pulse-slow">
+                 <Sparkles className={`w-6 h-6 ${item.textColor}`} />
+              </div>
+
+              {/* Bottom Hint */}
+              <div className="absolute bottom-4 left-0 right-0">
+                  <span className={`text-[10px] font-medium opacity-80 ${item.textColor} bg-black/20 px-3 py-1 rounded-full backdrop-blur-sm`}>
+                    แตะเพื่อดูคำทำนาย
+                  </span>
+              </div>
+           </div>
+        </div>
+
+        {/* === BACK FACE (Info Revealed) === */}
+        <div className="absolute inset-0 h-full w-full backface-hidden rotate-y-180 rounded-2xl overflow-hidden shadow-xl border border-white/20 bg-slate-900 z-20">
+           {/* Background Texture for Back */}
+           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_#312e81_0%,_#020617_100%)] opacity-100"></div>
+           <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10"></div>
+           
+           {/* Frame */}
+           <div className="absolute inset-1 border border-indigo-500/30 rounded-xl pointer-events-none"></div>
+
+           {/* Content */}
+           <div className="absolute inset-0 p-5 flex flex-col justify-center items-center text-center z-30">
+              
+              {/* Category (e.g., Power) */}
+              <div className="mb-3">
+                 <h4 className="text-xl font-bold text-white drop-shadow-md tracking-wide">
+                   {item.label}
+                 </h4>
+                 <div className="h-0.5 w-10 bg-indigo-500 mx-auto mt-2 rounded-full shadow-[0_0_8px_#6366f1]"></div>
+              </div>
+              
+              {/* Description (e.g., Money) */}
+              <p className="text-sm text-indigo-100/90 font-light leading-relaxed">
+                {item.desc}
+              </p>
+              
+              {/* Decorative Icon */}
+              <div className="mt-4 opacity-50">
+                 <Gem className="w-4 h-4 text-indigo-400" />
+              </div>
+           </div>
+        </div>
+
+      </div>
+    </div>
+  );
+};
+
+export default function App() {
+  const [selectedDay, setSelectedDay] = useState(null);
+
+  // Inject CSS for Flip Animations
+  useEffect(() => {
+    const styleId = 'flip-animations';
+    if (!document.getElementById(styleId)) {
+      const style = document.createElement('style');
+      style.id = styleId;
+      style.textContent = `
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        
+        @keyframes twinkle {
+          0%, 100% { opacity: var(--tw-opacity, 1); transform: scale(1); }
+          50% { opacity: 0.2; transform: scale(0.7); }
+        }
+        .animate-twinkle {
+          animation: twinkle var(--tw-animate-duration, 3s) ease-in-out infinite;
+          animation-delay: var(--tw-animate-delay, 0s);
+        }
+        .animate-pulse-slow {
+          animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+      `;
+      document.head.appendChild(style);
+    }
+  }, []);
+
+  return (
+    <div className="min-h-screen font-sans text-slate-100 selection:bg-indigo-500/30 relative overflow-hidden bg-black">
+      <StarryBackground />
+      <div className="relative z-10">
+        {selectedDay ? (
+          <DetailView 
+            dayData={daysData[selectedDay]} 
+            onBack={() => setSelectedDay(null)} 
+          />
+        ) : (
+          <HomeView onSelectDay={setSelectedDay} />
+        )}
+      </div>
+    </div>
+  );
+}
+
+// --- Home Component ---
+function HomeView({ onSelectDay }) {
+  return (
+    <div className="max-w-md mx-auto min-h-screen px-6 py-12 flex flex-col relative">
+      <header className="mb-10 relative">
+        <div className="flex items-center space-x-2 mb-4">
+           <div className="h-[2px] w-10 bg-indigo-500 shadow-[0_0_10px_#6366f1]"></div>
+           <p className="text-[10px] font-bold tracking-[0.3em] text-indigo-300 uppercase">Daily Guidance</p>
+        </div>
+        <h1 className="text-4xl font-light text-white leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+          เช็คสีมงคล<br />
+          <span className="font-semibold italic text-transparent bg-clip-text bg-gradient-to-r from-indigo-200 via-white to-indigo-200">ประจำวันเกิด</span>
+        </h1>
+        <div className="mt-6 flex items-center space-x-2 text-xs text-indigo-200 bg-white/10 backdrop-blur-md w-fit px-4 py-1.5 rounded-full border border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.1)]">
+          <Sparkles className="w-3 h-3 text-yellow-300 animate-pulse-slow" />
+          <span>ฉบับปี 2026</span>
+        </div>
+      </header>
+
+      <div className="grid grid-cols-1 gap-4 pb-10">
+        {Object.values(daysData).map((day) => (
+          <button
+            key={day.id}
+            onClick={() => onSelectDay(day.id)}
+            className="group relative w-full bg-slate-900/60 hover:bg-slate-800/80 p-4 rounded-xl backdrop-blur-md border border-white/10 hover:border-indigo-400/50 transition-all duration-300 flex items-center justify-between text-left shadow-lg overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+            <div className="flex items-center space-x-4 relative z-10">
+              <div className={`p-3 rounded-lg bg-black/40 border border-white/10 ${day.accent} shadow-inner`}>
+                {React.cloneElement(day.icon, { className: "w-6 h-6" })}
+              </div>
+              <div>
+                <h3 className="text-lg font-medium text-slate-100 group-hover:text-white transition-colors">{day.name}</h3>
+                <p className="text-[10px] tracking-wider text-slate-500 font-semibold uppercase group-hover:text-indigo-300">{day.enName}</p>
+              </div>
+            </div>
+          </button>
+        ))}
+      </div>
+      
+      <footer className="mt-auto text-center text-slate-600 text-xs py-4">
+        © 2026 Mongkol Design Studio
+      </footer>
+    </div>
+  );
+}
+
+// --- Detail Component ---
+function DetailView({ dayData, onBack }) {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  return (
+    <div className="min-h-screen">
+      <div className="max-w-md mx-auto min-h-screen flex flex-col relative">
+        {/* Adjusted Background Gradient Opacity to 40-50% feel via utility classes */}
+        <div className={`absolute top-0 inset-x-0 h-[70vh] bg-gradient-to-b ${dayData.bgGradient} transition-colors duration-700 pointer-events-none opacity-50`} />
+
+        <nav className="px-6 pt-12 pb-4 flex justify-between items-center sticky top-0 z-50">
+          <button 
+            onClick={onBack}
+            className="p-2 -ml-2 rounded-full bg-black/20 hover:bg-white/10 backdrop-blur-md border border-white/10 text-slate-200 transition-all active:scale-95"
+          >
+            <ArrowLeft strokeWidth={1.5} className="w-5 h-5" />
+          </button>
+          <span className="text-[10px] font-bold tracking-widest uppercase text-slate-400">Lucky Colors</span>
+          <div className="w-10" />
+        </nav>
+
+        <main className="flex-1 px-6 pb-12 flex flex-col relative z-10">
+          <div className="text-center mt-2 mb-8 animate-fade-in-up">
+            <div className={`inline-flex p-5 rounded-full bg-white/5 border border-white/10 shadow-[0_0_40px_rgba(255,255,255,0.05)] mb-4 ${dayData.accent} relative`}>
+              {React.cloneElement(dayData.icon, { className: "w-12 h-12 relative z-10 drop-shadow-[0_0_15px_currentColor]" })}
+            </div>
+            <h2 className="text-3xl font-medium text-white mb-1 drop-shadow-xl">{dayData.name}</h2>
+            <p className="text-xs text-slate-400 tracking-widest uppercase">{dayData.enName}</p>
+          </div>
+
+          <div className="bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-2xl p-5 mb-8 shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
+            <div className="flex items-start space-x-4 relative z-10">
+                <div className="bg-black/40 border border-white/10 text-indigo-300 p-2 rounded-xl mt-1 shrink-0">
+                  <Info size={18} />
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold text-indigo-300 uppercase mb-1 tracking-wide">สิ่งศักดิ์สิทธิ์ประจำวัน</p>
+                  <h3 className="text-lg font-medium text-white mb-2">{dayData.deityName}</h3>
+                  <div className="h-px w-full bg-white/10 my-2"></div>
+                  <p className="text-sm text-slate-300 leading-relaxed font-light">
+                      บูชา: {dayData.worship}
+                  </p>
+                </div>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div className="flex items-center justify-between px-1 mb-2">
+               <div className="flex items-center space-x-2">
+                 <Gem className="w-4 h-4 text-indigo-400" />
+                 <span className="text-sm font-semibold text-slate-200">ไพ่พลังสีมงคล</span>
+               </div>
+               <span className="text-[10px] text-slate-500 animate-pulse">แตะที่ไพ่เพื่อดูคำทำนาย</span>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              {dayData.luckyColors.map((item, idx) => (
+                <FlipCard key={idx} item={item} />
+              ))}
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+}
+
+
