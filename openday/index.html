@@ -3,482 +3,441 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ฤกษ์เปิดกระเป๋าเรียกทรัพย์</title>
+    <title>ดูดวงประจำวัน</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
-    <!-- Font Awesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        body {
-            font-family: 'Prompt', sans-serif;
-            background-color: #02010a; /* Dark Purple Black */
-            color: #e9d5ff; /* Light Purple text */
-            overflow-x: hidden;
-            position: relative;
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 15px rgba(250, 204, 21, 0.5); transform: scale(1.05); }
+            50% { box-shadow: 0 0 5px rgba(250, 204, 21, 0.2); transform: scale(1); }
         }
-
-        /* Background Stars Container */
-        .background-stars-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -2;
-            overflow: hidden;
+        .cell-highlight {
+            border-color: #facc15 !important;
+            background-color: rgba(113, 63, 18, 0.8) !important;
+            color: #fef9c3 !important;
+            animation: pulse-glow 0.5s infinite;
+            z-index: 10;
         }
-
-        /* Moon Container Styles */
-        .moon-container {
-            width: 280px;
-            height: 280px;
-            position: relative;
-            margin: 0 auto;
-            border-radius: 50%;
-        }
-
-        /* Stars Effect around the moon */
-        .stars-container {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 150%;
-            height: 150%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        /* Shared Star Style */
-        .star {
-            position: absolute;
-            background-color: #e9d5ff;
-            border-radius: 50%;
-            opacity: 0;
-            animation: twinkle 3s infinite ease-in-out;
-            box-shadow: 0 0 4px rgba(216, 180, 254, 0.8);
-        }
-
-        @keyframes twinkle {
-            0% { opacity: 0; transform: scale(0.5); }
-            50% { opacity: 1; transform: scale(1); }
-            100% { opacity: 0; transform: scale(0.5); }
-        }
-
-        /* Glow effect behind the moon */
-        .moon-glow {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            box-shadow: 0 0 70px rgba(168, 85, 247, 0.25);
-            z-index: 0;
-            transition: box-shadow 0.5s ease;
-        }
-
-        /* Animations */
-        .fade-in { animation: fadeIn 0.5s ease-out forwards; }
-        .slide-up { animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        .slide-up { animation: slideUp 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        body {
+            font-family: 'Sarabun', sans-serif;
         }
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Glassmorphism Card Base */
-        .glass-card {
-            background: rgba(15, 7, 32, 0.6);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(168, 85, 247, 0.2);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Selection Card Hover */
-        .selection-card {
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        .selection-card:hover {
-            background: rgba(168, 85, 247, 0.15);
-            transform: translateY(-5px);
-            border-color: rgba(168, 85, 247, 0.5);
-            box-shadow: 0 0 20px rgba(168, 85, 247, 0.2);
-        }
-
-        /* Utility to hide elements */
-        .hidden { display: none !important; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center py-6 px-4 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#2e1065] via-[#0b0314] to-[#000000]">
+<body class="min-h-screen bg-[#0f0c29] bg-gradient-to-b from-[#0f0c29] via-[#302b63] to-[#24243e] text-white flex flex-col items-center p-4 overflow-y-auto">
 
-    <!-- Background Stars -->
-    <div class="background-stars-container" id="backgroundStarsContainer"></div>
-
-    <!-- ================= LANDING PAGE (Select Career) ================= -->
-    <div id="landingPage" class="w-full max-w-md flex flex-col items-center justify-center space-y-8 z-10 slide-up">
-        
-        <div class="text-center space-y-2">
-            <div class="text-6xl mb-4 animate-pulse">🔮</div>
-            <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-200 to-pink-200 drop-shadow-md">
-                เลือกเส้นทางของคุณ
+    <!-- Screen 1: เลือกวันเกิด -->
+    <div id="screen-home" class="flex flex-col items-center justify-center min-h-[80vh] w-full max-w-md text-center space-y-8">
+        <div class="space-y-4">
+            <div class="flex justify-center mb-6 relative">
+                <div class="absolute inset-0 bg-yellow-400 blur-3xl opacity-20 animate-pulse rounded-full"></div>
+                <i data-lucide="sparkles" class="w-20 h-20 text-yellow-300 relative z-10"></i>
+            </div>
+            <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 to-amber-500">
+                ดูดวงประจำวัน
             </h1>
-            <p class="text-purple-300/60">เพื่อคำนวณฤกษ์เปิดทรัพย์ที่แม่นยำที่สุด</p>
+            <p class="text-purple-200 text-lg font-light">ของดีมีแรงครู</p>
+            <div id="home-date-display" class="text-sm text-purple-300 bg-white/5 py-1 px-3 rounded-full inline-block mt-2 border border-white/10">
+                <!-- วันที่ปัจจุบันจะแสดงที่นี่ -->
+            </div>
         </div>
 
-        <div class="grid grid-cols-1 gap-4 w-full px-4">
-            <!-- Option 1: Normal -->
-            <div onclick="selectMode('normal')" class="glass-card selection-card rounded-2xl p-6 flex items-center space-x-4 group">
-                <div class="w-12 h-12 rounded-full bg-purple-500/10 flex items-center justify-center border border-purple-500/30 group-hover:bg-purple-500/30 transition">
-                    <i class="fa-solid fa-sun text-yellow-300 text-xl"></i>
-                </div>
-                <div class="text-left">
-                    <h3 class="text-xl font-bold text-purple-100">บุคคลทั่วไป</h3>
-                    <p class="text-xs text-purple-400 group-hover:text-purple-200">ค้าขาย, งานประจำ, ธุรกิจสุจริต</p>
-                </div>
-                <div class="ml-auto text-purple-500/50 group-hover:text-purple-300">
-                    <i class="fa-solid fa-chevron-right"></i>
-                </div>
-            </div>
-
-            <!-- Option 2: Gray -->
-            <div onclick="selectMode('gray')" class="glass-card selection-card rounded-2xl p-6 flex items-center space-x-4 group">
-                <div class="w-12 h-12 rounded-full bg-purple-500/10 flex items-center justify-center border border-purple-500/30 group-hover:bg-purple-500/30 transition">
-                    <i class="fa-solid fa-moon text-purple-400 text-xl"></i>
-                </div>
-                <div class="text-left">
-                    <h3 class="text-xl font-bold text-purple-100">สายเทา / กลางคืน</h3>
-                    <p class="text-xs text-purple-400 group-hover:text-purple-200">งานกลางคืน, ธุรกิจสีเทา, เสี่ยงโชค</p>
-                </div>
-                <div class="ml-auto text-purple-500/50 group-hover:text-purple-300">
-                    <i class="fa-solid fa-chevron-right"></i>
-                </div>
+        <div class="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/10 shadow-2xl w-full">
+            <h2 class="text-xl mb-6 font-semibold text-white/90">เลือกวันเกิดของคุณ</h2>
+            <div class="grid grid-cols-2 gap-4" id="day-buttons">
+                <!-- ปุ่มจะถูกสร้างด้วย JS -->
             </div>
         </div>
     </div>
 
-
-    <!-- ================= MAIN APP (Moon Phase) ================= -->
-    <main id="mainApp" class="hidden w-full max-w-md glass-card rounded-3xl p-6 shadow-2xl relative overflow-hidden ring-1 ring-purple-500/10 fade-in">
+    <!-- Screen 2: ดูดวง -->
+    <div id="screen-horoscope" class="hidden flex-col items-center w-full max-w-md space-y-6 pb-12">
         
-        <!-- Decorative Elements -->
-        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-            <div class="absolute -top-20 -right-20 w-40 h-40 bg-purple-600/20 rounded-full blur-3xl"></div>
-            <div class="absolute -bottom-20 -left-20 w-40 h-40 bg-indigo-600/20 rounded-full blur-3xl"></div>
-        </div>
-
-        <!-- Navigation / Header -->
-        <header class="relative z-10 mb-6">
-            <!-- Back Button (Updated for better clickability) -->
-            <button onclick="goBack()" class="absolute left-0 top-0 p-3 -ml-3 text-purple-400/70 hover:text-purple-100 transition z-50 rounded-full hover:bg-purple-500/10 cursor-pointer">
-                <i class="fa-solid fa-arrow-left text-xl"></i>
+        <!-- Header -->
+        <div class="w-full flex justify-between items-center mb-2 pt-4 px-2">
+            <button onclick="resetApp()" class="text-gray-400 hover:text-white flex items-center gap-2 text-sm transition-colors py-2 px-3 rounded-lg hover:bg-white/10">
+                ← เปลี่ยนวันเกิด
             </button>
-            
-            <div class="text-center">
-                <h1 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-200 to-pink-200 drop-shadow-md">
-                    🌙 ฤกษ์เปิดกระเป๋า
-                </h1>
-                <p id="displayModeText" class="text-xs font-semibold text-purple-400 mt-1 uppercase tracking-wider border border-purple-500/30 inline-block px-2 py-0.5 rounded-full bg-purple-900/30">
-                    -
-                </p>
-            </div>
-        </header>
-
-        <!-- Controls (Date Only) -->
-        <div class="mb-6 space-y-4 relative z-10">
-            <div class="flex flex-col">
-                <label class="text-xs text-purple-300/70 mb-1 ml-1">เลือกวันที่ต้องการเช็ค</label>
-                <input type="date" id="datePicker" class="w-full bg-[#1e1b4b]/60 border border-purple-500/30 rounded-xl px-4 py-3 text-purple-100 focus:outline-none focus:border-purple-400 text-center shadow-inner placeholder-purple-400/50">
-            </div>
-            <!-- Removed Toggle Switch -->
-        </div>
-
-        <!-- Moon Visualization -->
-        <div class="relative flex justify-center items-center py-2 mb-2 z-10">
-            <div class="moon-container">
-                <div class="stars-container" id="starsContainer"></div>
-                <div id="moonGlow" class="moon-glow"></div>
-                <div id="moonVisual" class="relative z-10 w-full h-full">
-                    <!-- SVG Injected Here -->
+            <div class="text-right">
+                <h2 id="user-day-display" class="text-lg font-bold px-3 py-1 rounded-lg bg-opacity-20 text-white inline-block">
+                    <!-- วันเกิดผู้ใช้ -->
+                </h2>
+                <div id="lunar-phase-display" class="text-xs text-purple-200 flex items-center justify-end gap-1 mt-1 opacity-70">
+                    <!-- ข้างขึ้น/แรม จะแสดงที่นี่ -->
                 </div>
             </div>
         </div>
 
-        <!-- Info Text -->
-        <div class="text-center mb-6 relative z-10">
-            <h2 id="lunarPhaseText" class="text-2xl font-bold text-purple-50 drop-shadow-sm">กำลังคำนวณ...</h2>
-            <p id="moonAgeText" class="text-sm text-purple-300/80 mt-1 font-mono tracking-wide">Age: - | Phase: -%</p>
+        <!-- Status Box -->
+        <div class="bg-gradient-to-r from-purple-900/50 to-blue-900/50 backdrop-blur border border-white/10 rounded-2xl p-6 text-center min-h-[100px] flex items-center justify-center shadow-lg w-full relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-purple-400 to-transparent opacity-50"></div>
+            <div id="status-text" class="space-y-1">
+                <p class="text-lg font-medium text-white">พร้อมทำนายดวงชะตาหรือยัง?</p>
+                <p class="text-sm text-purple-300">กดปุ่มด้านล่างเพื่อหมุนวงล้อทักษา</p>
+            </div>
         </div>
 
-        <!-- Result Card -->
-        <div id="resultCard" class="relative z-10 rounded-xl p-5 text-center opacity-0 transform scale-95 border-2 bg-[#0f0720]/60 backdrop-blur-sm transition-all duration-300">
-            <div id="resultIcon" class="text-5xl mb-3 drop-shadow-md"></div>
-            <h3 id="resultTitle" class="text-2xl font-bold mb-2"></h3>
-            <p id="resultDesc" class="text-sm opacity-90 leading-relaxed"></p>
+        <!-- The Grid -->
+        <div class="bg-black/40 p-4 rounded-3xl border border-white/10 shadow-[0_0_50px_rgba(139,92,246,0.15)] relative w-full">
+            <div id="grid-container" class="grid grid-cols-3 gap-3 relative z-10">
+                <!-- Grid Cells จะถูกสร้างด้วย JS -->
+            </div>
         </div>
-
-    </main>
-
-    <script>
-        // --- DOM Elements ---
-        const landingPage = document.getElementById('landingPage');
-        const mainApp = document.getElementById('mainApp');
-        const displayModeText = document.getElementById('displayModeText');
         
-        const datePicker = document.getElementById('datePicker');
-        const moonVisual = document.getElementById('moonVisual');
-        const moonGlow = document.getElementById('moonGlow');
-        const starsContainer = document.getElementById('starsContainer');
-        const backgroundStarsContainer = document.getElementById('backgroundStarsContainer'); 
-        const lunarPhaseText = document.getElementById('lunarPhaseText');
-        const moonAgeText = document.getElementById('moonAgeText');
-        const resultCard = document.getElementById('resultCard');
-        const resultTitle = document.getElementById('resultTitle');
-        const resultDesc = document.getElementById('resultDesc');
-        const resultIcon = document.getElementById('resultIcon');
+        <!-- Direction Info -->
+        <div id="direction-info" class="text-xs text-gray-400 bg-white/5 py-1 px-3 rounded-full border border-white/5 hidden">
+             <!-- แสดงทิศทางนับ -->
+        </div>
 
-        // Config
-        const MOON_IMAGE_URL = "https://as1.ftcdn.net/jpg/05/58/34/58/1000_F_558345818_bge4TJnE7KG7Lu1Gykh5HZOzRUDkXK3Q.jpg";
+        <!-- Controls / Results -->
+        <div id="action-area" class="w-full">
+            <button onclick="startPrediction()" class="w-full bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 hover:from-yellow-400 hover:to-red-400 text-white font-bold py-4 rounded-2xl shadow-lg transform hover:scale-[1.02] active:scale-95 transition-all text-xl flex items-center justify-center gap-3 group relative overflow-hidden">
+                <i data-lucide="sparkles"></i> เริ่มทำนายดวงชะตา
+            </button>
+        </div>
+
+        <!-- Result Card (Hidden by default) -->
+        <div id="result-card" class="hidden w-full space-y-4 slide-up">
+            <div id="result-box" class="p-6 rounded-3xl border-2 shadow-2xl relative overflow-hidden bg-gradient-to-br from-purple-900/60 to-indigo-950/60 border-purple-500">
+                <div class="flex items-center justify-between mb-6 relative z-10">
+                    <div>
+                        <p class="text-sm opacity-80 font-medium tracking-wide mb-1">วันนี้ดวงของคุณตกที่ภูมิ</p>
+                        <h3 id="result-label" class="text-4xl font-extrabold text-white tracking-tight drop-shadow-md">
+                            -
+                        </h3>
+                    </div>
+                    <div id="result-icon-bg" class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-inner bg-yellow-400 text-yellow-900">
+                        <i data-lucide="star" class="w-8 h-8"></i>
+                    </div>
+                </div>
+                <div class="bg-black/30 backdrop-blur-sm rounded-xl p-5 mb-4 border border-white/5 relative z-10">
+                    <p id="result-meaning" class="text-lg leading-relaxed text-gray-100 font-light">-</p>
+                </div>
+                <div id="result-ref" class="text-xs opacity-50 text-center font-mono"></div>
+            </div>
+
+            <div class="bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/10 text-sm shadow-xl">
+                <h4 class="font-bold text-lg text-yellow-400 mb-3 flex items-center gap-2">
+                    <span class="w-1 h-6 bg-yellow-400 rounded-full inline-block"></span>
+                    คำแนะนำประจำวัน
+                </h4>
+                <div id="result-advice" class="text-gray-200 leading-relaxed text-base"></div>
+            </div>
+
+            <button onclick="resetApp()" class="w-full py-4 text-gray-400 hover:text-white border border-white/10 bg-white/5 rounded-2xl hover:bg-white/10 transition-all flex items-center justify-center gap-2 mt-4">
+                <i data-lucide="refresh-cw" class="w-4 h-4"></i> ดูดวงใหม่อีกครั้ง
+            </button>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- DATA ---
+        const DAYS = [
+            { id: 1, name: 'วันอาทิตย์', color: 'bg-red-500' },
+            { id: 2, name: 'วันจันทร์', color: 'bg-yellow-400' },
+            { id: 3, name: 'วันอังคาร', color: 'bg-pink-500' },
+            { id: 4, name: 'วันพุธ (กลางวัน)', color: 'bg-green-500' },
+            { id: 8, name: 'วันพุธ (กลางคืน)', color: 'bg-gray-700' },
+            { id: 5, name: 'วันพฤหัสบดี', color: 'bg-orange-500' },
+            { id: 6, name: 'วันศุกร์', color: 'bg-blue-500' },
+            { id: 7, name: 'วันเสาร์', color: 'bg-purple-700' },
+        ];
+
+        const GRID_LAYOUT = [
+            [8, 1, 6],
+            [3, null, 4],
+            [5, 7, 2]
+        ];
+
+        // Path A (Clockwise/Waning): 1 -> 6 -> 4 -> 2 -> 7 -> 5 -> 3 -> 8 -> 1
+        const PATH_CW = [1, 6, 4, 2, 7, 5, 3, 8];
+        // Path B (Counter-Clockwise/Waxing): 1 -> 8 -> 3 -> 5 -> 7 -> 2 -> 4 -> 6 -> 1
+        const PATH_CCW = [1, 8, 3, 5, 7, 2, 4, 6];
+        
+        const THAKSA_ATTRIBUTES = {
+            'borivan': { label: 'บริวาร', meaning: 'คนใกล้ชิด, ครอบครัว, ลูกน้อง', type: 'neutral' },
+            'ayu': { label: 'อายุ', meaning: 'สุขภาพ, ความเป็นอยู่, วิถีชีวิต', type: 'good' },
+            'dech': { label: 'เดช', meaning: 'อำนาจ, ชื่อเสียง, บารมี', type: 'good' },
+            'si': { label: 'ศรี', meaning: 'โชคลาภ, ความสำเร็จ, เงินทอง (ดีมาก)', type: 'very_good' },
+            'mula': { label: 'มูลละ', meaning: 'ทรัพย์สิน, มรดก, ความมั่นคง', type: 'good' },
+            'utsaha': { label: 'อุตสาหะ', meaning: 'หน้าที่การงาน, ความพยายาม', type: 'neutral' },
+            'montri': { label: 'มนตรี', meaning: 'ผู้ใหญ่เมตตา, คนอุปถัมภ์ (ดีมาก)', type: 'very_good' },
+            'kalakini': { label: 'กาลกิณี', meaning: 'อุปสรรค, โชคร้าย, สิ่งที่ควรระวัง (ไม่ดี)', type: 'bad' },
+        };
+        const ATTRIBUTE_KEYS = ['borivan', 'ayu', 'dech', 'si', 'mula', 'utsaha', 'montri', 'kalakini'];
 
         // State
-        let currentMode = 'normal'; // default
+        let selectedDay = null;
+        let finalResult = null;
+        let currentMoonPhase = null;
         
-        // Initialize Date
-        const today = new Date();
-        datePicker.valueAsDate = today;
+        // --- INIT ---
+        window.onload = function() {
+            lucide.createIcons();
+            initDateAndMoon();
+            renderDayButtons();
+            renderGrid();
+        };
 
-        // --- View Navigation Logic ---
-        function selectMode(mode) {
-            currentMode = mode;
+        // --- REAL TIME CALCULATION ---
+        function initDateAndMoon() {
+            const today = new Date();
             
-            // Update UI text based on mode
-            if (currentMode === 'normal') {
-                displayModeText.innerText = "อาชีพ: บุคคลทั่วไป (สายขาว)";
-                displayModeText.className = "text-xs font-semibold text-yellow-200 mt-1 uppercase tracking-wider border border-yellow-500/30 inline-block px-2 py-0.5 rounded-full bg-yellow-900/30";
+            // 1. Show Today's Date in Thai
+            const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+            const thaiDate = today.toLocaleDateString('th-TH', options);
+            document.getElementById('home-date-display').innerText = thaiDate;
+
+            // 2. Calculate Moon Phase
+            currentMoonPhase = calculateMoonPhase(today);
+            
+            // Update UI
+            const moonIcon = currentMoonPhase.type === 'waxing' ? 'sun' : 'moon'; // Use sun/moon icon for wax/wan
+            const moonColor = currentMoonPhase.type === 'waxing' ? 'text-yellow-300' : 'text-blue-300';
+            
+            const moonHtml = `<i data-lucide="${moonIcon}" class="w-4 h-4 ${moonColor}"></i> ${currentMoonPhase.label}`;
+            document.getElementById('lunar-phase-display').innerHTML = moonHtml;
+
+            // Update Direction Info (Visible only when start)
+            const dirText = currentMoonPhase.type === 'waxing' ? 'ทวนเข็มนาฬิกา (ข้างขึ้น)' : 'ตามเข็มนาฬิกา (ข้างแรม)';
+            document.getElementById('direction-info').innerHTML = `ทิศทางการเดิน: ${dirText}`;
+            document.getElementById('direction-info').classList.remove('hidden');
+            document.getElementById('direction-info').classList.add('inline-block');
+        }
+
+        function calculateMoonPhase(date) {
+            // Astronomical Approximate for Demo Purposes
+            // Reference New Moon: Jan 21, 2023 20:53 UTC
+            const knownNewMoon = new Date('2023-01-21T20:53:00Z').getTime();
+            const cycle = 29.53058867;
+            const diff = date.getTime() - knownNewMoon;
+            const daysSince = diff / (1000 * 60 * 60 * 24);
+            const currentCycleAge = daysSince % cycle;
+            
+            let age = Math.floor(currentCycleAge); // 0 - 29
+            
+            // Logic mapping to Thai Calendar (Simplified)
+            // 0-14 = Waxing (Khuen 1-15)
+            // 15-29 = Waning (Raem 1-15)
+            
+            if (age < 15) {
+                const day = age + 1;
+                return { type: 'waxing', day: day, label: `ขึ้น ${day} ค่ำ` };
             } else {
-                displayModeText.innerText = "อาชีพ: สายเทา / กลางคืน";
-                displayModeText.className = "text-xs font-semibold text-purple-300 mt-1 uppercase tracking-wider border border-purple-500/30 inline-block px-2 py-0.5 rounded-full bg-purple-900/30";
-            }
-
-            // Transition
-            landingPage.classList.add('hidden');
-            landingPage.classList.remove('slide-up'); // Remove class to reset animation for next time
-            
-            mainApp.classList.remove('hidden');
-            void mainApp.offsetWidth; // Trigger reflow
-            mainApp.classList.add('slide-up');
-            
-            // Trigger calculation
-            updateApp();
-        }
-
-        function goBack() {
-            mainApp.classList.add('hidden');
-            mainApp.classList.remove('slide-up');
-            
-            landingPage.classList.remove('hidden');
-            void landingPage.offsetWidth; // Trigger reflow
-            landingPage.classList.add('slide-up'); // Re-trigger animation
-        }
-
-        // --- Visual Effects (Stars) ---
-        function createStars() {
-            starsContainer.innerHTML = '';
-            const numStars = 30;
-            for (let i = 0; i < numStars; i++) {
-                const star = document.createElement('div');
-                star.classList.add('star');
-                const angle = Math.random() * Math.PI * 2;
-                const distance = 140 + Math.random() * 100;
-                const x = Math.cos(angle) * distance;
-                const y = Math.sin(angle) * distance;
-                const size = 1 + Math.random() * 3;
-                const delay = Math.random() * 3;
-                const duration = 2 + Math.random() * 3;
-
-                star.style.width = `${size}px`;
-                star.style.height = `${size}px`;
-                star.style.left = `calc(50% + ${x}px)`;
-                star.style.top = `calc(50% + ${y}px)`;
-                star.style.animationDelay = `${delay}s`;
-                star.style.animationDuration = `${duration}s`;
-                star.style.backgroundColor = Math.random() > 0.8 ? "#d8b4fe" : "#ffffff";
-
-                starsContainer.appendChild(star);
+                const day = age - 14;
+                return { type: 'waning', day: day, label: `แรม ${day} ค่ำ` };
             }
         }
-        
-        function createBackgroundStars() {
-            const numStars = 80;
-            for (let i = 0; i < numStars; i++) {
-                const star = document.createElement('div');
-                star.classList.add('star');
-                const x = Math.random() * 100;
-                const y = Math.random() * 100;
-                const size = 1 + Math.random() * 2; 
-                const delay = Math.random() * 5;
-                const duration = 3 + Math.random() * 4; 
 
-                star.style.width = `${size}px`;
-                star.style.height = `${size}px`;
-                star.style.left = `${x}%`;
-                star.style.top = `${y}%`;
-                star.style.animationDelay = `${delay}s`;
-                star.style.animationDuration = `${duration}s`;
-                star.style.opacity = Math.random() * 0.7 + 0.3; 
-                star.style.backgroundColor = Math.random() > 0.7 ? "#a855f7" : "#ffffff";
+        // --- RENDER FUNCTIONS ---
+        function renderDayButtons() {
+            const container = document.getElementById('day-buttons');
+            container.innerHTML = '';
+            DAYS.forEach(day => {
+                const btn = document.createElement('button');
+                btn.className = `${day.color} hover:brightness-110 hover:scale-105 active:scale-95 transition-all duration-200 text-white py-4 px-4 rounded-2xl font-medium shadow-lg flex items-center justify-center gap-2`;
+                btn.innerText = day.name;
+                btn.onclick = () => selectDay(day);
+                container.appendChild(btn);
+            });
+        }
+
+        function renderGrid(activeNum = null, showResult = false) {
+            const container = document.getElementById('grid-container');
+            container.innerHTML = '';
+            
+            // Center icon based on moon phase
+            const centerIcon = currentMoonPhase && currentMoonPhase.type === 'waxing' ? 'sun' : 'moon';
+
+            GRID_LAYOUT.flat().forEach(num => {
+                const div = document.createElement('div');
                 
-                backgroundStarsContainer.appendChild(star);
-            }
-        }
-
-        createStars();
-        createBackgroundStars();
-
-        // --- Core Logic ---
-        function getMoonPhase(date) {
-            // ใช้ UTC เพื่อป้องกันปัญหา Timezone ทำให้วันที่เพี้ยน
-            let year = date.getUTCFullYear();
-            let month = date.getUTCMonth() + 1;
-            let day = date.getUTCDate();
-
-            // สูตรคำนวณ Julian Day (ความแม่นยำสูง)
-            if (month < 3) {
-                year--;
-                month += 12;
-            }
-
-            let A = Math.floor(year / 100);
-            let B = 2 - A + Math.floor(A / 4);
-            let JD = Math.floor(365.25 * (year + 4716)) + Math.floor(30.6001 * (month + 1)) + day + B - 1524.5;
-
-            // คำนวณเฟสดวงจันทร์จากวันที่อ้างอิง (Known New Moon: 2000 Jan 6)
-            let daysSinceNew = JD - 2451550.1;
-            let cycles = daysSinceNew / 29.53058867;
-            let phase = cycles - Math.floor(cycles);
-
-            // ปรับ phase ให้อยู่ในช่วง 0-1 เสมอ
-            if (phase < 0) phase += 1;
-            
-            // คำนวณอายุจันทร์ (0 - 29.5)
-            let age = phase * 29.53058867;
-
-            return { 
-                phase: phase, 
-                age: Math.round(age) 
-            };
-        }
-
-        function getLunarPhaseName(age) {
-            if (age === 0 || age >= 29) return { name: "🌑 เดือนดับ (New Moon)", type: "new" };
-            if (age === 15) return { name: "🌕 จันทร์เพ็ญ (Full Moon)", type: "full" };
-            if (age < 15) return { name: `🌒 ข้างขึ้น ${age} ค่ำ`, type: "waxing" };
-            return { name: `🌘 ข้างแรม ${age - 15} ค่ำ`, type: "waning" };
-        }
-
-        function renderRealMoon(phase) {
-            const s = 250;
-            const r = s / 2;
-            let path = "";
-            let glowIntensity = 0.1;
-
-            if (phase <= 0.01 || phase >= 0.99) {
-                path = `M ${r},${r} m 0,0 z`;
-                glowIntensity = 0.05;
-            } else if (Math.abs(phase - 0.5) <= 0.01) {
-                path = `M ${r},0 A ${r},${r} 0 1,1 ${r},${s} A ${r},${r} 0 1,1 ${r},0`;
-                glowIntensity = 0.8;
-            } else {
-                const isWaxing = phase < 0.5;
-                let p = isWaxing ? phase * 2 : (phase - 0.5) * 2;
-                let rx = r * Math.cos(p * Math.PI); 
-                let sweepInner = 0;
-                
-                if (isWaxing) {
-                    sweepInner = phase < 0.25 ? 0 : 1;
-                    path = `M ${r},0 A ${r},${r} 0 0,1 ${r},${s} A ${Math.abs(rx)},${r} 0 0,${sweepInner} ${r},0`;
+                if (num === null) {
+                    // Center Cell
+                    div.className = "flex items-center justify-center bg-gray-900/50 rounded-lg aspect-square border border-gray-700 relative overflow-hidden";
+                    div.innerHTML = `<div class="absolute inset-0 opacity-20 animate-pulse bg-gradient-to-tr from-purple-500 to-blue-500"></div><i data-lucide="${centerIcon}" class="w-8 h-8 text-yellow-100 opacity-50"></i>`;
                 } else {
-                    sweepInner = phase < 0.75 ? 0 : 1;
-                    path = `M ${r},0 A ${r},${r} 0 0,0 ${r},${s} A ${Math.abs(rx)},${r} 0 0,${sweepInner} ${r},0`;
+                    // Number Cell
+                    let baseClass = "flex flex-col items-center justify-center rounded-lg aspect-square border-2 transition-all duration-300 relative ";
+                    let content = `<span class="text-2xl font-bold text-purple-100">${num}</span>`;
+
+                    const isUserDay = selectedDay && selectedDay.id === num;
+                    const isActive = activeNum === num;
+                    
+                    if (isActive) {
+                        baseClass += "border-yellow-400 bg-yellow-900/80 scale-105 shadow-[0_0_15px_rgba(250,204,21,0.5)] z-10 text-yellow-100";
+                    } else if (showResult && finalResult) {
+                        const attrKey = finalResult.mapping[num];
+                        const attr = THAKSA_ATTRIBUTES[attrKey];
+                        
+                        if (isUserDay) {
+                             baseClass += "border-white bg-white/20 scale-100 ring-2 ring-white ring-offset-2 ring-offset-purple-900";
+                        } else if (finalResult.borivan === num) {
+                             baseClass += "border-blue-400 bg-blue-900/30";
+                        } else {
+                             baseClass += "border-purple-800 bg-purple-900/40 text-gray-400";
+                        }
+
+                        if (attr) {
+                            let badgeClass = "bg-gray-800 text-gray-300";
+                            if (attrKey === 'kalakini') badgeClass = "bg-red-500 text-white font-bold";
+                            else if (attrKey === 'si') badgeClass = "bg-yellow-400 text-black font-bold";
+                            else if (attrKey === 'montri') badgeClass = "bg-pink-400 text-black font-bold";
+
+                            content += `<span class="text-[10px] px-2 py-0.5 rounded-full mt-1 ${badgeClass}">${attr.label}</span>`;
+                        }
+                    } else {
+                        if (isUserDay) {
+                            baseClass += "border-purple-400 bg-purple-800/60";
+                            content += `<span class="text-[10px] bg-white text-purple-900 px-1 rounded mt-1 absolute bottom-1 right-1">คุณ</span>`;
+                        } else {
+                            baseClass += "border-purple-800 bg-purple-900/20";
+                        }
+                    }
+                    
+                    div.className = baseClass;
+                    div.innerHTML = content;
                 }
-                glowIntensity = 0.1 + ((1 - (Math.abs(phase - 0.5) * 2)) * 0.5);
-            }
+                container.appendChild(div);
+            });
+            lucide.createIcons();
+        }
 
-            moonGlow.style.boxShadow = `0 0 ${40 + (glowIntensity * 50)}px rgba(192, 132, 252, ${glowIntensity * 0.5})`;
+        // --- LOGIC ---
+        function selectDay(day) {
+            selectedDay = day;
+            document.getElementById('screen-home').classList.add('hidden');
+            document.getElementById('screen-horoscope').classList.remove('hidden');
+            document.getElementById('screen-horoscope').classList.add('flex');
+            
+            const dayBadge = document.getElementById('user-day-display');
+            dayBadge.innerText = day.name;
+            dayBadge.className = `text-lg font-bold px-3 py-1 rounded-lg ${day.color} bg-opacity-20 text-white inline-block`;
+            
+            renderGrid();
+        }
 
-            const size = s * 1.25;
-            const offset = (size - s) / 2;
-
-            moonVisual.innerHTML = `
-                <svg width="100%" height="100%" viewBox="0 0 ${s} ${s}">
-                    <defs>
-                        <filter id="softEdge">
-                            <feGaussianBlur stdDeviation="4" />
-                        </filter>
-                        <mask id="moonMask">
-                            <rect x="0" y="0" width="${s}" height="${s}" fill="black" />
-                            <path d="${path}" fill="white" filter="url(#softEdge)" />
-                        </mask>
-                    </defs>
-                    <circle cx="${r}" cy="${r}" r="${r - 1}" fill="#0a0510" />
-                    <image href="${MOON_IMAGE_URL}" x="${-offset}" y="${-offset}" width="${size}" height="${size}" mask="url(#moonMask)" preserveAspectRatio="xMidYMid slice" />
-                    <circle cx="${r}" cy="${r}" r="${r}" fill="none" stroke="#2e1065" stroke-opacity="0.5" stroke-width="2" />
-                </svg>
+        function resetApp() {
+            selectedDay = null;
+            finalResult = null;
+            document.getElementById('screen-horoscope').classList.add('hidden');
+            document.getElementById('screen-horoscope').classList.remove('flex');
+            document.getElementById('screen-home').classList.remove('hidden');
+            
+            document.getElementById('action-area').classList.remove('hidden');
+            document.getElementById('result-card').classList.add('hidden');
+            document.getElementById('status-text').innerHTML = `
+                <p class="text-lg font-medium text-white">พร้อมทำนายดวงชะตาหรือยัง?</p>
+                <p class="text-sm text-purple-300">กดปุ่มด้านล่างเพื่อหมุนวงล้อทักษา</p>
             `;
         }
 
-        function updateApp() {
-            const date = datePicker.valueAsDate;
-            if(!date) return;
-
-            const moonData = getMoonPhase(date);
-            const lunarInfo = getLunarPhaseName(moonData.age);
-            renderRealMoon(moonData.phase);
+        function startPrediction() {
+            // USE REAL DATA
+            // Determine Path and Steps based on Moon Phase
+            const isWaxing = currentMoonPhase.type === 'waxing';
             
-            lunarPhaseText.innerText = lunarInfo.name;
-            moonAgeText.innerText = `อายุจันทร์: ${moonData.age} วัน (${Math.floor(moonData.phase*100)}%)`;
-
-            const age = moonData.age;
-            const isBrightPhase = (age >= 1 && age <= 15);
-            let isGood = false;
-
-            if (currentMode === 'normal') {
-                isGood = isBrightPhase;
-            } else {
-                isGood = !isBrightPhase;
-            }
-
-            resultCard.classList.remove('fade-in');
-            void resultCard.offsetWidth;
+            // Logic Check: Waxing = Counter-Clockwise (CCW), Waning = Clockwise (CW)
+            const path = isWaxing ? PATH_CCW : PATH_CW;
+            const steps = currentMoonPhase.day; // Number of days (e.g., Khuen 3 = 3 steps)
             
-            if (isGood) {
-                resultCard.className = `relative z-10 rounded-xl p-5 text-center border-2 fade-in bg-gradient-to-br from-[#103020]/90 to-[#1e1b4b]/90 border-green-500/40 text-green-200 shadow-[0_0_25px_rgba(34,197,94,0.15)]`;
-                resultIcon.innerText = "💰";
-                resultTitle.innerText = "ฤกษ์มงคล (เปิดรับทรัพย์)";
-                resultTitle.className = "text-2xl font-bold mb-2 text-green-300 drop-shadow-sm";
-                resultDesc.innerText = currentMode === 'normal' 
-                    ? "ข้างขึ้น/จันทร์เพ็ญ: แสงสว่างนำทางความสำเร็จ เหมาะแก่การเปิดเผยและเริ่มต้น"
-                    : "ข้างแรม/เดือนดับ: ความมืดอำพราง เหมาะแก่การทำงานลับ การเจรจาที่ไม่เปิดเผย";
-            } else {
-                resultCard.className = `relative z-10 rounded-xl p-5 text-center border-2 fade-in bg-gradient-to-br from-[#450a0a]/90 to-[#1e1b4b]/90 border-red-500/40 text-red-200 shadow-[0_0_25px_rgba(239,68,68,0.15)]`;
-                resultIcon.innerText = "🔒";
-                resultTitle.innerText = "ควรงดเว้น (เก็บทรัพย์)";
-                resultTitle.className = "text-2xl font-bold mb-2 text-red-300 drop-shadow-sm";
-                resultDesc.innerText = currentMode === 'normal'
-                    ? "ข้างแรม/เดือนดับ: พลังจันทราอับแสง ไม่เหมาะแก่การเริ่มงานมงคลทั่วไป"
-                    : "ข้างขึ้น/จันทร์เพ็ญ: แสงสว่างจ้าเกินไป อาจเปิดเผยสิ่งที่ควรซ่อนเร้น";
-            }
+            let stepCount = 0;
+            
+            document.getElementById('action-area').classList.add('hidden');
+            
+            const interval = setInterval(() => {
+                const currentIndex = stepCount % path.length;
+                const currentNumber = path[currentIndex];
+                
+                document.getElementById('status-text').innerHTML = `<p class="text-yellow-300 text-xl font-medium">นับ ${stepCount + 1}... (ตกเลข ${currentNumber})</p>`;
+                
+                renderGrid(currentNumber, false);
+                
+                stepCount++;
+                if (stepCount >= steps) {
+                    clearInterval(interval);
+                    calculateResult(currentNumber);
+                }
+            }, 500); // Speed
         }
 
-        datePicker.addEventListener('change', updateApp);
+        function calculateResult(borivanNumber) {
+            // Note: Attribute distribution always follows the standard Clockwise flow (Path A logic) in standard Thaksa
+            // regardless of how we arrived at the Borivan.
+            const mapping = {};
+            const standardPath = PATH_CW; 
+            const startIndex = standardPath.indexOf(borivanNumber);
+            
+            let userAttrKey = null;
+
+            ATTRIBUTE_KEYS.forEach((key, i) => {
+                const numberIndex = (startIndex + i) % 8;
+                const number = standardPath[numberIndex];
+                mapping[number] = key;
+
+                if (number === selectedDay.id) {
+                    userAttrKey = key;
+                }
+            });
+
+            finalResult = { borivan: borivanNumber, mapping: mapping, userAttrKey: userAttrKey };
+            
+            renderGrid(null, true);
+            showResultCard(userAttrKey, borivanNumber);
+        }
+
+        function showResultCard(attrKey, borivanNum) {
+            const attr = THAKSA_ATTRIBUTES[attrKey];
+            const card = document.getElementById('result-card');
+            const box = document.getElementById('result-box');
+            const iconBg = document.getElementById('result-icon-bg');
+            const label = document.getElementById('result-label');
+            const meaning = document.getElementById('result-meaning');
+            const advice = document.getElementById('result-advice');
+            const ref = document.getElementById('result-ref');
+
+            box.className = `p-6 rounded-3xl border-2 shadow-2xl relative overflow-hidden ${
+                attrKey === 'kalakini' ? 'bg-gradient-to-br from-red-900/80 to-red-950/80 border-red-500' :
+                (attr.type === 'very_good' ? 'bg-gradient-to-br from-yellow-900/60 to-amber-950/60 border-yellow-500' :
+                'bg-gradient-to-br from-purple-900/60 to-indigo-950/60 border-purple-500')
+            }`;
+
+            iconBg.className = `w-14 h-14 rounded-2xl flex items-center justify-center shadow-inner ${
+                attrKey === 'kalakini' ? 'bg-red-500 text-white' : 'bg-yellow-400 text-yellow-900'
+            }`;
+            iconBg.innerHTML = attrKey === 'kalakini' ? '<span class="text-3xl">⚠️</span>' : '<i data-lucide="star" class="w-8 h-8 fill-current"></i>';
+
+            label.innerText = attr.label;
+            meaning.innerText = attr.meaning;
+            
+            // Show reference of calculation
+            const dirText = currentMoonPhase.type === 'waxing' ? 'ทวนเข็ม (ขึ้น)' : 'ตามเข็ม (แรม)';
+            ref.innerText = `*ตำแหน่งบริวารอยู่ที่เลข ${borivanNum} (นับ${dirText} ${currentMoonPhase.day} ช่อง)`;
+
+            let adviceText = "";
+            if (attrKey === 'kalakini') adviceText = 'วันนี้ดวงชะตาอยู่ในเกณฑ์ที่ต้อง <strong class="text-red-400">ระมัดระวังเป็นพิเศษ</strong> ควรมีสติในการใช้ชีวิตให้มาก หลีกเลี่ยงการตัดสินใจเรื่องใหญ่ๆ';
+            else if (attrKey === 'si') adviceText = 'เป็นวันดีของคุณ! ดาวศรีกำลังส่องสว่าง หากมีแผนจะทำอะไรให้ <strong class="text-green-400">รีบลงมือทำ</strong> มีเกณฑ์ได้รับโชคลาภ';
+            else if (attrKey === 'montri') adviceText = 'ดวงวันนี้โดดเด่นเรื่อง <strong class="text-pink-400">การอุปถัมภ์</strong> หากติดขัดอะไรให้เข้าหาผู้ใหญ่ หรือขอคำปรึกษา';
+            else if (attrKey === 'dech') adviceText = 'วันนี้มีพลังอำนาจในการเจรจาต่อรองสูง เหมาะแก่การสั่งการหรือเริ่มโปรเจกต์ใหม่ๆ';
+            else adviceText = 'เป็นวันที่ดำเนินไปตามปกติ หมั่นทำความดีและตั้งใจทำงาน รักษาอารมณ์ให้แจ่มใส ผลลัพธ์ที่ดีจะตามมาเอง';
+            
+            advice.innerHTML = `<p>${adviceText}</p>`;
+
+            document.getElementById('status-text').innerHTML = `
+                <p class="text-sm text-gray-300">ผลการทำนายประจำวัน</p>
+                <p class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-yellow-200">${selectedDay.name}</p>
+            `;
+            
+            card.classList.remove('hidden');
+            lucide.createIcons();
+        }
     </script>
 </body>
 </html>
