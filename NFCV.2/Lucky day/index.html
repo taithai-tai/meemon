@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>มหาทักษาพยากรณ์</title>
-    <!-- Tailwind CSS (ผ่าน CDN เพื่อความสวยงาม) -->
+    <title>ดูดวงประจำวัน</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* CSS เพิ่มเติมสำหรับ Animation */
         @keyframes pulse-glow {
             0%, 100% { box-shadow: 0 0 15px rgba(250, 204, 21, 0.5); transform: scale(1.05); }
             50% { box-shadow: 0 0 5px rgba(250, 204, 21, 0.2); transform: scale(1); }
@@ -27,7 +26,7 @@
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         
         body {
-            font-family: 'Sarabun', sans-serif; /* แนะนำฟอนต์ไทย */
+            font-family: 'Sarabun', sans-serif;
         }
     </style>
 </head>
@@ -44,6 +43,9 @@
                 ดูดวงประจำวัน
             </h1>
             <p class="text-purple-200 text-lg font-light">ของดีมีแรงครู</p>
+            <div id="home-date-display" class="text-sm text-purple-300 bg-white/5 py-1 px-3 rounded-full inline-block mt-2 border border-white/10">
+                <!-- วันที่ปัจจุบันจะแสดงที่นี่ -->
+            </div>
         </div>
 
         <div class="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/10 shadow-2xl w-full">
@@ -66,8 +68,8 @@
                 <h2 id="user-day-display" class="text-lg font-bold px-3 py-1 rounded-lg bg-opacity-20 text-white inline-block">
                     <!-- วันเกิดผู้ใช้ -->
                 </h2>
-                <div class="text-xs text-purple-200 flex items-center justify-end gap-1 mt-1 opacity-70">
-                    <i data-lucide="moon" size="12"></i> แรม 5 ค่ำ
+                <div id="lunar-phase-display" class="text-xs text-purple-200 flex items-center justify-end gap-1 mt-1 opacity-70">
+                    <!-- ข้างขึ้น/แรม จะแสดงที่นี่ -->
                 </div>
             </div>
         </div>
@@ -86,6 +88,11 @@
             <div id="grid-container" class="grid grid-cols-3 gap-3 relative z-10">
                 <!-- Grid Cells จะถูกสร้างด้วย JS -->
             </div>
+        </div>
+        
+        <!-- Direction Info -->
+        <div id="direction-info" class="text-xs text-gray-400 bg-white/5 py-1 px-3 rounded-full border border-white/5 hidden">
+             <!-- แสดงทิศทางนับ -->
         </div>
 
         <!-- Controls / Results -->
@@ -149,7 +156,10 @@
             [5, 7, 2]
         ];
 
+        // Path A (Clockwise/Waning): 1 -> 6 -> 4 -> 2 -> 7 -> 5 -> 3 -> 8 -> 1
         const PATH_CW = [1, 6, 4, 2, 7, 5, 3, 8];
+        // Path B (Counter-Clockwise/Waxing): 1 -> 8 -> 3 -> 5 -> 7 -> 2 -> 4 -> 6 -> 1
+        const PATH_CCW = [1, 8, 3, 5, 7, 2, 4, 6];
         
         const THAKSA_ATTRIBUTES = {
             'borivan': { label: 'บริวาร', meaning: 'คนใกล้ชิด, ครอบครัว, ลูกน้อง', type: 'neutral' },
@@ -166,13 +176,65 @@
         // State
         let selectedDay = null;
         let finalResult = null;
+        let currentMoonPhase = null;
         
         // --- INIT ---
         window.onload = function() {
             lucide.createIcons();
+            initDateAndMoon();
             renderDayButtons();
             renderGrid();
         };
+
+        // --- REAL TIME CALCULATION ---
+        function initDateAndMoon() {
+            const today = new Date();
+            
+            // 1. Show Today's Date in Thai
+            const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+            const thaiDate = today.toLocaleDateString('th-TH', options);
+            document.getElementById('home-date-display').innerText = thaiDate;
+
+            // 2. Calculate Moon Phase
+            currentMoonPhase = calculateMoonPhase(today);
+            
+            // Update UI
+            const moonIcon = currentMoonPhase.type === 'waxing' ? 'sun' : 'moon'; // Use sun/moon icon for wax/wan
+            const moonColor = currentMoonPhase.type === 'waxing' ? 'text-yellow-300' : 'text-blue-300';
+            
+            const moonHtml = `<i data-lucide="${moonIcon}" class="w-4 h-4 ${moonColor}"></i> ${currentMoonPhase.label}`;
+            document.getElementById('lunar-phase-display').innerHTML = moonHtml;
+
+            // Update Direction Info (Visible only when start)
+            const dirText = currentMoonPhase.type === 'waxing' ? 'ทวนเข็มนาฬิกา (ข้างขึ้น)' : 'ตามเข็มนาฬิกา (ข้างแรม)';
+            document.getElementById('direction-info').innerHTML = `ทิศทางการเดิน: ${dirText}`;
+            document.getElementById('direction-info').classList.remove('hidden');
+            document.getElementById('direction-info').classList.add('inline-block');
+        }
+
+        function calculateMoonPhase(date) {
+            // Astronomical Approximate for Demo Purposes
+            // Reference New Moon: Jan 21, 2023 20:53 UTC
+            const knownNewMoon = new Date('2023-01-21T20:53:00Z').getTime();
+            const cycle = 29.53058867;
+            const diff = date.getTime() - knownNewMoon;
+            const daysSince = diff / (1000 * 60 * 60 * 24);
+            const currentCycleAge = daysSince % cycle;
+            
+            let age = Math.floor(currentCycleAge); // 0 - 29
+            
+            // Logic mapping to Thai Calendar (Simplified)
+            // 0-14 = Waxing (Khuen 1-15)
+            // 15-29 = Waning (Raem 1-15)
+            
+            if (age < 15) {
+                const day = age + 1;
+                return { type: 'waxing', day: day, label: `ขึ้น ${day} ค่ำ` };
+            } else {
+                const day = age - 14;
+                return { type: 'waning', day: day, label: `แรม ${day} ค่ำ` };
+            }
+        }
 
         // --- RENDER FUNCTIONS ---
         function renderDayButtons() {
@@ -190,6 +252,9 @@
         function renderGrid(activeNum = null, showResult = false) {
             const container = document.getElementById('grid-container');
             container.innerHTML = '';
+            
+            // Center icon based on moon phase
+            const centerIcon = currentMoonPhase && currentMoonPhase.type === 'waxing' ? 'sun' : 'moon';
 
             GRID_LAYOUT.flat().forEach(num => {
                 const div = document.createElement('div');
@@ -197,20 +262,18 @@
                 if (num === null) {
                     // Center Cell
                     div.className = "flex items-center justify-center bg-gray-900/50 rounded-lg aspect-square border border-gray-700 relative overflow-hidden";
-                    div.innerHTML = '<div class="absolute inset-0 opacity-20 animate-pulse bg-gradient-to-tr from-purple-500 to-blue-500"></div><i data-lucide="moon" class="w-8 h-8 text-yellow-100 opacity-50"></i>';
+                    div.innerHTML = `<div class="absolute inset-0 opacity-20 animate-pulse bg-gradient-to-tr from-purple-500 to-blue-500"></div><i data-lucide="${centerIcon}" class="w-8 h-8 text-yellow-100 opacity-50"></i>`;
                 } else {
                     // Number Cell
                     let baseClass = "flex flex-col items-center justify-center rounded-lg aspect-square border-2 transition-all duration-300 relative ";
                     let content = `<span class="text-2xl font-bold text-purple-100">${num}</span>`;
 
-                    // Check states
                     const isUserDay = selectedDay && selectedDay.id === num;
                     const isActive = activeNum === num;
                     
                     if (isActive) {
                         baseClass += "border-yellow-400 bg-yellow-900/80 scale-105 shadow-[0_0_15px_rgba(250,204,21,0.5)] z-10 text-yellow-100";
                     } else if (showResult && finalResult) {
-                        // Result State
                         const attrKey = finalResult.mapping[num];
                         const attr = THAKSA_ATTRIBUTES[attrKey];
                         
@@ -222,7 +285,6 @@
                              baseClass += "border-purple-800 bg-purple-900/40 text-gray-400";
                         }
 
-                        // Add attribute label badge
                         if (attr) {
                             let badgeClass = "bg-gray-800 text-gray-300";
                             if (attrKey === 'kalakini') badgeClass = "bg-red-500 text-white font-bold";
@@ -232,7 +294,6 @@
                             content += `<span class="text-[10px] px-2 py-0.5 rounded-full mt-1 ${badgeClass}">${attr.label}</span>`;
                         }
                     } else {
-                        // Idle State
                         if (isUserDay) {
                             baseClass += "border-purple-400 bg-purple-800/60";
                             content += `<span class="text-[10px] bg-white text-purple-900 px-1 rounded mt-1 absolute bottom-1 right-1">คุณ</span>`;
@@ -256,7 +317,6 @@
             document.getElementById('screen-horoscope').classList.remove('hidden');
             document.getElementById('screen-horoscope').classList.add('flex');
             
-            // Update UI
             const dayBadge = document.getElementById('user-day-display');
             dayBadge.innerText = day.name;
             dayBadge.className = `text-lg font-bold px-3 py-1 rounded-lg ${day.color} bg-opacity-20 text-white inline-block`;
@@ -271,7 +331,6 @@
             document.getElementById('screen-horoscope').classList.remove('flex');
             document.getElementById('screen-home').classList.remove('hidden');
             
-            // Reset Result UI
             document.getElementById('action-area').classList.remove('hidden');
             document.getElementById('result-card').classList.add('hidden');
             document.getElementById('status-text').innerHTML = `
@@ -281,9 +340,14 @@
         }
 
         function startPrediction() {
-            // Waning 5, Clockwise
-            const path = PATH_CW; 
-            const steps = 5; 
+            // USE REAL DATA
+            // Determine Path and Steps based on Moon Phase
+            const isWaxing = currentMoonPhase.type === 'waxing';
+            
+            // Logic Check: Waxing = Counter-Clockwise (CCW), Waning = Clockwise (CW)
+            const path = isWaxing ? PATH_CCW : PATH_CW;
+            const steps = currentMoonPhase.day; // Number of days (e.g., Khuen 3 = 3 steps)
+            
             let stepCount = 0;
             
             document.getElementById('action-area').classList.add('hidden');
@@ -292,10 +356,8 @@
                 const currentIndex = stepCount % path.length;
                 const currentNumber = path[currentIndex];
                 
-                // Update Status text
                 document.getElementById('status-text').innerHTML = `<p class="text-yellow-300 text-xl font-medium">นับ ${stepCount + 1}... (ตกเลข ${currentNumber})</p>`;
                 
-                // Highlight Grid
                 renderGrid(currentNumber, false);
                 
                 stepCount++;
@@ -303,11 +365,12 @@
                     clearInterval(interval);
                     calculateResult(currentNumber);
                 }
-            }, 500);
+            }, 500); // Speed
         }
 
         function calculateResult(borivanNumber) {
-            // Map attributes
+            // Note: Attribute distribution always follows the standard Clockwise flow (Path A logic) in standard Thaksa
+            // regardless of how we arrived at the Borivan.
             const mapping = {};
             const standardPath = PATH_CW; 
             const startIndex = standardPath.indexOf(borivanNumber);
@@ -326,7 +389,6 @@
 
             finalResult = { borivan: borivanNumber, mapping: mapping, userAttrKey: userAttrKey };
             
-            // Show Final Grid
             renderGrid(null, true);
             showResultCard(userAttrKey, borivanNumber);
         }
@@ -341,7 +403,6 @@
             const advice = document.getElementById('result-advice');
             const ref = document.getElementById('result-ref');
 
-            // Set Colors
             box.className = `p-6 rounded-3xl border-2 shadow-2xl relative overflow-hidden ${
                 attrKey === 'kalakini' ? 'bg-gradient-to-br from-red-900/80 to-red-950/80 border-red-500' :
                 (attr.type === 'very_good' ? 'bg-gradient-to-br from-yellow-900/60 to-amber-950/60 border-yellow-500' :
@@ -353,21 +414,22 @@
             }`;
             iconBg.innerHTML = attrKey === 'kalakini' ? '<span class="text-3xl">⚠️</span>' : '<i data-lucide="star" class="w-8 h-8 fill-current"></i>';
 
-            // Set Text
             label.innerText = attr.label;
             meaning.innerText = attr.meaning;
-            ref.innerText = `*ตำแหน่งบริวารอยู่ที่เลข ${borivanNum}`;
+            
+            // Show reference of calculation
+            const dirText = currentMoonPhase.type === 'waxing' ? 'ทวนเข็ม (ขึ้น)' : 'ตามเข็ม (แรม)';
+            ref.innerText = `*ตำแหน่งบริวารอยู่ที่เลข ${borivanNum} (นับ${dirText} ${currentMoonPhase.day} ช่อง)`;
 
-            // Advice Text
             let adviceText = "";
             if (attrKey === 'kalakini') adviceText = 'วันนี้ดวงชะตาอยู่ในเกณฑ์ที่ต้อง <strong class="text-red-400">ระมัดระวังเป็นพิเศษ</strong> ควรมีสติในการใช้ชีวิตให้มาก หลีกเลี่ยงการตัดสินใจเรื่องใหญ่ๆ';
             else if (attrKey === 'si') adviceText = 'เป็นวันดีของคุณ! ดาวศรีกำลังส่องสว่าง หากมีแผนจะทำอะไรให้ <strong class="text-green-400">รีบลงมือทำ</strong> มีเกณฑ์ได้รับโชคลาภ';
             else if (attrKey === 'montri') adviceText = 'ดวงวันนี้โดดเด่นเรื่อง <strong class="text-pink-400">การอุปถัมภ์</strong> หากติดขัดอะไรให้เข้าหาผู้ใหญ่ หรือขอคำปรึกษา';
+            else if (attrKey === 'dech') adviceText = 'วันนี้มีพลังอำนาจในการเจรจาต่อรองสูง เหมาะแก่การสั่งการหรือเริ่มโปรเจกต์ใหม่ๆ';
             else adviceText = 'เป็นวันที่ดำเนินไปตามปกติ หมั่นทำความดีและตั้งใจทำงาน รักษาอารมณ์ให้แจ่มใส ผลลัพธ์ที่ดีจะตามมาเอง';
             
             advice.innerHTML = `<p>${adviceText}</p>`;
 
-            // Transition UI
             document.getElementById('status-text').innerHTML = `
                 <p class="text-sm text-gray-300">ผลการทำนายประจำวัน</p>
                 <p class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-yellow-200">${selectedDay.name}</p>
