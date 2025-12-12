@@ -44,7 +44,22 @@
             text-align: center;
         }
         .btn-gold:hover { transform: scale(1.05); box-shadow: 0 0 25px rgba(255, 215, 0, 0.8); }
-        .btn-gold:disabled { opacity: 0.5; filter: grayscale(100%); cursor: not-allowed; transform: none; }
+        .btn-gold:disabled { opacity: 0.5; filter: grayscale(100%); cursor: not-allowed; transform: none; box-shadow: none; background: #555; color: #999; border-color: #666; }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            text-align: center;
+            cursor: pointer;
+        }
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #fff;
+        }
 
         /* Star Animation */
         .star {
@@ -81,7 +96,7 @@
             align-items: center;
         }
 
-        #view-login.active {
+        #view-login.active, #view-register.active, #view-otp.active, #view-setup-profile.active {
             justify-content: center;
             min-height: 100vh;
         }
@@ -167,8 +182,6 @@
             filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.5));
         }
 
-        /* Effect Canvas: z-index 20 (Top of burnt, above base if we want lines on top? No lines should be on base edge) */
-        /* Actually, to draw the char line ON TOP of the base card edge, it needs high z-index */
         #effect-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20; pointer-events: none; }
         #particle-canvas { position: absolute; top: -20%; left: -20%; width: 140%; height: 140%; z-index: 25; pointer-events: none; }
 
@@ -189,40 +202,144 @@
             font-size: 16px;
             outline: none;
             box-sizing: border-box;
+            letter-spacing: 1px;
         }
         .custom-input:focus { border-color: #facc15; }
+        
+        .otp-input {
+            letter-spacing: 8px; 
+            font-weight: bold; 
+            font-size: 24px;
+            text-align: center;
+        }
+
+        #msg, #login-msg {
+            font-size: 0.8rem;
+            margin-top: 10px;
+            min-height: 20px;
+            text-align: center;
+        }
+        .msg-error { color: #ff6b6b; }
+        .msg-success { color: #4ade80; }
     </style>
 </head>
 <body>
 
     <div id="stars-container" class="fixed inset-0 z-0 pointer-events-none"></div>
 
-    <!-- VIEW: LOGIN -->
+    <!-- VIEW: LOGIN (DEFAULT START PAGE) -->
     <div id="view-login" class="view-section active" style="display: flex; justify-content: center; min-height: 100vh;">
         <div class="glass-panel p-8 w-full text-center relative z-10 max-w-sm">
-            <div class="mb-6">
-                <img src="https://github.com/taithai-tai/meemon/blob/main/Picture/logo.png?raw=true" class="w-32 mx-auto drop-shadow-[0_0_15px_rgba(255,215,0,0.6)]" alt="Logo" style="width: 120px; height: auto;">
+            <div class="mb-4">
+                <img src="https://github.com/taithai-tai/meemon/blob/main/Picture/logo.png?raw=true" class="w-28 mx-auto drop-shadow-[0_0_15px_rgba(255,215,0,0.6)]" alt="Logo" style="width: 110px; height: auto;">
             </div>
-            <h1 class="text-3xl font-bold text-yellow-400 mb-2 font-['Pattaya']" style="font-family: 'Pattaya', sans-serif; font-size: 2rem; color: #facc15;">มีมนต์ มหาเฮง</h1>
-            <p class="text-gray-300 mb-8 text-sm">เข้าสู่ระบบเพื่อสะสมแต้มบุญและดูสถิติ</p>
-            <input type="text" id="usernameInput" placeholder="กรอกชื่อของคุณ..." class="custom-input mb-4" autocomplete="off">
-            <button onclick="app.login()" class="w-full btn-gold rounded-lg py-3 text-lg font-bold">เริ่มใช้งาน</button>
+            <h1 class="text-2xl font-bold text-yellow-400 mb-2 font-['Pattaya']">มีมนต์ มหาเฮง</h1>
+            <p class="text-gray-300 mb-6 text-sm">เข้าสู่ระบบเพื่อสะสมแต้มบุญ</p>
+            
+            <div class="space-y-3">
+                <div class="relative">
+                    <i class="fa-solid fa-envelope absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input type="email" id="login-email" placeholder="อีเมล" class="custom-input pl-10" autocomplete="off">
+                </div>
+                <div class="relative">
+                    <i class="fa-solid fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input type="password" id="login-password" placeholder="รหัสผ่าน" class="custom-input pl-10" autocomplete="off">
+                </div>
+            </div>
+            
+            <div id="login-msg" class="text-sm mt-2 min-h-[20px]"></div>
+
+            <button onclick="app.performLogin()" class="w-full btn-gold rounded-lg py-3 text-lg font-bold mt-4">
+                เข้าสู่ระบบ
+            </button>
+
+            <div class="mt-6 border-t border-gray-600 pt-4">
+                <p class="text-gray-400 text-sm mb-3">ยังไม่มีบัญชี?</p>
+                <button onclick="app.showView('view-register')" class="w-full btn-outline text-sm">
+                    สมัครสมาชิก
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIEW: REGISTER -->
+    <div id="view-register" class="view-section" style="justify-content: center; min-height: 100vh;">
+        <div class="glass-panel p-8 w-full text-center relative z-10 max-w-sm">
+            <h2 class="text-2xl font-bold text-white mb-6">สมัครสมาชิก</h2>
+            
+            <div class="space-y-3">
+                <div class="relative">
+                    <i class="fa-solid fa-envelope absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input type="email" id="email" placeholder="อีเมล" class="custom-input pl-10" autocomplete="off">
+                </div>
+                <div class="relative">
+                    <i class="fa-solid fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input type="password" id="password" placeholder="รหัสผ่าน" class="custom-input pl-10" autocomplete="off">
+                </div>
+                <div class="relative">
+                    <i class="fa-solid fa-phone absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input type="tel" id="phone" placeholder="เบอร์โทรศัพท์" class="custom-input pl-10" autocomplete="off">
+                </div>
+            </div>
+            
+            <div id="msg"></div>
+
+            <button id="btn-request-otp" onclick="app.requestOtp()" class="w-full btn-gold rounded-lg py-3 text-lg font-bold mt-4">
+                รับรหัส OTP
+            </button>
+
+            <button onclick="app.showView('view-login')" class="mt-4 text-sm text-gray-400 hover:text-white underline">
+                <i class="fa-solid fa-arrow-left"></i> กลับไปหน้าเข้าสู่ระบบ
+            </button>
+        </div>
+    </div>
+
+    <!-- VIEW: OTP VERIFICATION -->
+    <div id="view-otp" class="view-section" style="justify-content: center; min-height: 100vh;">
+        <div class="glass-panel p-8 w-full text-center relative z-10 max-w-sm">
+            <h2 class="text-2xl font-bold text-white mb-2">ยืนยันรหัส OTP</h2>
+            <div class="mb-4 text-sm text-gray-300">
+                <p>ส่งรหัสไปที่: <span id="display-email-otp" class="text-yellow-400 font-bold block truncate px-4"></span></p>
+                <p class="text-xs mt-2 text-gray-400">*หากไม่ได้รับ กรุณาใช้รหัสทดสอบ <span class="text-green-400 font-bold">123456</span></p>
+            </div>
+            
+            <div class="mb-6">
+                <input type="text" id="otpInput" placeholder="XXXXXX" class="custom-input otp-input mb-2" maxlength="6" autocomplete="off">
+            </div>
+            
+            <button onclick="app.verifyOTP()" class="w-full btn-gold rounded-lg py-3 text-lg font-bold mb-3">ยืนยัน</button>
+            <button onclick="app.showView('view-register')" class="text-sm text-gray-400 hover:text-white underline">แก้ไขข้อมูล</button>
+        </div>
+    </div>
+
+    <!-- VIEW: SETUP PROFILE (NAME) -->
+    <div id="view-setup-profile" class="view-section" style="justify-content: center; min-height: 100vh;">
+        <div class="glass-panel p-8 w-full text-center relative z-10 max-w-sm">
+            <div class="mb-4 text-4xl">👋</div>
+            <h2 class="text-2xl font-bold text-white mb-2">ยินดีต้อนรับ!</h2>
+            <p class="text-gray-300 text-sm mb-6">กรุณาตั้งชื่อเล่นของคุณ</p>
+            
+            <input type="text" id="nameInput" placeholder="ชื่อเล่น..." class="custom-input mb-4" autocomplete="off" style="text-align: center;">
+            
+            <button onclick="app.saveProfile()" class="w-full btn-gold rounded-lg py-3 text-lg font-bold">เริ่มใช้งาน</button>
         </div>
     </div>
 
     <!-- VIEW: HOME -->
     <div id="view-home" class="view-section pt-10">
-        <div class="glass-panel p-4 w-full mb-6 flex justify-between items-center z-10">
+        <div class="glass-panel p-4 w-full mb-6 flex justify-between items-center z-10 relative">
             <div class="flex items-center gap-3">
                 <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-xl font-bold shadow-lg text-white" style="background: #6b21a8;">
                     <span id="display-avatar">U</span>
                 </div>
-                <div>
-                    <h2 id="display-username" class="font-bold text-lg text-yellow-400">User</h2>
-                    <p class="text-xs text-gray-300">สมาชิกทั่วไป</p>
+                <div class="overflow-hidden">
+                    <h2 id="display-username" class="font-bold text-lg text-yellow-400 truncate w-32">User</h2>
+                    <p class="text-xs text-gray-300 truncate w-32" id="display-user-email">email@example.com</p>
                 </div>
             </div>
-            <button onclick="app.logout()" class="text-xs text-red-400 border border-red-900 px-2 py-1 rounded hover:bg-red-900/50">ออก</button>
+            <button onclick="app.logout()" class="text-xs text-red-400 border border-red-900 px-3 py-1.5 rounded hover:bg-red-900/50 cursor-pointer z-50 transition-colors duration-200">
+                <i class="fa-solid fa-right-from-bracket mr-1"></i> ออก
+            </button>
         </div>
 
         <div class="grid grid-cols-2 gap-4 w-full mb-8 z-10" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
@@ -389,14 +506,26 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwL_b3IKYU3ghohEivA0uNcafTk5CAkVK6H5lZBkYaq14QT_cnOEMtNEib_40eOCtmc/exec";
+
         const app = {
-            data: { username: null, credits: 500, inventory: 1, history: [], lastDailyClaim: null },
+            data: { username: null, email: null, phone: null, credits: 500, inventory: 1, history: [], lastDailyClaim: null },
+            tempEmail: null,
+            tempPhone: null,
+
             init() {
                 try {
                     const saved = localStorage.getItem('meemon_save');
                     if (saved) this.data = JSON.parse(saved);
                 } catch (e) { localStorage.removeItem('meemon_save'); }
-                if (this.data.username) this.goToHome();
+                
+                // Check if logged in
+                if (this.data.username && this.data.email) {
+                    this.goToHome();
+                } else {
+                    // Start at login
+                    this.showView('view-login');
+                }
                 this.createStars();
             },
             save() {
@@ -407,6 +536,7 @@
                 try {
                     const name = this.data.username || 'Guest';
                     if(document.getElementById('display-username')) document.getElementById('display-username').innerText = name;
+                    if(document.getElementById('display-user-email')) document.getElementById('display-user-email').innerText = this.data.email || '';
                     if(document.getElementById('display-avatar')) document.getElementById('display-avatar').innerText = name.charAt(0).toUpperCase();
                     if(document.getElementById('display-credits')) document.getElementById('display-credits').innerText = this.data.credits.toLocaleString();
                     if(document.getElementById('display-inventory')) document.getElementById('display-inventory').innerText = this.data.inventory.toLocaleString();
@@ -414,20 +544,150 @@
                     if(document.getElementById('ritual-inventory')) document.getElementById('ritual-inventory').innerText = this.data.inventory.toLocaleString();
                 } catch(e) {}
             },
-            login() {
-                const name = document.getElementById('usernameInput').value.trim();
-                if (!name) return this.showToast('กรุณากรอกชื่อก่อนเริ่มใช้งาน');
+
+            // --- LOGIN FLOW ---
+            performLogin() {
+                const email = document.getElementById('login-email').value.trim();
+                const password = document.getElementById('login-password').value.trim();
+                const msg = document.getElementById('login-msg');
+
+                if (!email || !password) {
+                    msg.innerText = "กรุณากรอกอีเมลและรหัสผ่าน";
+                    msg.className = "msg-error text-red-400 text-sm";
+                    return;
+                }
+
+                // SIMULATED LOGIN LOGIC (Since no real backend database)
+                msg.innerText = "กำลังตรวจสอบ...";
+                msg.className = "text-yellow-400 text-sm";
+
+                setTimeout(() => {
+                    // Check if this user exists in local storage
+                    if (this.data.email && this.data.email === email) {
+                        this.goToHome();
+                        msg.innerText = "";
+                        // Reset fields
+                        document.getElementById('login-email').value = "";
+                        document.getElementById('login-password').value = "";
+                    } else {
+                        // Demo Mode: Auto-login new email as a fresh user for testing
+                        if(email.includes('@')) {
+                            // If it's a new email we haven't seen, treat as "User not found" in real app, 
+                            // BUT for this demo, we will just log them in to let you test.
+                            // To force registration flow, uncomment the else block below instead.
+                            
+                            // this.data.email = email;
+                            // this.data.username = email.split('@')[0];
+                            // this.save();
+                            // this.goToHome();
+                            
+                            msg.innerText = "ไม่พบผู้ใช้งานนี้ กรุณาสมัครสมาชิก";
+                            msg.className = "text-red-400 text-sm";
+                        } else {
+                            msg.innerText = "อีเมลไม่ถูกต้อง";
+                            msg.className = "text-red-400 text-sm";
+                        }
+                    }
+                }, 1000);
+            },
+
+            // --- REGISTER FLOW (OTP) ---
+            requestOtp() {
+                const email = document.getElementById("email").value.trim();
+                const password = document.getElementById("password").value.trim();
+                const phone = document.getElementById("phone").value.trim();
+                const msg = document.getElementById("msg");
+                const btn = document.getElementById("btn-request-otp");
+
+                if(!email || !password || !phone) {
+                    msg.innerText = "กรุณากรอกข้อมูลให้ครบทุกช่อง";
+                    msg.className = "msg-error text-red-400 text-sm mt-2";
+                    return;
+                }
+
+                this.tempEmail = email;
+                this.tempPhone = phone;
+
+                msg.innerText = "กำลังเชื่อมต่อระบบ...";
+                msg.className = "text-yellow-400 text-sm mt-2";
+                btn.disabled = true;
+                btn.innerText = "กำลังส่งข้อมูล...";
+
+                const formData = new FormData();
+                formData.append('action', 'requestOtp');
+                formData.append('email', email);
+                formData.append('password', password);
+                formData.append('phone', phone);
+
+                fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: formData,
+                    mode: 'no-cors'
+                })
+                .then(() => {
+                    // Always show OTP screen after delay, assuming success or fallback
+                    setTimeout(() => {
+                        document.getElementById('display-email-otp').innerText = email;
+                        this.showView('view-otp');
+                        btn.disabled = false;
+                        btn.innerText = "รับรหัส OTP";
+                        msg.innerText = "";
+                    }, 1000);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Network error fallback
+                    setTimeout(() => {
+                        this.showView('view-otp');
+                        document.getElementById('display-email-otp').innerText = email;
+                        btn.disabled = false;
+                        btn.innerText = "รับรหัส OTP";
+                        msg.innerText = "";
+                        alert("Simulation Mode: OTP is 123456"); // Update simulation OTP
+                    }, 1000);
+                });
+            },
+
+            verifyOTP() {
+                const input = document.getElementById('otpInput').value.trim();
+                if (input.length < 6) {
+                    return this.showToast('กรุณากรอกรหัส OTP 6 หลัก');
+                }
+                // Optional: Verify specific code if simulating
+                // if (input !== '123456') return this.showToast('รหัส OTP ไม่ถูกต้อง');
+                
+                this.showView('view-setup-profile');
+            },
+
+            saveProfile() {
+                const name = document.getElementById('nameInput').value.trim();
+                if (!name) return this.showToast('กรุณาตั้งชื่อเล่นก่อน');
                 this.data.username = name;
+                this.data.email = this.tempEmail;
+                this.data.phone = this.tempPhone;
                 this.save();
                 this.goToHome();
             },
+
             logout() {
+                // Changed to standard confirm, ensuring logic runs
                 if(confirm('คุณต้องการออกจากระบบหรือไม่?')) {
                     this.data.username = null;
+                    this.data.email = null;
+                    this.data.phone = null;
                     this.save(); 
+                    
                     this.showView('view-login');
+                    
+                    // Clear inputs
+                    const ids = ['email', 'password', 'phone', 'otpInput', 'nameInput', 'login-email', 'login-password'];
+                    ids.forEach(id => {
+                        const el = document.getElementById(id);
+                        if(el) el.value = '';
+                    });
                 }
             },
+            
             claimFreeCredits() {
                 const today = new Date().toDateString();
                 if (this.data.lastDailyClaim === today) return this.showToast('วันนี้คุณรับไปแล้ว พรุ่งนี้มาใหม่นะ!');
@@ -447,6 +707,7 @@
                 this.data.history.unshift({ date: new Date().toLocaleString('th-TH'), numbers: numbers.join('') });
                 this.save();
             },
+
             showView(viewId) {
                 const currentActive = document.querySelector('.view-section.active');
                 const target = document.getElementById(viewId);
@@ -464,7 +725,6 @@
             goToRitual() { 
                 ritual.reset(); 
                 this.showView('view-ritual'); 
-                // CRITICAL FIX: Resize canvas after view is visible to restore effects
                 setTimeout(() => ritual.resizeCanvas(), 600);
             },
             goToHistory() { this.renderHistoryList(); this.showView('view-history'); },
@@ -535,10 +795,7 @@
                     setTimeout(() => app.goToShop(), 1000);
                     return;
                 }
-                
-                // Ensure size is correct before starting
                 this.resizeCanvas();
-
                 app.data.inventory--;
                 app.save();
                 this.isBurning = true;
@@ -687,6 +944,9 @@
                 ctx.fill();
             }
         }
+
+        // EXPOSE APP TO WINDOW to ensure onclick works
+        window.app = app;
 
         window.onload = () => {
             app.init();
