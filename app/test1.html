@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>จุดธูปขอเลขมงคล - Meemon</title>
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&family=Cinzel:wght@700&family=Pattaya&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+            color: white;
+            font-family: 'Sarabun', sans-serif;
+            overflow-x: hidden;
+            overflow-y: auto;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* --- UI COMPONENTS --- */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .btn-gold {
+            background: linear-gradient(45deg, #FFD700, #DAA520);
+            color: #3e2723;
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+            transition: all 0.3s;
+            border: 2px solid #fff;
+            cursor: pointer;
+            text-align: center;
+        }
+        .btn-gold:hover { transform: scale(1.05); box-shadow: 0 0 25px rgba(255, 215, 0, 0.8); }
+        .btn-gold:disabled { opacity: 0.5; filter: grayscale(100%); cursor: not-allowed; transform: none; }
+
+        /* Star Animation */
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0;
+            animation: twinkle var(--duration) ease-in-out infinite;
+            box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.2; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 10px white; }
+            100% { opacity: 0.2; transform: scale(0.8); }
+        }
+
+        /* Views Transition Logic */
+        .view-section {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        
+        .view-section.active {
+            display: flex;
+            opacity: 1;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #view-login.active {
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* --- RITUAL SPECIFIC STYLES --- */
+        .card-container {
+            position: relative;
+            width: 300px;
+            height: 533px; /* 9:16 ratio */
+            margin: 0 auto;
+            border-radius: 15px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+            overflow: hidden;
+            background-color: #111;
+            z-index: 10;
+            flex-shrink: 0;
+        }
+
+        .card-layer {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #card-burnt { z-index: 1; background: radial-gradient(circle at center, #dcdcdc, #808080, #363636); }
+        #card-base { z-index: 5; transition: none; }
+
+        .texture {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            opacity: 0.3;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            mix-blend-mode: overlay;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .theme-black { background: linear-gradient(135deg, #2b2b2b 0%, #000000 100%); color: #d4af37; border: 4px solid #1a1a1a; }
+        .theme-gold { background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c); color: #3e2723; border: 4px solid #fff5c3; }
+        .theme-orange { background: linear-gradient(135deg, #ff8c00 0%, #ff4500 100%); color: white; border: 4px solid #cc3700; }
+
+        .vertical-brand-text {
+            position: absolute;
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-family: 'Pattaya', sans-serif;
+            font-size: 8rem;
+            font-weight: normal;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            letter-spacing: -0.2em;
+            opacity: 0.1;
+            z-index: 2;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        .theme-black .vertical-brand-text { color: #d4af37; }
+        .theme-gold .vertical-brand-text { color: #5d4037; }
+        .theme-orange .vertical-brand-text { color: #fff; }
+
+        .numbers-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            z-index: 10;
+        }
+
+        .lucky-digit {
+            font-family: 'Cinzel', serif;
+            font-size: 130px;
+            font-weight: 800;
+            color: #8b0000;
+            text-shadow: 2px 2px 4px rgba(255,255,255,0.3), -1px -1px 2px rgba(0,0,0,0.5);
+            line-height: 0.9;
+            background: -webkit-linear-gradient(#8b0000, #3e0000);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.5));
+        }
+
+        /* Effect Canvas: z-index 20 (Top of burnt, above base if we want lines on top? No lines should be on base edge) */
+        /* Actually, to draw the char line ON TOP of the base card edge, it needs high z-index */
+        #effect-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20; pointer-events: none; }
+        #particle-canvas { position: absolute; top: -20%; left: -20%; width: 140%; height: 140%; z-index: 25; pointer-events: none; }
+
+        .stick {
+            width: 12px; height: 150px;
+            background: linear-gradient(to right, #3e2723, #5d4037, #3e2723);
+            margin: -5px auto 0; position: relative; z-index: 1;
+        }
+
+        .custom-input {
+            width: 100%;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid #a855f7;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            color: white;
+            font-size: 16px;
+            outline: none;
+            box-sizing: border-box;
+        }
+        .custom-input:focus { border-color: #facc15; }
+    </style>
+</head>
+<body>
+
+    <div id="stars-container" class="fixed inset-0 z-0 pointer-events-none"></div>
+
+    <!-- VIEW: LOGIN -->
+    <div id="view-login" class="view-section active" style="display: flex; justify-content: center; min-height: 100vh;">
+        <div class="glass-panel p-8 w-full text-center relative z-10 max-w-sm">
+            <div class="mb-6">
+                <img src="https://github.com/taithai-tai/meemon/blob/main/Picture/logo.png?raw=true" class="w-32 mx-auto drop-shadow-[0_0_15px_rgba(255,215,0,0.6)]" alt="Logo" style="width: 120px; height: auto;">
+            </div>
+            <h1 class="text-3xl font-bold text-yellow-400 mb-2 font-['Pattaya']" style="font-family: 'Pattaya', sans-serif; font-size: 2rem; color: #facc15;">มีมนต์ มหาเฮง</h1>
+            <p class="text-gray-300 mb-8 text-sm">เข้าสู่ระบบเพื่อสะสมแต้มบุญและดูสถิติ</p>
+            <input type="text" id="usernameInput" placeholder="กรอกชื่อของคุณ..." class="custom-input mb-4" autocomplete="off">
+            <button onclick="app.login()" class="w-full btn-gold rounded-lg py-3 text-lg font-bold">เริ่มใช้งาน</button>
+        </div>
+    </div>
+
+    <!-- VIEW: HOME -->
+    <div id="view-home" class="view-section pt-10">
+        <div class="glass-panel p-4 w-full mb-6 flex justify-between items-center z-10">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-xl font-bold shadow-lg text-white" style="background: #6b21a8;">
+                    <span id="display-avatar">U</span>
+                </div>
+                <div>
+                    <h2 id="display-username" class="font-bold text-lg text-yellow-400">User</h2>
+                    <p class="text-xs text-gray-300">สมาชิกทั่วไป</p>
+                </div>
+            </div>
+            <button onclick="app.logout()" class="text-xs text-red-400 border border-red-900 px-2 py-1 rounded hover:bg-red-900/50">ออก</button>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 w-full mb-8 z-10" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="glass-panel p-4 text-center">
+                <div class="text-3xl mb-1">🕯️</div>
+                <div class="text-gray-400 text-xs uppercase">ธูปในคลัง</div>
+                <div class="text-2xl font-bold text-white"><span id="display-inventory">0</span> <span class="text-xs font-normal">ดอก</span></div>
+            </div>
+            <div class="glass-panel p-4 text-center relative overflow-hidden">
+                <div class="text-3xl mb-1">💰</div>
+                <div class="text-gray-400 text-xs uppercase">แต้มบุญ</div>
+                <div class="text-2xl font-bold text-yellow-400" id="display-credits">0</div>
+                <button onclick="app.claimFreeCredits()" class="absolute top-1 right-1 bg-green-600/80 text-[10px] px-2 py-1 rounded-full animate-pulse hover:bg-green-500" style="position: absolute; top: 5px; right: 5px; font-size: 10px;">+รับฟรี</button>
+            </div>
+        </div>
+
+        <div class="w-full space-y-4 z-10">
+            <button onclick="app.goToShop()" class="w-full glass-panel p-4 flex items-center justify-between hover:bg-white/5 transition group mb-4">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-full bg-yellow-500/20 flex items-center justify-center text-yellow-400" style="color: #eab308;">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </div>
+                    <div class="text-left">
+                        <div class="font-bold">ร้านค้าธูปมงคล</div>
+                        <div class="text-xs text-gray-400">ซื้อธูปเพิ่มเพื่อขอเลขเด็ด</div>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-gray-500"></i>
+            </button>
+
+            <button onclick="app.goToRitual()" class="w-full btn-gold rounded-xl p-6 flex items-center justify-center gap-3 relative overflow-hidden group mb-4">
+                <i class="fa-solid fa-fire text-2xl"></i>
+                <div class="text-xl font-bold">จุดธูปขอเลข</div>
+            </button>
+
+            <button onclick="app.goToHistory()" class="w-full glass-panel p-4 flex items-center justify-between hover:bg-white/5 transition group">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400" style="color: #60a5fa;">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                    </div>
+                    <div class="text-left">
+                        <div class="font-bold">ประวัติการจุด</div>
+                        <div class="text-xs text-gray-400">ดูสถิติย้อนหลัง</div>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-gray-500"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- VIEW: SHOP -->
+    <div id="view-shop" class="view-section pt-10">
+        <div class="w-full flex items-center justify-between mb-6 z-10">
+            <button onclick="app.goToHome()" class="text-white hover:text-yellow-400"><i class="fa-solid fa-arrow-left"></i> กลับ</button>
+            <h2 class="text-xl font-bold text-yellow-400">ร้านค้าธูป</h2>
+            <div class="bg-black/40 px-3 py-1 rounded-full text-sm">💰 <span id="shop-credits">0</span></div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4 w-full z-10" style="display: grid; gap: 1rem;">
+            <div class="glass-panel p-4 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="text-3xl">🕯️</div>
+                    <div>
+                        <div class="font-bold">ธูป 1 ดอก</div>
+                        <div class="text-xs text-gray-400">สำหรับลองของ</div>
+                    </div>
+                </div>
+                <button onclick="app.buyItem(1, 100)" class="bg-white/10 hover:bg-yellow-500/80 hover:text-black border border-yellow-500/50 px-4 py-2 rounded-lg transition text-sm text-white">100 แต้ม</button>
+            </div>
+            <div class="glass-panel p-4 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="text-3xl">🧨</div>
+                    <div>
+                        <div class="font-bold">ธูป 5 ดอก</div>
+                        <div class="text-xs text-gray-400 text-green-400">คุ้มค่า!</div>
+                    </div>
+                </div>
+                <button onclick="app.buyItem(5, 450)" class="bg-white/10 hover:bg-yellow-500/80 hover:text-black border border-yellow-500/50 px-4 py-2 rounded-lg transition text-sm text-white">450 แต้ม</button>
+            </div>
+            <div class="glass-panel p-4 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="text-3xl">🔥</div>
+                    <div>
+                        <div class="font-bold">ธูป 10 ดอก</div>
+                        <div class="text-xs text-gray-400 text-green-400">สายมูตัวจริง</div>
+                    </div>
+                </div>
+                <button onclick="app.buyItem(10, 800)" class="bg-white/10 hover:bg-yellow-500/80 hover:text-black border border-yellow-500/50 px-4 py-2 rounded-lg transition text-sm text-white">800 แต้ม</button>
+            </div>
+        </div>
+        <p class="text-xs text-gray-500 mt-6 text-center w-full">กดรับแต้มบุญฟรีที่หน้าแรกได้ทุกวัน!</p>
+    </div>
+
+    <!-- VIEW: HISTORY -->
+    <div id="view-history" class="view-section pt-10">
+        <div class="w-full flex items-center justify-between mb-6 z-10">
+            <button onclick="app.goToHome()" class="text-white hover:text-yellow-400"><i class="fa-solid fa-arrow-left"></i> กลับ</button>
+            <h2 class="text-xl font-bold text-blue-400">บันทึกสถิติ</h2>
+            <div class="w-8"></div>
+        </div>
+        <div id="history-list" class="w-full space-y-3 z-10 pb-10">
+            <div class="text-center text-gray-500 mt-10">ยังไม่มีประวัติการจุดธูป</div>
+        </div>
+    </div>
+
+    <!-- VIEW: RITUAL -->
+    <div id="view-ritual" class="view-section pt-4 relative">
+        <button onclick="app.goToHome()" class="absolute top-4 left-4 z-50 bg-black/30 backdrop-blur px-3 py-1 rounded-full text-sm hover:bg-white/20 transition border border-white/20" style="position: absolute; top: 1rem; left: 1rem; z-index: 50;">
+            <i class="fa-solid fa-house"></i> กลับหน้าหลัก
+        </button>
+
+        <div class="card-container mt-4" id="cardContainer">
+            <canvas id="effect-canvas"></canvas>
+            <canvas id="particle-canvas"></canvas>
+
+            <div id="card-burnt" class="card-layer">
+                <div class="texture"></div>
+                <div class="numbers-container">
+                    <span class="lucky-digit" id="digit-1">?</span>
+                    <span class="lucky-digit" id="digit-2">?</span>
+                    <span class="lucky-digit" id="digit-3">?</span>
+                </div>
+            </div>
+
+            <div id="card-base" class="card-layer theme-black">
+                <div class="texture"></div>
+                <div class="vertical-brand-text">รวย</div>
+            </div>
+        </div>
+
+        <div class="stick shadow-lg"></div>
+
+        <div class="mt-6 z-50 flex flex-col items-center gap-3 w-full px-4 mb-8">
+            <div class="text-center mb-2">
+                <span class="text-gray-400 text-sm">คงเหลือ:</span>
+                <span class="font-bold text-yellow-400 text-xl" id="ritual-inventory">0</span>
+                <span class="text-gray-400 text-sm">ดอก</span>
+            </div>
+
+            <div id="start-buttons-group" class="flex flex-col items-center gap-3 w-full">
+                <button onclick="ritual.start(60000)" class="btn-gold w-full max-w-xs py-3 rounded-full text-lg shadow-lg">
+                    🔥 จุดธูปขอเลข (1 นาที)
+                </button>
+                <button onclick="ritual.start(10000)" class="bg-purple-600 hover:bg-purple-500 text-white px-6 py-2 rounded-full text-sm transition shadow-lg w-full max-w-xs border border-purple-400" style="background-color: #9333ea; border: 1px solid #c084fc;">
+                    ⚡ จุดธูปด่วน (10 วินาที)
+                </button>
+            </div>
+
+            <div id="result-controls" class="hidden flex flex-col items-center gap-3 w-full">
+                <div class="text-green-400 font-bold animate-bounce">บันทึกสถิติเรียบร้อย!</div>
+                <button onclick="ritual.reset()" class="bg-gray-700 text-white px-8 py-3 rounded-full hover:bg-gray-600 transition shadow-lg border border-gray-500 font-bold">
+                    🔄 จุดอีกครั้ง
+                </button>
+                <button onclick="app.goToHistory()" class="text-sm text-gray-400 underline">ดูประวัติ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-gray-800 border border-gray-600 text-white px-6 py-3 rounded-full shadow-2xl opacity-0 pointer-events-none transition-opacity duration-300 z-[100] flex items-center gap-2" style="position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); background: #1f2937; border: 1px solid #4b5563; padding: 12px 24px; border-radius: 999px; z-index: 100; opacity: 0; transition: opacity 0.3s;">
+        <i class="fa-solid fa-circle-info text-yellow-400"></i>
+        <span id="toast-msg">Notification</span>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        const app = {
+            data: { username: null, credits: 500, inventory: 1, history: [], lastDailyClaim: null },
+            init() {
+                try {
+                    const saved = localStorage.getItem('meemon_save');
+                    if (saved) this.data = JSON.parse(saved);
+                } catch (e) { localStorage.removeItem('meemon_save'); }
+                if (this.data.username) this.goToHome();
+                this.createStars();
+            },
+            save() {
+                try { localStorage.setItem('meemon_save', JSON.stringify(this.data)); } catch (e) {}
+                this.updateUI();
+            },
+            updateUI() {
+                try {
+                    const name = this.data.username || 'Guest';
+                    if(document.getElementById('display-username')) document.getElementById('display-username').innerText = name;
+                    if(document.getElementById('display-avatar')) document.getElementById('display-avatar').innerText = name.charAt(0).toUpperCase();
+                    if(document.getElementById('display-credits')) document.getElementById('display-credits').innerText = this.data.credits.toLocaleString();
+                    if(document.getElementById('display-inventory')) document.getElementById('display-inventory').innerText = this.data.inventory.toLocaleString();
+                    if(document.getElementById('shop-credits')) document.getElementById('shop-credits').innerText = this.data.credits.toLocaleString();
+                    if(document.getElementById('ritual-inventory')) document.getElementById('ritual-inventory').innerText = this.data.inventory.toLocaleString();
+                } catch(e) {}
+            },
+            login() {
+                const name = document.getElementById('usernameInput').value.trim();
+                if (!name) return this.showToast('กรุณากรอกชื่อก่อนเริ่มใช้งาน');
+                this.data.username = name;
+                this.save();
+                this.goToHome();
+            },
+            logout() {
+                if(confirm('คุณต้องการออกจากระบบหรือไม่?')) {
+                    this.data.username = null;
+                    this.save(); 
+                    this.showView('view-login');
+                }
+            },
+            claimFreeCredits() {
+                const today = new Date().toDateString();
+                if (this.data.lastDailyClaim === today) return this.showToast('วันนี้คุณรับไปแล้ว พรุ่งนี้มาใหม่นะ!');
+                this.data.credits += 200;
+                this.data.lastDailyClaim = today;
+                this.save();
+                this.showToast('รับฟรี 200 แต้มบุญเรียบร้อย!');
+            },
+            buyItem(amount, cost) {
+                if (this.data.credits < cost) return this.showToast('แต้มบุญไม่พอ! กดรับฟรีหน้าแรกได้นะ');
+                this.data.credits -= cost;
+                this.data.inventory += amount;
+                this.save();
+                this.showToast(`ซื้อธูป ${amount} ดอก เรียบร้อย!`);
+            },
+            addHistory(numbers) {
+                this.data.history.unshift({ date: new Date().toLocaleString('th-TH'), numbers: numbers.join('') });
+                this.save();
+            },
+            showView(viewId) {
+                const currentActive = document.querySelector('.view-section.active');
+                const target = document.getElementById(viewId);
+                if (currentActive === target) { this.updateUI(); return; }
+                document.querySelectorAll('.view-section').forEach(el => {
+                    el.classList.remove('active');
+                    setTimeout(() => { if(!el.classList.contains('active')) el.style.display = 'none'; }, 500); 
+                });
+                target.style.display = 'flex';
+                setTimeout(() => target.classList.add('active'), 50); 
+                this.updateUI();
+            },
+            goToHome() { this.showView('view-home'); },
+            goToShop() { this.showView('view-shop'); },
+            goToRitual() { 
+                ritual.reset(); 
+                this.showView('view-ritual'); 
+                // CRITICAL FIX: Resize canvas after view is visible to restore effects
+                setTimeout(() => ritual.resizeCanvas(), 600);
+            },
+            goToHistory() { this.renderHistoryList(); this.showView('view-history'); },
+            renderHistoryList() {
+                const container = document.getElementById('history-list');
+                container.innerHTML = '';
+                if (!this.data.history || this.data.history.length === 0) {
+                    container.innerHTML = '<div class="text-center text-gray-500 mt-10">ยังไม่มีประวัติการจุดธูป</div>';
+                    return;
+                }
+                this.data.history.forEach(item => {
+                    const el = document.createElement('div');
+                    el.className = 'glass-panel p-4 flex items-center justify-between border-l-4 border-l-yellow-400';
+                    el.style.display = 'flex'; el.style.justifyContent = 'space-between'; el.style.alignItems = 'center';
+                    el.innerHTML = `<div><div class="text-xs text-gray-400">${item.date}</div><div class="text-yellow-400 font-bold mt-1">ธูปมงคล</div></div><div class="text-3xl font-bold font-['Cinzel'] tracking-widest text-white drop-shadow-md">${item.numbers.split('').join(' ')}</div>`;
+                    container.appendChild(el);
+                });
+            },
+            showToast(msg) {
+                const toast = document.getElementById('toast');
+                document.getElementById('toast-msg').innerText = msg;
+                toast.style.opacity = '1';
+                setTimeout(() => toast.style.opacity = '0', 3000);
+            },
+            createStars() {
+                const container = document.getElementById('stars-container');
+                if(!container) return;
+                for (let i = 0; i < 100; i++) {
+                    const star = document.createElement('div');
+                    star.className = 'star';
+                    star.style.left = `${Math.random() * 100}%`;
+                    star.style.top = `${Math.random() * 100}%`;
+                    const size = Math.random() * 3 + 1;
+                    star.style.width = star.style.height = `${size}px`;
+                    star.style.setProperty('--duration', `${Math.random() * 3 + 2}s`);
+                    star.style.animationDelay = `${Math.random() * 5}s`;
+                    container.appendChild(star);
+                }
+            }
+        };
+
+        const ritual = {
+            isBurning: false, animationId: null, particles: [], duration: 10000, startTime: 0, cardWidth: 300, cardHeight: 533,
+            cardBase: document.getElementById('card-base'),
+            canvas: document.getElementById('effect-canvas'),
+            pCanvas: document.getElementById('particle-canvas'),
+            digits: [document.getElementById('digit-1'), document.getElementById('digit-2'), document.getElementById('digit-3')],
+            get ctx() { return this.canvas.getContext('2d'); },
+            get pCtx() { return this.pCanvas.getContext('2d'); },
+            init() { 
+                this.resizeCanvas(); 
+                window.addEventListener('resize', () => this.resizeCanvas());
+            },
+            resizeCanvas() {
+                const container = document.querySelector('.card-container');
+                if(!container || container.offsetWidth === 0) return;
+                this.cardWidth = container.offsetWidth;
+                this.cardHeight = container.offsetHeight;
+                this.canvas.width = this.cardWidth;
+                this.canvas.height = this.cardHeight;
+                this.pCanvas.width = this.cardWidth * 1.4;
+                this.pCanvas.height = this.cardHeight * 1.4;
+            },
+            start(duration) {
+                if (this.isBurning) return;
+                if (app.data.inventory <= 0) {
+                    app.showToast('ธูปหมด! กรุณาซื้อเพิ่มที่ร้านค้า');
+                    setTimeout(() => app.goToShop(), 1000);
+                    return;
+                }
+                
+                // Ensure size is correct before starting
+                this.resizeCanvas();
+
+                app.data.inventory--;
+                app.save();
+                this.isBurning = true;
+                this.duration = duration;
+                this.startTime = Date.now();
+                const nums = [Math.floor(Math.random()*10), Math.floor(Math.random()*10), Math.floor(Math.random()*10)];
+                this.digits.forEach((el, i) => el.innerText = nums[i]);
+                document.getElementById('start-buttons-group').classList.add('hidden');
+                document.getElementById('result-controls').classList.add('hidden');
+                this.animate(nums);
+            },
+            animate(finalNumbers) {
+                const elapsed = Date.now() - this.startTime;
+                let rawProgress = elapsed / this.duration;
+                const isFireActive = rawProgress < 1.1;
+
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.pCtx.clearRect(0, 0, this.pCanvas.width, this.pCanvas.height);
+
+                if (isFireActive) {
+                    const numPoints = 20;
+                    const step = 100 / numPoints;
+                    let currentY = rawProgress * (this.cardHeight + 100);
+                    let clipString = `100% 100%, 0% 100%, `;
+                    let jaggedPath = [];
+
+                    for (let i = 0; i <= numPoints; i++) {
+                        const xPct = i * step;
+                        const noise = (Math.random() - 0.5) * 30;
+                        let yPos = currentY + noise;
+                        if (yPos < 0) yPos = 0;
+                        clipString += `${xPct}% ${yPos}px, `;
+                        jaggedPath.push({ x: (xPct/100)*this.cardWidth, y: yPos });
+                    }
+
+                    this.cardBase.style.clipPath = `polygon(${clipString.slice(0, -2)})`;
+
+                    this.ctx.beginPath();
+                    this.ctx.lineWidth = 15;
+                    this.ctx.strokeStyle = "rgba(0,0,0,0.8)";
+                    this.ctx.lineCap = "round";
+                    this.ctx.lineJoin = "round";
+                    if (jaggedPath.length > 0) {
+                        this.ctx.moveTo(jaggedPath[0].x, jaggedPath[0].y);
+                        for (let p of jaggedPath) this.ctx.lineTo(p.x, p.y);
+                    }
+                    this.ctx.stroke();
+
+                    this.ctx.beginPath();
+                    this.ctx.lineWidth = 4;
+                    this.ctx.strokeStyle = "#ff4500";
+                    this.ctx.shadowBlur = 15;
+                    this.ctx.shadowColor = "#ff0000";
+                    if (jaggedPath.length > 0) {
+                        this.ctx.moveTo(jaggedPath[0].x, jaggedPath[0].y);
+                        for (let p of jaggedPath) this.ctx.lineTo(p.x, p.y);
+                    }
+                    this.ctx.stroke();
+                    this.ctx.shadowBlur = 0;
+
+                    for (let p of jaggedPath) {
+                        if (p.y < this.cardHeight + 50) {
+                            const pX = p.x + (this.cardWidth * 0.2);
+                            const pY = p.y + (this.cardHeight * 0.2);
+                            if (Math.random() < 0.15) this.particles.push(new Particle('smoke', pX, pY));
+                            if (Math.random() < 0.05) this.particles.push(new Particle('fire', pX, pY));
+                        }
+                    }
+                } else {
+                    this.cardBase.style.clipPath = `polygon(0 0, 0 0, 0 0)`;
+                }
+
+                for (let i = this.particles.length - 1; i >= 0; i--) {
+                    const p = this.particles[i];
+                    p.update();
+                    p.draw(this.pCtx);
+                    if (p.life <= 0) this.particles.splice(i, 1);
+                }
+
+                if (isFireActive || this.particles.length > 0) {
+                    this.animationId = requestAnimationFrame(() => this.animate(finalNumbers));
+                } else {
+                    this.finish(finalNumbers);
+                }
+            },
+            finish(numbers) {
+                this.isBurning = false;
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.pCtx.clearRect(0, 0, this.pCanvas.width, this.pCanvas.height);
+                document.getElementById('result-controls').classList.remove('hidden');
+                app.addHistory(numbers);
+            },
+            reset() {
+                document.getElementById('start-buttons-group').classList.remove('hidden');
+                document.getElementById('result-controls').classList.add('hidden');
+                this.cardBase.style.clipPath = 'none';
+                this.digits.forEach(el => el.innerText = '?');
+                const themes = ['theme-black', 'theme-gold', 'theme-orange'];
+                this.cardBase.classList.remove(...themes);
+                this.cardBase.classList.add(themes[Math.floor(Math.random() * themes.length)]);
+                this.particles = [];
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.pCtx.clearRect(0, 0, this.pCanvas.width, this.pCanvas.height);
+                this.isBurning = false;
+            }
+        };
+
+        class Particle {
+            constructor(type, startX, startY) {
+                this.type = type;
+                this.x = startX;
+                this.y = startY;
+                if (type === 'smoke') {
+                    this.vx = (Math.random() - 0.5) * 2;
+                    this.vy = -Math.random() * 2 - 1; 
+                    this.size = Math.random() * 20 + 20;
+                    this.life = Math.random() * 60 + 40;
+                    this.maxLife = this.life;
+                    this.alpha = 0;
+                    this.color = Math.floor(Math.random() * 50);
+                } else if (type === 'fire') {
+                    this.vx = (Math.random() - 0.5) * 3;
+                    this.vy = (Math.random() - 0.5) * 3 - 1;
+                    this.size = Math.random() * 4 + 2;
+                    this.life = Math.random() * 20 + 10;
+                    this.hue = Math.random() * 30;
+                }
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.life--;
+                if (this.type === 'smoke') {
+                    this.size += 0.3;
+                    this.alpha = (this.life / this.maxLife) * 0.8;
+                } else { this.size *= 0.9; }
+            }
+            draw(ctx) {
+                ctx.beginPath();
+                if (this.type === 'smoke') {
+                    ctx.fillStyle = `rgba(${this.color}, ${this.color}, ${this.color}, ${this.alpha})`;
+                } else {
+                    ctx.fillStyle = `hsl(${this.hue}, 100%, 50%)`;
+                }
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        window.onload = () => {
+            app.init();
+            ritual.init();
+        };
+    </script>
+</body>
+</html>
