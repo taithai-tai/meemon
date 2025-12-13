@@ -23,8 +23,9 @@
 </div>
 
 <script>
-  // ✅ ใช้ URL ใหม่ตัวเดียวกันทุกหน้า
   const API_URL = "https://script.google.com/macros/s/AKfycbzVd-VNUeXbmecyTk1ITZOssdNm7uTb0ZFFHkcPgmjJaa6iJM56QLiwA9iKhG8HW3M/exec";
+
+  const OTP_PAGE = "/verify-otp.html"; // ✅ แนะนำให้ใช้แบบนี้
 
   function setMsg(text, ok=false){
     const el = document.getElementById("msg");
@@ -35,15 +36,10 @@
   async function postForm(obj){
     const form = new URLSearchParams();
     Object.keys(obj).forEach(k => form.append(k, obj[k]));
-
     const r = await fetch(API_URL, { method: "POST", body: form });
     const text = await r.text();
-
     try { return JSON.parse(text); }
-    catch {
-      console.error("NOT JSON:", text);
-      return { error: "Server ไม่ตอบกลับเป็น JSON", raw: text.slice(0, 250) };
-    }
+    catch { return { error: "Server ไม่ตอบกลับเป็น JSON", raw: text.slice(0, 250) }; }
   }
 
   async function register() {
@@ -61,11 +57,14 @@
       const data = await postForm({ action: "register", email, password });
 
       if (data.success) {
-        // ✅ เก็บอีเมลไว้ให้ verify-otp.html ดึงไปใช้
+        // ✅ เก็บอีเมล + ธงบอกว่าเรากำลังไปหน้า OTP
         sessionStorage.setItem("MEEMON_EMAIL", email);
+        sessionStorage.setItem("MEEMON_OTP_FLOW", "1");
 
         setMsg("สมัครสำเร็จ ✅ กำลังไปหน้ากรอก OTP…", true);
-        setTimeout(() => location.href = "verify-otp.html", 600);
+
+        // ✅ กันโดนสคริปต์อื่นเด้งทับ: ใช้ replace + หน่วงนิดเดียว
+        setTimeout(() => location.replace(OTP_PAGE), 200);
       } else {
         setMsg(data.error || "สมัครไม่สำเร็จ");
       }
