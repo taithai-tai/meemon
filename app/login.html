@@ -25,9 +25,11 @@
 
   <p id="msg" class="text-sm mt-3 text-red-300 min-h-[20px]"></p>
 </div>
+  
+<script src="config.js"></script>
 
 <script>
-  const API = "https://script.google.com/macros/s/AKfycbzVd-VNUeXbmecyTk1ITZOssdNm7uTb0ZFFHkcPgmjJaa6iJM56QLiwA9iKhG8HW3M/exec";
+  const API_URL = window.MEEMON_API_URL;
 
   // ✅ ถ้าอยู่ใน flow OTP ให้เด้งไปหน้า OTP ที่ถูกต้องใน /app
   const inOtpFlow = sessionStorage.getItem("MEEMON_OTP_FLOW") === "1";
