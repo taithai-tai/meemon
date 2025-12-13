@@ -135,7 +135,8 @@ async function initLIFF() {
 
 async function login() {
   document.getElementById("login-msg").innerText = "กำลังพาไปล็อกอิน LINE…";
-  await liff.login({ redirectUri: window.location.href });
+  await liff.login({ redirectUri: "https://meemon.net/app/index.html" });
+
 }
 
 function logout() {
@@ -146,7 +147,15 @@ function logout() {
 /* =============================
    EVENTS
 ============================= */
-document.getElementById("btn-login").onclick = login;
+document.getElementById("btn-login").onclick = async () => {
+  await liff.init({ liffId: "2008685502-NdidvjVm" });
+
+  if (!liff.isLoggedIn()) {
+    liff.login({ redirectUri: "https://meemon.net/app/index.html" });
+    return;
+  }
+};
+
 document.getElementById("btn-logout").onclick = logout;
 
 window.onload = () => {
