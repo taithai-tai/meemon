@@ -5,19 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>จุดธูปขอเลขมงคล - Meemon</title>
     <!-- Tailwind CSS (CDN) -->
-    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <!-- Fonts -->
-    <link href="[https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&family=Cinzel:wght@700&family=Pattaya&display=swap](https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&family=Cinzel:wght@700&family=Pattaya&display=swap)" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&family=Cinzel:wght@700&family=Pattaya&display=swap" rel="stylesheet">
     <!-- FontAwesome for Icons -->
-    <link rel="stylesheet" href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css)">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Firebase SDKs -->
-    <script src="[https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js](https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js)"></script>
-    <script src="[https://www.gstatic.com/firebasejs/11.6.1/firebase-auth-compat.js](https://www.gstatic.com/firebasejs/11.6.1/firebase-auth-compat.js)"></script>
-    <script src="[https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore-compat.js](https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore-compat.js)"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore-compat.js"></script>
 
     <!-- LINE LIFF SDK (เพิ่มมาใหม่) -->
-    <script charset="utf-8" src="[https://static.line-scdn.net/liff/edge/2/sdk.js](https://static.line-scdn.net/liff/edge/2/sdk.js)"></script>
+    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
     <!-- 1. ลิงก์ไฟล์ CSS -->
     <link rel="stylesheet" href="css/style.css">
@@ -36,12 +36,12 @@
     <div id="view-login" class="view-section" style="display: flex; justify-content: center; min-height: 100vh;">
         <div class="glass-panel p-8 w-full text-center relative z-10 max-w-sm">
             <div class="mb-4">
-                <img src="[https://github.com/taithai-tai/meemon/blob/main/Picture/logo.png?raw=true](https://github.com/taithai-tai/meemon/blob/main/Picture/logo.png?raw=true)" class="w-28 mx-auto drop-shadow-[0_0_15px_rgba(255,215,0,0.6)]" alt="Logo" style="width: 110px; height: auto;">
+                <img src="https://github.com/taithai-tai/meemon/blob/main/Picture/logo.png?raw=true" class="w-28 mx-auto drop-shadow-[0_0_15px_rgba(255,215,0,0.6)]" alt="Logo" style="width: 110px; height: auto;">
             </div>
             <h1 class="text-2xl font-bold text-yellow-400 mb-2 font-['Pattaya']">มีมนต์ มหาเฮง</h1>
             <p class="text-gray-300 mb-8 text-sm">เข้าสู่ระบบด้วย LINE เพื่อสะสมแต้มบุญ</p>
             
-            <button onclick="app.loginWithLine()" class="btn-line shadow-lg hover:shadow-green-500/50">
+            <button onclick="app.login()" class="btn-line shadow-lg hover:shadow-green-500/50">
                 <i class="fa-brands fa-line text-2xl"></i>
                 เข้าสู่ระบบด้วย LINE
             </button>
