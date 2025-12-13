@@ -39,22 +39,47 @@
       width: 100%;
       cursor: pointer;
       transition: transform .15s ease;
+      text-align: center;
     }
     .btn-gold:hover { transform: scale(1.02); }
-    .muted { color: rgba(255,255,255,0.7); }
+
+    .btn-outline {
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 14px;
+      padding: 12px 14px;
+      width: 100%;
+      background: rgba(0,0,0,0.18);
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .15s ease;
+      text-align: center;
+    }
+    .btn-outline:hover { transform: scale(1.02); }
+
+    .muted { color: rgba(255,255,255,0.75); }
   </style>
 </head>
 
 <body>
   <div class="glass p-8 w-full max-w-sm text-center">
-    <img src="https://github.com/taithai-tai/meemon/blob/main/Picture/logo.png?raw=true"
-         class="w-28 mx-auto mb-4" alt="logo">
+    <img
+      src="https://github.com/taithai-tai/meemon/blob/main/Picture/logo.png?raw=true"
+      class="w-28 mx-auto mb-4"
+      alt="logo"
+    />
 
     <h1 class="text-2xl font-bold text-yellow-300 mb-1 font-['Pattaya']">มีมนต์ มหาเฮง</h1>
     <p class="muted text-sm mb-6">ล็อกอินด้วย LINE เพื่อใช้งานระบบแต้ม/ธูป</p>
 
+    <!-- ปุ่มล็อกอิน (ใช้ตอนอยู่ใน LINE หรือบนเดสก์ท็อป) -->
     <button id="btnLogin" class="btn-gold">
       <i class="fa-brands fa-line mr-2"></i> เข้าสู่ระบบด้วย LINE
+    </button>
+
+    <!-- ปุ่มเปิดในแอป LINE (โชว์เฉพาะกรณีเปิดจาก browser มือถือ) -->
+    <button id="btnOpenInLine" class="btn-outline mt-3" style="display:none;">
+      📲 เปิดในแอป LINE
     </button>
 
     <p id="msg" class="text-xs mt-4 min-h-[18px] muted"></p>
@@ -65,41 +90,62 @@
   </div>
 
   <script>
-    // === ใส่ของคุณ ===
+    // === ของคุณ ===
     const LIFF_ID = "2008685502-NdidvjVm";
-    const REDIRECT_LOGIN = "https://meemon.net/app/index.html"; // URL หน้า login ของจริง (เป๊ะ)
+    const REDIRECT_LOGIN = "https://meemon.net/app/index.html"; // ต้องตรง endpoint ที่ตั้งใน LIFF
     const HOME_URL = "/app/home.html";
-    // ==================
+    const LIFF_DEEP_LINK = "https://liff.line.me/2008685502-NdidvjVm";
+    // ===============
 
     const msg = (t) => document.getElementById("msg").innerText = t;
+
+    function isMobile() {
+      return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    }
 
     async function boot() {
       msg("กำลังเตรียมระบบ…");
       await liff.init({ liffId: LIFF_ID });
 
-      if (liff.isLoggedIn()) {
-        // ได้ idToken แล้วเก็บไว้ใน sessionStorage (ไม่โชว์ใน URL ปลอดภัยกว่า)
-        const idToken = liff.getIDToken();
-        if (!sessionStorage.getItem("MEEMON_IDTOKEN")) {
-          sessionStorage.setItem("MEEMON_IDTOKEN", idToken || "");
-        }
-        msg("เข้าสู่ระบบแล้ว กำลังไปหน้าหลัก…");
-        location.href = HOME_URL;
-        return;
+      // ถ้าเปิดบนมือถือ "นอก LINE" ให้แนะนำเปิดในแอป LINE
+      if (isMobile() && !liff.isInClient()) {
+        document.getElementById("btnOpenInLine").style.display = "block";
+        msg("แนะนำ: กด 'เปิดในแอป LINE' เพื่อใช้งานได้สมบูรณ์ ✅");
+      } else {
+        msg("พร้อมให้ล็อกอิน ✅");
       }
 
-      msg("พร้อมให้ล็อกอิน ✅");
+      // ถ้าล็อกอินแล้วก็ไปต่อเลย
+      if (liff.isLoggedIn()) {
+        const idToken = liff.getIDToken();
+        sessionStorage.setItem("MEEMON_IDTOKEN", idToken || "");
+        msg("เข้าสู่ระบบแล้ว กำลังไปหน้าหลัก…");
+        location.href = HOME_URL;
+      }
     }
 
     async function doLogin() {
       msg("กำลังพาไปล็อกอิน LINE…");
+      // (ไม่ต้อง init ซ้ำก็ได้ แต่เผื่อบางเครื่อง)
       await liff.init({ liffId: LIFF_ID });
+
       if (!liff.isLoggedIn()) {
         liff.login({ redirectUri: REDIRECT_LOGIN });
+        return;
       }
+
+      // เผื่อผู้ใช้ล็อกอินอยู่แล้ว
+      const idToken = liff.getIDToken();
+      sessionStorage.setItem("MEEMON_IDTOKEN", idToken || "");
+      location.href = HOME_URL;
+    }
+
+    function openInLine() {
+      location.href = LIFF_DEEP_LINK;
     }
 
     document.getElementById("btnLogin").addEventListener("click", doLogin);
+    document.getElementById("btnOpenInLine").addEventListener("click", openInLine);
 
     window.addEventListener("load", () => {
       boot().catch(err => {
