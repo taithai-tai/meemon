@@ -1,56 +1,78 @@
-const app = {};
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-// 🔥 Firebase config (ใส่ของคุณเอง)
+// ✅ Firebase config ของคุณ
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT",
+  apiKey: "AIzaSyBcEydl7HHzE3WdVgJc65O8-IEGYVUbZxY",
+  authDomain: "meemon-app.firebaseapp.com",
+  projectId: "meemon-app",
+  storageBucket: "meemon-app.firebasestorage.app",
+  messagingSenderId: "801234540684",
+  appId: "1:801234540684:web:9238eb229688d2d15183a9"
 };
 
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
+// ✅ init Firebase
+const fbApp = initializeApp(firebaseConfig);
+const auth = getAuth(fbApp);
+const db = getFirestore(fbApp);
 
-// 🔑 LIFF INIT
-liff.init({
-  liffId: "2008685502-NdidvjVm" // ← ของคุณ
-})
-.then(() => {
-  document.getElementById("status").innerText = "LIFF Ready";
-})
-.catch(err => {
-  document.getElementById("status").innerText = err.message;
-  console.error(err);
-});
+// ✅ LIFF ID ของคุณ
+const LIFF_ID = "2008685502-NdidvjVm";
 
-// 🔐 Login function
-app.login = async function () {
-  if (!liff.isLoggedIn()) {
-    liff.login();
-    return;
-  }
+const $status = document.getElementById("status");
+const $btn = document.getElementById("btnLogin");
 
+function setStatus(msg) {
+  $status.textContent = msg;
+}
+
+async function init() {
   try {
-    // LINE profile
+    setStatus("กำลังเริ่ม LIFF…");
+    await liff.init({ liffId: LIFF_ID });
+
+    if (liff.isLoggedIn()) {
+      setStatus("Logged in แล้ว ✅ กำลังโหลดโปรไฟล์…");
+      await afterLineLogin();
+    } else {
+      setStatus("ยังไม่ล็อกอิน LINE");
+    }
+
+    $btn.addEventListener("click", async () => {
+      if (!liff.isLoggedIn()) {
+        liff.login();
+        return;
+      }
+      await afterLineLogin();
+    });
+
+  } catch (err) {
+    console.error(err);
+    setStatus("LIFF Error: " + (err?.message || err));
+  }
+}
+
+async function afterLineLogin() {
+  try {
     const profile = await liff.getProfile();
-    const userId = profile.userId;
 
-    // Firebase anonymous login
-    await auth.signInAnonymously();
+    setStatus("กำลังล็อกอิน Firebase…");
+    await signInAnonymously(auth);
 
-    // Save user
-    await db.collection("users").doc(userId).set({
-      userId,
-      displayName: profile.displayName,
-      pictureUrl: profile.pictureUrl,
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    setStatus("กำลังบันทึกข้อมูล…");
+    await setDoc(doc(db, "users", profile.userId), {
+      userId: profile.userId,
+      displayName: profile.displayName || "",
+      pictureUrl: profile.pictureUrl || "",
+      updatedAt: serverTimestamp()
     }, { merge: true });
 
-    document.getElementById("status").innerText = "Login สำเร็จ 🎉";
-    console.log("User:", profile);
-
-  } catch (e) {
-    document.getElementById("status").innerText = "เกิดข้อผิดพลาด";
-    console.error(e);
+    setStatus("สำเร็จ 🎉 ข้อมูล sync ทุกเครื่องแล้ว");
+  } catch (err) {
+    console.error(err);
+    setStatus("Error: " + (err?.message || err));
   }
-};
+}
+
+init();
