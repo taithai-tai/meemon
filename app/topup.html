@@ -2,163 +2,157 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Meemon | Topup</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Meemon | เติมแต้มบุญ</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="min-h-screen bg-slate-900 text-white flex items-center justify-center p-4">
+<body class="min-h-screen flex items-center justify-center bg-slate-900 text-white p-4">
 
-<div class="w-full max-w-md bg-white/10 rounded-2xl p-6">
-  <div class="flex items-center justify-between mb-4">
-    <h1 class="text-xl font-bold">เติมแต้มบุญด้วยสลิป</h1>
-    <a href="home.html" class="text-sm underline text-yellow-300">กลับหน้า Home</a>
+<div class="bg-white/10 p-6 rounded-xl w-full max-w-sm space-y-4">
+
+  <h1 class="text-xl font-bold text-center">เติมแต้มบุญ</h1>
+
+  <!-- AMOUNT -->
+  <div>
+    <label class="text-sm text-white/70">จำนวนเงิน (บาท)</label>
+    <input id="amount" type="number" min="1"
+      class="w-full p-2 rounded text-black"
+      placeholder="เช่น 100" />
   </div>
 
-  <div class="text-sm text-white/70 mb-4">
-    อัปโหลดสลิปโอนเงิน → ระบบจะตรวจสอบกับ SlipOK แล้วเติมแต้มให้ ✅
+  <!-- CREDIT PREVIEW -->
+  <div class="text-center text-sm">
+    จะได้รับ <span id="creditPreview" class="text-yellow-300 font-bold">0</span> แต้มบุญ
   </div>
 
-  <div class="space-y-3">
-    <div class="bg-black/30 rounded-xl p-4">
-      <div class="text-xs text-white/60 mb-2">แนบรูปสลิป (JPG/PNG/WEBP)</div>
-      <input id="file" type="file" accept="image/*"
-             class="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-yellow-300 file:text-black file:font-bold" />
-      <img id="preview" class="mt-3 hidden w-full rounded-xl border border-white/10" />
-    </div>
-
-    <div class="bg-black/30 rounded-xl p-4">
-      <div class="text-xs text-white/60 mb-2">ระบุยอด (ถ้าต้องการให้เช็กยอดตรงสลิป)</div>
-      <input id="amount" inputmode="decimal" placeholder="เช่น 100.00"
-             class="w-full p-3 rounded-lg text-black" />
-      <div class="text-xs text-white/50 mt-2">
-        * ถ้าว่าง ระบบจะเช็กจากสลิปอย่างเดียว (ไม่บังคับยอด)
-      </div>
-    </div>
-
-    <button id="btn" onclick="submitSlip()"
-            class="w-full bg-green-400 text-black font-bold py-3 rounded-xl">
-      ตรวจสลิป & เติมแต้ม
-    </button>
-
-    <p id="msg" class="text-sm min-h-[20px] text-red-300"></p>
-
-    <div id="result" class="hidden mt-4 bg-emerald-500/10 border border-emerald-400/30 rounded-xl p-4">
-      <div class="font-bold text-emerald-300 mb-2">✅ เติมสำเร็จ</div>
-      <div class="text-sm text-white/80 space-y-1">
-        <div>ยอดเงิน: <span id="rAmount" class="font-bold text-yellow-300"></span></div>
-        <div>แต้มที่ได้รับ: <span id="rPoints" class="font-bold text-yellow-300"></span></div>
-        <div>อ้างอิง: <span id="rRef" class="font-mono text-white/90"></span></div>
-      </div>
-    </div>
+  <!-- QR -->
+  <div id="qrBox" class="hidden text-center">
+    <img id="qrImg" class="mx-auto rounded-lg border" />
+    <p class="text-xs text-white/60 mt-2">สแกนเพื่อโอนเงิน</p>
   </div>
+
+  <!-- FILE -->
+  <div>
+    <input id="slip" type="file" accept="image/*"
+      class="w-full text-sm" />
+  </div>
+
+  <!-- BUTTON -->
+  <button id="btnConfirm"
+    onclick="submitSlip()"
+    class="w-full bg-green-400 text-black p-2 rounded font-bold">
+    ยืนยันการเติมเงิน
+  </button>
+
+  <!-- MSG -->
+  <p id="msg" class="text-sm text-center min-h-[20px]"></p>
+
 </div>
 
 <script>
-  // 🔥 ใส่ URL Web App ตัวเดียวกับที่คุณใช้ login/register
-  const API_URL = "https://script.google.com/macros/s/AKfycbzVd-VNUeXbmecyTk1ITZOssdNm7uTb0ZFFHkcPgmjJaa6iJM56QLiwA9iKhG8HW3M/exec";
+/* ======================
+   CONFIG
+====================== */
+const API_URL = "https://script.google.com/macros/s/AKfycbzVd-VNUeXbmecyTk1ITZOssdNm7uTb0ZFFHkcPgmjJaa6iJM56QLiwA9iKhG8HW3M/exec";
+const PROMPTPAY = "0661127624";
+const CREDIT_PER_BAHT = 10;
 
-  // ต้องล็อกอินก่อน (คุณใช้ MEEMON_UID ใน localStorage อยู่แล้ว)
-  const uid = localStorage.getItem("MEEMON_UID");
-  if (!uid) location.replace("login.html");
+/* ======================
+   STATE
+====================== */
+const uid = localStorage.getItem("MEEMON_UID");
+if (!uid) location.href = "login.html";
 
-  const fileEl = document.getElementById("file");
-  const previewEl = document.getElementById("preview");
-  const msgEl = document.getElementById("msg");
-  const btnEl = document.getElementById("btn");
+/* ======================
+   ELEMENTS
+====================== */
+const amountEl = document.getElementById("amount");
+const creditEl = document.getElementById("creditPreview");
+const qrBox = document.getElementById("qrBox");
+const qrImg = document.getElementById("qrImg");
+const msgEl = document.getElementById("msg");
+const btn = document.getElementById("btnConfirm");
 
-  fileEl.addEventListener("change", () => {
-    msg("");
-    const f = fileEl.files?.[0];
-    if (!f) return;
+/* ======================
+   EVENTS
+====================== */
+amountEl.addEventListener("input", () => {
+  const amount = Number(amountEl.value || 0);
+  const credit = amount * CREDIT_PER_BAHT;
+  creditEl.innerText = credit.toLocaleString();
 
-    const url = URL.createObjectURL(f);
-    previewEl.src = url;
-    previewEl.classList.remove("hidden");
-  });
-
-  function msg(t, ok=false){
-    msgEl.className = "text-sm min-h-[20px] " + (ok ? "text-green-400" : "text-red-300");
-    msgEl.innerText = t || "";
+  if (amount > 0) {
+    qrImg.src = `https://promptpay.io/${PROMPTPAY}/${amount}.png`;
+    qrBox.classList.remove("hidden");
+  } else {
+    qrBox.classList.add("hidden");
   }
+});
 
-  function toBase64(file){
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        // data:image/png;base64,XXXX -> เอาเฉพาะ XXXX
-        const s = String(reader.result || "");
-        const base64 = s.includes(",") ? s.split(",")[1] : s;
-        resolve(base64);
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
+/* ======================
+   SUBMIT
+====================== */
+async function submitSlip(){
+  msg("");
+  const amount = Number(amountEl.value);
+  const file = document.getElementById("slip").files[0];
+
+  if (!amount || amount <= 0) return msg("กรุณากรอกจำนวนเงิน");
+  if (!file) return msg("กรุณาอัปโหลดสลิป");
+
+  btn.disabled = true;
+  btn.innerText = "กำลังตรวจสอบ...";
+  msg("กำลังตรวจสอบสลิป…", true);
+
+  const base64 = await fileToBase64(file);
+
+  const form = new URLSearchParams();
+  form.append("action", "verifySlip");
+  form.append("uid", uid);
+  form.append("imageBase64", base64);
+
+  try {
+    const r = await fetch(API_URL, {
+      method: "POST",
+      body: form
     });
-  }
 
-  async function postForm(obj){
-    const form = new URLSearchParams();
-    Object.keys(obj).forEach(k => form.append(k, obj[k]));
-
-    const r = await fetch(API_URL, { method: "POST", body: form });
     const text = await r.text();
+    const data = JSON.parse(text);
 
-    try { return JSON.parse(text); }
-    catch {
-      console.error("NOT JSON:", text);
-      return { success:false, error:"Server ไม่ตอบกลับเป็น JSON", raw:text.slice(0,250) };
+    if (!data.success) {
+      msg(data.error || "เติมเงินไม่สำเร็จ");
+      return;
     }
+
+    msg(`เติมสำเร็จ 🎉 ได้รับ ${data.credits} แต้มบุญ`, true);
+    setTimeout(() => location.href = "home.html", 1500);
+
+  } catch (e) {
+    console.error(e);
+    msg("เชื่อมต่อระบบไม่ได้");
+  } finally {
+    btn.disabled = false;
+    btn.innerText = "ยืนยันการเติมเงิน";
   }
+}
 
-  async function submitSlip(){
-    const f = fileEl.files?.[0];
-    if (!f) return msg("กรุณาแนบรูปสลิปก่อน");
+/* ======================
+   HELPERS
+====================== */
+function msg(t, ok=false){
+  msgEl.className = "text-sm text-center " + (ok ? "text-green-400" : "text-red-300");
+  msgEl.innerText = t || "";
+}
 
-    btnEl.disabled = true;
-    btnEl.innerText = "กำลังตรวจสอบ...";
-    msg("กำลังส่งสลิปไปตรวจสอบกับ SlipOK…", true);
-
-    try{
-      const base64 = await toBase64(f);
-      const amount = document.getElementById("amount").value.trim();
-
-      // action นี้ต้องให้ Apps Script รองรับ (เช่น topupSlip)
-      const payload = {
-        action: "topupSlip",
-        uid,
-        files: base64,
-        log: "true"
-      };
-
-      // ถ้ามี amount ค่อยส่ง
-      if (amount) payload.amount = amount;
-
-      const data = await postForm(payload);
-
-      if (!data.success){
-        msg(data.error || "ตรวจสลิปไม่ผ่าน");
-        return;
-      }
-
-      // แสดงผล
-      document.getElementById("result").classList.remove("hidden");
-      document.getElementById("rAmount").innerText = (data.amount ?? "-");
-      document.getElementById("rPoints").innerText = (data.points ?? "-");
-      document.getElementById("rRef").innerText = (data.transRef ?? "-");
-
-      msg("เติมแต้มสำเร็จ ✅", true);
-
-      // จะเด้งกลับ home ก็ได้
-      // setTimeout(() => location.href = "home.html", 900);
-
-    }catch(err){
-      console.error(err);
-      msg("เชื่อมต่อหลังบ้านไม่ได้");
-    }finally{
-      btnEl.disabled = false;
-      btnEl.innerText = "ตรวจสลิป & เติมแต้ม";
-    }
-  }
+function fileToBase64(file){
+  return new Promise(res => {
+    const r = new FileReader();
+    r.onload = () => res(r.result.split(",")[1]);
+    r.readAsDataURL(file);
+  });
+}
 </script>
 
 </body>
