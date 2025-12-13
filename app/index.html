@@ -2,47 +2,27 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
-  <title>Meemon Login</title>
+  <title>Meemon LIFF + Firebase</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
-
-  <style>
-    body {
-      font-family: 'Prompt', sans-serif;
-      background: radial-gradient(circle at top, #1a1a1a, #050509);
-    }
-  </style>
 </head>
 
-<body class="min-h-screen flex items-center justify-center text-white">
+<body class="min-h-screen flex items-center justify-center bg-black text-white">
+  <div class="max-w-sm w-full p-6 rounded-2xl bg-white/10 border border-white/10">
+    <h1 class="text-xl font-semibold">Meemon</h1>
+    <p class="text-sm text-white/70 mt-1">LIFF + Firebase (100%)</p>
 
-  <div class="bg-black/80 p-8 rounded-2xl shadow-xl max-w-sm w-full text-center">
-    <h1 class="text-2xl font-semibold mb-4">Meemon</h1>
-    <p class="text-sm text-gray-400 mb-6">เข้าสู่ระบบด้วย LINE</p>
-
-    <button
-      onclick="app.login()"
-      class="w-full bg-green-500 hover:bg-green-600 transition text-black font-semibold py-3 rounded-xl">
+    <button id="btnLogin" class="mt-5 w-full rounded-xl bg-green-500 text-black font-semibold py-3">
       Login with LINE
     </button>
 
-    <p id="status" class="text-xs text-gray-400 mt-4"></p>
+    <div id="status" class="mt-4 text-xs text-white/70">Loading…</div>
   </div>
 
-  <!-- LIFF SDK -->
+  <!-- LIFF SDK (ต้องเป็น script ปกติ) -->
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
-  <!-- App -->
-  <script src="./app.js"></script>
+  <!-- โค้ดหลัก (เป็น module) -->
+  <script type="module" src="./app.js"></script>
 </body>
 </html>
