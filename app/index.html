@@ -3,18 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>จุดธูปขอเลขมงคล - Meemon</title>
+  <title>Meemon | Login</title>
 
-  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&family=Pattaya&display=swap" rel="stylesheet">
-
-  <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-
-  <!-- LIFF SDK -->
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
   <style>
@@ -24,147 +17,96 @@
       font-family: 'Sarabun', sans-serif;
       min-height: 100vh;
       margin: 0;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding: 16px;
     }
     .glass {
       background: rgba(255,255,255,0.1);
       backdrop-filter: blur(12px);
       border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 20px;
+      border-radius: 22px;
       box-shadow: 0 10px 40px rgba(0,0,0,0.5);
     }
     .btn-gold {
       background: linear-gradient(45deg, #FFD700, #DAA520);
       color: #3e2723;
       font-weight: bold;
-      border-radius: 12px;
-      padding: 12px;
+      border: 2px solid rgba(255,255,255,0.8);
+      border-radius: 14px;
+      padding: 12px 14px;
       width: 100%;
       cursor: pointer;
+      transition: transform .15s ease;
     }
-    .view { display:none; }
-    .view.active { display:flex; }
+    .btn-gold:hover { transform: scale(1.02); }
+    .muted { color: rgba(255,255,255,0.7); }
   </style>
 </head>
 
-<body class="flex items-center justify-center">
-
-<!-- ===== LOGIN VIEW ===== -->
-<div id="view-login" class="view active w-full max-w-sm p-6">
-  <div class="glass p-8 text-center w-full">
+<body>
+  <div class="glass p-8 w-full max-w-sm text-center">
     <img src="https://github.com/taithai-tai/meemon/blob/main/Picture/logo.png?raw=true"
-         class="w-28 mx-auto mb-4"
-         alt="logo">
+         class="w-28 mx-auto mb-4" alt="logo">
 
-    <h1 class="text-2xl font-bold text-yellow-400 mb-2 font-['Pattaya']">
-      มีมนต์ มหาเฮง
-    </h1>
+    <h1 class="text-2xl font-bold text-yellow-300 mb-1 font-['Pattaya']">มีมนต์ มหาเฮง</h1>
+    <p class="muted text-sm mb-6">ล็อกอินด้วย LINE เพื่อใช้งานระบบแต้ม/ธูป</p>
 
-    <p class="text-gray-300 text-sm mb-6">
-      ล็อกอินด้วย LINE เพื่อสะสมแต้มบุญ
-    </p>
-
-    <button id="btn-login" class="btn-gold">
-      <i class="fa-brands fa-line mr-2"></i>
-      เข้าสู่ระบบด้วย LINE
+    <button id="btnLogin" class="btn-gold">
+      <i class="fa-brands fa-line mr-2"></i> เข้าสู่ระบบด้วย LINE
     </button>
 
-    <p id="login-msg" class="text-xs text-gray-300 mt-4 min-h-[18px]"></p>
-  </div>
-</div>
+    <p id="msg" class="text-xs mt-4 min-h-[18px] muted"></p>
 
-<!-- ===== HOME VIEW ===== -->
-<div id="view-home" class="view w-full max-w-md p-4">
-  <div class="glass p-4 mb-4 flex justify-between items-center">
-    <div>
-      <div id="home-name" class="font-bold text-yellow-400">User</div>
-      <div id="home-id" class="text-xs text-gray-300 truncate w-48">line_user_id</div>
-    </div>
-    <button id="btn-logout" class="text-xs text-red-300">
-      ออก
-    </button>
-  </div>
-
-  <div class="grid grid-cols-2 gap-4 mb-6">
-    <div class="glass p-4 text-center">
-      <div class="text-2xl">💰</div>
-      <div class="text-xs text-gray-300">แต้มบุญ</div>
-      <div class="text-2xl font-bold text-yellow-400">0</div>
-    </div>
-    <div class="glass p-4 text-center">
-      <div class="text-2xl">🕯️</div>
-      <div class="text-xs text-gray-300">ธูป</div>
-      <div class="text-2xl font-bold">0</div>
+    <div class="mt-6 text-[11px] muted">
+      * ระบบจะผูกข้อมูลกับบัญชี LINE ของคุณแบบอัตโนมัติ
     </div>
   </div>
 
-  <div class="glass p-4 text-center text-sm text-gray-300">
-    🔒 ตอนนี้ยังเป็นเวอร์ชัน LIFF only  
-    <br/>ระบบแต้ม / ร้าน / สลิป จะต่อเพิ่มทีหลัง
-  </div>
-</div>
+  <script>
+    // === ใส่ของคุณ ===
+    const LIFF_ID = "2008685502-NdidvjVm";
+    const REDIRECT_LOGIN = "https://meemon.net/app/index.html"; // URL หน้า login ของจริง (เป๊ะ)
+    const HOME_URL = "/app/home.html";
+    // ==================
 
-<script>
-/* =============================
-   CONFIG
-============================= */
-const LIFF_ID = "2008685502-NdidvjVm";
+    const msg = (t) => document.getElementById("msg").innerText = t;
 
-/* =============================
-   UI helpers
-============================= */
-function showView(id) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
+    async function boot() {
+      msg("กำลังเตรียมระบบ…");
+      await liff.init({ liffId: LIFF_ID });
 
-/* =============================
-   LIFF LOGIC
-============================= */
-async function initLIFF() {
-  await liff.init({ liffId: LIFF_ID });
+      if (liff.isLoggedIn()) {
+        // ได้ idToken แล้วเก็บไว้ใน sessionStorage (ไม่โชว์ใน URL ปลอดภัยกว่า)
+        const idToken = liff.getIDToken();
+        if (!sessionStorage.getItem("MEEMON_IDTOKEN")) {
+          sessionStorage.setItem("MEEMON_IDTOKEN", idToken || "");
+        }
+        msg("เข้าสู่ระบบแล้ว กำลังไปหน้าหลัก…");
+        location.href = HOME_URL;
+        return;
+      }
 
-  if (liff.isLoggedIn()) {
-    const profile = await liff.getProfile();
-    document.getElementById("home-name").innerText = profile.displayName;
-    document.getElementById("home-id").innerText = profile.userId;
-    showView("view-home");
-  } else {
-    showView("view-login");
-  }
-}
+      msg("พร้อมให้ล็อกอิน ✅");
+    }
 
-async function login() {
-  document.getElementById("login-msg").innerText = "กำลังพาไปล็อกอิน LINE…";
-  await liff.login({ redirectUri: "https://meemon.net/app/index.html" });
+    async function doLogin() {
+      msg("กำลังพาไปล็อกอิน LINE…");
+      await liff.init({ liffId: LIFF_ID });
+      if (!liff.isLoggedIn()) {
+        liff.login({ redirectUri: REDIRECT_LOGIN });
+      }
+    }
 
-}
+    document.getElementById("btnLogin").addEventListener("click", doLogin);
 
-function logout() {
-  if (liff.isLoggedIn()) liff.logout();
-  location.reload();
-}
-
-/* =============================
-   EVENTS
-============================= */
-document.getElementById("btn-login").onclick = async () => {
-  await liff.init({ liffId: "2008685502-NdidvjVm" });
-
-  if (!liff.isLoggedIn()) {
-    liff.login({ redirectUri: "https://meemon.net/app/index.html" });
-    return;
-  }
-};
-
-document.getElementById("btn-logout").onclick = logout;
-
-window.onload = () => {
-  initLIFF().catch(err => {
-    console.error(err);
-    alert("LIFF ERROR: " + err.message);
-  });
-};
-</script>
-
+    window.addEventListener("load", () => {
+      boot().catch(err => {
+        console.error(err);
+        alert("LIFF ERROR: " + (err?.message || err));
+      });
+    });
+  </script>
 </body>
 </html>
