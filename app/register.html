@@ -71,7 +71,7 @@
       setMsg("สมัครสำเร็จ ✅ กำลังไปหน้ากรอก OTP…", true);
 
       // ✅ เด้งแบบชัวร์
-      const nextUrl = new URL("verify-otp.html", location.href).toString();
+      const nextUrl = new URL("/app/verify-otp.html", location.href).toString();
       location.assign(nextUrl);
 
     }catch(err){
