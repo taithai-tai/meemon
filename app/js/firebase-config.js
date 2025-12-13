@@ -9,7 +9,7 @@ const firebaseConfig = {
 };
 
 // ตั้งค่า LINE LIFF ID (สำคัญมาก!)
-const LIFF_ID = "YOUR_LIFF_ID_HERE"; // เช่น 1657xxxxxx-xxxxxxx
+const LIFF_ID = "2008685502-WBAWzCrl"; // เช่น 1657xxxxxx-xxxxxxx
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
