@@ -1,32 +1,236 @@
-<! DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script charset="utf-8" src="https:/[tatic.line-scdn.net/liff/edge/2/sdk. js"></script>
-  </head>
-  
-  <body>
-    <h2>Line login</h2>
-    <button onclick="login()">
-      Login now
-    </button>
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>จุดธูปขอเลขมงคล - Meemon</title>
 
-    <script>
-      function login() {
-        liff.init({
-          liffId: "2008685502-NdidvjVm"
-        })
-        liff.ready.then(() => {
-          if(!liff.isLoggedIn()) {
-            liff.login()
-          }
-          liff.getProfile().then((Profile) => {
-            console.log("Profile", Profile)
-          })
-        })
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&family=Cinzel:wght@700&family=Pattaya&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- LIFF SDK -->
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+
+  <style>
+    body { background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e); color: white; font-family: 'Sarabun', sans-serif; min-height: 100vh; margin: 0; }
+    .glass-panel { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; box-shadow: 0 4px 30px rgba(0,0,0,0.5); }
+    .btn-gold { background: linear-gradient(45deg, #FFD700, #DAA520); color: #3e2723; font-weight: bold; box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); transition: all 0.3s; border: 2px solid #fff; cursor: pointer; text-align: center; }
+    .btn-gold:hover { transform: scale(1.03); box-shadow: 0 0 25px rgba(255,215,0,0.8); }
+    .btn-outline { background: transparent; border: 1px solid rgba(255,255,255,0.3); color: white; padding: 10px 20px; border-radius: 8px; transition: all 0.3s; text-align: center; cursor: pointer; }
+    .btn-outline:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
+
+    .view-section { display: none; opacity: 0; transition: opacity 0.5s ease; width: 100%; max-width: 500px; margin: 0 auto; padding: 20px; box-sizing: border-box; }
+    .view-section.active { display: flex; opacity: 1; flex-direction: column; align-items: center; }
+    #view-login.active { justify-content: center; min-height: 100vh; }
+
+    #toast { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); background: #1f2937; border: 1px solid #4b5563; padding: 12px 24px; border-radius: 999px; z-index: 100; opacity: 0; transition: opacity 0.3s; display:flex; gap:10px; align-items:center; }
+  </style>
+</head>
+
+<body>
+  <!-- LOGIN VIEW -->
+  <div id="view-login" class="view-section active" style="display:flex;">
+    <div class="glass-panel p-8 w-full text-center relative z-10 max-w-sm">
+      <div class="mb-4">
+        <img src="https://github.com/taithai-tai/meemon/blob/main/Picture/logo.png?raw=true" class="w-28 mx-auto drop-shadow-[0_0_15px_rgba(255,215,0,0.6)]" alt="Logo" style="width:110px;height:auto;">
+      </div>
+      <h1 class="text-2xl font-bold text-yellow-400 mb-2 font-['Pattaya']">มีมนต์ มหาเฮง</h1>
+      <p class="text-gray-300 mb-6 text-sm">ล็อกอินด้วย LINE เพื่อสะสมแต้มบุญ</p>
+
+      <button id="btn-line-login" class="w-full btn-gold rounded-lg py-3 text-lg font-bold mt-2">
+        <i class="fa-brands fa-line mr-2"></i> เข้าสู่ระบบด้วย LINE
+      </button>
+
+      <p id="login-msg" class="text-sm mt-3 min-h-[20px] text-gray-300"></p>
+
+      <div class="mt-6 border-t border-gray-600 pt-4 text-xs text-gray-400">
+        * ระบบแต้ม/คลังธูปจะผูกกับบัญชี LINE ของคุณ
+      </div>
+    </div>
+  </div>
+
+  <!-- HOME VIEW (ยกตัวอย่างแบบย่อ — คุณเอา view-home/shop/history/ritual เดิมมาแปะได้เลย) -->
+  <div id="view-home" class="view-section pt-10">
+    <div class="glass-panel p-4 w-full mb-6 flex justify-between items-center z-10 relative">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-full bg-purple-700 flex items-center justify-center text-xl font-bold shadow-lg text-white">
+          <span id="display-avatar">U</span>
+        </div>
+        <div class="overflow-hidden">
+          <h2 id="display-username" class="font-bold text-lg text-yellow-400 truncate w-40">User</h2>
+          <p class="text-xs text-gray-300 truncate w-40" id="display-user-id">line_user_id</p>
+        </div>
+      </div>
+
+      <button id="btn-logout" class="text-xs text-red-300 border border-red-900 px-3 py-1.5 rounded hover:bg-red-900/50">
+        <i class="fa-solid fa-right-from-bracket mr-1"></i> ออก
+      </button>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4 w-full mb-8">
+      <div class="glass-panel p-4 text-center">
+        <div class="text-3xl mb-1">🕯️</div>
+        <div class="text-gray-400 text-xs uppercase">ธูปในคลัง</div>
+        <div class="text-2xl font-bold text-white"><span id="display-inventory">0</span> <span class="text-xs font-normal">ดอก</span></div>
+      </div>
+      <div class="glass-panel p-4 text-center">
+        <div class="text-3xl mb-1">💰</div>
+        <div class="text-gray-400 text-xs uppercase">แต้มบุญ</div>
+        <div class="text-2xl font-bold text-yellow-400" id="display-credits">0</div>
+      </div>
+    </div>
+
+    <button id="btn-refresh" class="w-full btn-outline">รีเฟรชยอดจากหลังบ้าน</button>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast">
+    <i class="fa-solid fa-circle-info text-yellow-400"></i>
+    <span id="toast-msg">Notification</span>
+  </div>
+
+  <!-- Firebase (ESM) + App logic -->
+  <script type="module">
+    // ====== ใส่ค่าของคุณตรงนี้ ======
+    const LIFF_ID = "ใส่-LIFF-ID-ตรงนี้";
+    const FUNCTIONS_BASE_URL = "https://us-central1-<YOUR_PROJECT_ID>.cloudfunctions.net"; 
+    const firebaseConfig = {
+      apiKey: "…",
+      authDomain: "…",
+      projectId: "…",
+      appId: "…",
+    };
+    // =================================
+
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import { getAuth, signInWithCustomToken, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+    const fbApp = initializeApp(firebaseConfig);
+    const auth = getAuth(fbApp);
+    const db = getFirestore(fbApp);
+
+    const ui = {
+      showView(id) {
+        document.querySelectorAll('.view-section').forEach(v => {
+          v.classList.remove('active');
+          setTimeout(() => { if (!v.classList.contains('active')) v.style.display = 'none'; }, 300);
+        });
+        const target = document.getElementById(id);
+        target.style.display = 'flex';
+        setTimeout(() => target.classList.add('active'), 50);
+      },
+      toast(msg) {
+        const t = document.getElementById('toast');
+        document.getElementById('toast-msg').innerText = msg;
+        t.style.opacity = '1';
+        setTimeout(() => t.style.opacity = '0', 3000);
+      },
+      setHomeProfile({ name, lineUserId, credits, inventory }) {
+        document.getElementById('display-username').innerText = name || "User";
+        document.getElementById('display-user-id').innerText = lineUserId || "";
+        document.getElementById('display-avatar').innerText = (name || "U").charAt(0).toUpperCase();
+        document.getElementById('display-credits').innerText = (credits ?? 0).toLocaleString();
+        document.getElementById('display-inventory').innerText = (inventory ?? 0).toLocaleString();
       }
-    </script>
-  </body>
+    };
+
+    async function liffBoot() {
+      await liff.init({ liffId: LIFF_ID });
+      if (!liff.isLoggedIn()) {
+        // เปิดใน LINE ก็จะให้ login ได้, เปิดใน browser ก็พาไป login ได้เหมือนกัน
+        return;
+      }
+    }
+
+    async function loginWithLineAndFirebase() {
+      const msg = document.getElementById('login-msg');
+      msg.innerText = "กำลังเชื่อมต่อ LINE…";
+
+      await liffBoot();
+
+      if (!liff.isLoggedIn()) {
+        msg.innerText = "กำลังพาไปล็อกอิน…";
+        liff.login(); // redirect
+        return;
+      }
+
+      const idToken = liff.getIDToken();
+      if (!idToken) {
+        msg.innerText = "ไม่พบ token จาก LINE";
+        return;
+      }
+
+      msg.innerText = "กำลังยืนยันตัวตนกับหลังบ้าน…";
+
+      // เรียก Cloud Function ของคุณ: /authLine (ตัวอย่างด้านล่างผมให้โค้ด functions ด้วย)
+      const res = await fetch(`${FUNCTIONS_BASE_URL}/authLine`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ idToken })
+      });
+
+      if (!res.ok) {
+        const t = await res.text();
+        console.error(t);
+        msg.innerText = "ยืนยันตัวตนไม่สำเร็จ (ดู Console)";
+        return;
+      }
+
+      const data = await res.json();
+      const customToken = data.customToken;
+
+      msg.innerText = "กำลังเข้าสู่ระบบ…";
+      await signInWithCustomToken(auth, customToken);
+
+      ui.toast("เข้าสู่ระบบสำเร็จ ✅");
+      msg.innerText = "";
+    }
+
+    async function loadWalletFromFirestore(lineUserId) {
+      const userRef = doc(db, "users", lineUserId);
+      const walletRef = doc(db, "wallets", lineUserId);
+
+      const [uSnap, wSnap] = await Promise.all([getDoc(userRef), getDoc(walletRef)]);
+      const u = uSnap.exists() ? uSnap.data() : {};
+      const w = wSnap.exists() ? wSnap.data() : { balance_points: 0, inventory: 0 };
+
+      ui.setHomeProfile({
+        name: u.display_name || "User",
+        lineUserId,
+        credits: w.balance_points || 0,
+        inventory: w.inventory || 0
+      });
+    }
+
+    // ===== UI events =====
+    document.getElementById("btn-line-login").addEventListener("click", () => loginWithLineAndFirebase());
+    document.getElementById("btn-logout").addEventListener("click", async () => {
+      await signOut(auth);
+      if (liff.isLoggedIn()) liff.logout();
+      ui.showView("view-login");
+      ui.toast("ออกจากระบบแล้ว");
+    });
+    document.getElementById("btn-refresh").addEventListener("click", async () => {
+      const user = auth.currentUser;
+      if (!user) return ui.toast("ยังไม่ได้ล็อกอิน");
+      // ในระบบนี้ UID ของ Firebase Auth = line_user_id (เราจะทำให้เป็นแบบนั้นใน functions)
+      await loadWalletFromFirestore(user.uid);
+      ui.toast("รีเฟรชแล้ว ✅");
+    });
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        ui.showView("view-login");
+        return;
+      }
+      ui.showView("view-home");
+      await loadWalletFromFirestore(user.uid);
+    });
+
+    // init
+    ui.showView("view-login");
+  </script>
+</body>
 </html>
