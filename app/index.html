@@ -9,8 +9,24 @@
   
   <body>
     <h2>Line login</h2>
-    <button>
+    <button onclick="login()">
       Login now
     </button>
+
+    <script>
+      function login() {
+        liff.init({
+          liffId: "2008685502-NdidvjVm"
+        })
+        liff.ready.then(() => {
+          if(!liff.isLoggedIn()) {
+            liff.login()
+          }
+          liff.getProfile().then((Profile) => {
+            console.log("Profile", Profile)
+          })
+        })
+      }
+    </script>
   </body>
 </html>
