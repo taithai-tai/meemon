@@ -1,18 +1,26 @@
-// ตั้งค่า Firebase
+// การตั้งค่า Firebase (อัปเดตค่าจริงแล้ว)
 const firebaseConfig = {
-  apiKey: "YOUR_FIREBASE_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyBcEydl7HHzE3WdVgJc65O8-IEGYVUbZxY",
+  authDomain: "meemon-app.firebaseapp.com",
+  projectId: "meemon-app",
+  storageBucket: "meemon-app.firebasestorage.app",
+  messagingSenderId: "801234540684",
+  appId: "1:801234540684:web:9238eb229688d2d15183a9"
 };
 
-// ตั้งค่า LINE LIFF ID (สำคัญมาก!)
-const LIFF_ID = "2008685502-WBAWzCrl"; // เช่น 1657xxxxxx-xxxxxxx
+// ******************************************************
+// [อัปเดตแล้ว] รหัส LIFF ID ที่ถูกต้องพร้อมใช้งานครับ
+// ******************************************************
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
+const LIFF_ID = "2008685502-WBAWzCrl"; 
+
+// ******************************************************
+
+// เริ่มต้นการทำงาน (ห้ามแก้ไขส่วนนี้)
+try {
+    firebase.initializeApp(firebaseConfig);
+} catch (e) {
+    console.error("Firebase Init Error (ตรวจสอบ Config ด้านบน):", e);
+}
 const db = firebase.firestore();
-const appId = "meemon-production";
+const auth = firebase.auth();
