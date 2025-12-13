@@ -67,6 +67,8 @@
       // ✅ เก็บค่าให้ verify-otp.html
       sessionStorage.setItem("MEEMON_EMAIL", email);
       sessionStorage.setItem("MEEMON_OTP_FLOW", "1");
+      location.href = "/app/verify-otp.html";
+
 
       setMsg("สมัครสำเร็จ ✅ กำลังไปหน้ากรอก OTP…", true);
 
