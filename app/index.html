@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>จุดธูปขอเลขมงคล - Meemon</title>
+    <!-- Tailwind CSS (CDN) -->
+    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
+    <!-- Fonts -->
+    <link href="[https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&family=Cinzel:wght@700&family=Pattaya&display=swap](https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&family=Cinzel:wght@700&family=Pattaya&display=swap)" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css)">
+
+    <!-- Firebase SDKs -->
+    <script src="[https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js](https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js)"></script>
+    <script src="[https://www.gstatic.com/firebasejs/11.6.1/firebase-auth-compat.js](https://www.gstatic.com/firebasejs/11.6.1/firebase-auth-compat.js)"></script>
+    <script src="[https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore-compat.js](https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore-compat.js)"></script>
+
+    <!-- LINE LIFF SDK (เพิ่มมาใหม่) -->
+    <script charset="utf-8" src="[https://static.line-scdn.net/liff/edge/2/sdk.js](https://static.line-scdn.net/liff/edge/2/sdk.js)"></script>
+
+    <!-- 1. ลิงก์ไฟล์ CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div id="stars-container" class="fixed inset-0 z-0 pointer-events-none"></div>
+
+    <!-- GLOBAL LOADER -->
+    <div id="global-loader" class="loading-overlay">
+        <div class="spinner"></div>
+        <div class="text-yellow-400 font-bold mt-4">กำลังเชื่อมต่อ LINE...</div>
+    </div>
+
+    <!-- VIEW: LOGIN (เปลี่ยนเป็นปุ่ม LINE) -->
+    <div id="view-login" class="view-section" style="display: flex; justify-content: center; min-height: 100vh;">
+        <div class="glass-panel p-8 w-full text-center relative z-10 max-w-sm">
+            <div class="mb-4">
+                <img src="[https://github.com/taithai-tai/meemon/blob/main/Picture/logo.png?raw=true](https://github.com/taithai-tai/meemon/blob/main/Picture/logo.png?raw=true)" class="w-28 mx-auto drop-shadow-[0_0_15px_rgba(255,215,0,0.6)]" alt="Logo" style="width: 110px; height: auto;">
+            </div>
+            <h1 class="text-2xl font-bold text-yellow-400 mb-2 font-['Pattaya']">มีมนต์ มหาเฮง</h1>
+            <p class="text-gray-300 mb-8 text-sm">เข้าสู่ระบบด้วย LINE เพื่อสะสมแต้มบุญ</p>
+            
+            <button onclick="app.loginWithLine()" class="btn-line shadow-lg hover:shadow-green-500/50">
+                <i class="fa-brands fa-line text-2xl"></i>
+                เข้าสู่ระบบด้วย LINE
+            </button>
+
+            <p class="text-xs text-gray-500 mt-6">
+                ข้อมูลจะผูกกับบัญชี LINE ของคุณ<br>เข้าเครื่องไหนแต้มก็ยังอยู่
+            </p>
+        </div>
+    </div>
+
+    <!-- VIEW: HOME (หน้าหลัก) -->
+    <div id="view-home" class="view-section pt-10">
+        <div class="glass-panel p-4 w-full mb-6 flex justify-between items-center z-10 relative">
+            <div class="flex items-center gap-3">
+                <div id="display-avatar" class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-xl font-bold shadow-lg text-white border-2 border-yellow-400/30 overflow-hidden">
+                    U
+                </div>
+                <div class="overflow-hidden">
+                    <h2 id="display-username" class="font-bold text-lg text-yellow-400 truncate w-32">User</h2>
+                    <p class="text-xs text-gray-300 truncate w-32" id="display-user-email">LINE Member</p>
+                </div>
+            </div>
+            <button onclick="app.logout()" class="text-xs text-red-400 border border-red-900 px-3 py-1.5 rounded hover:bg-red-900/50 cursor-pointer z-50 transition-colors duration-200">
+                <i class="fa-solid fa-right-from-bracket mr-1"></i> ออก
+            </button>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 w-full mb-8 z-10" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="glass-panel p-4 text-center">
+                <div class="text-3xl mb-1">🕯️</div>
+                <div class="text-gray-400 text-xs uppercase">ธูปในคลัง</div>
+                <div class="text-2xl font-bold text-white"><span id="display-inventory">0</span> <span class="text-xs font-normal">ดอก</span></div>
+            </div>
+            <div class="glass-panel p-4 text-center relative overflow-hidden">
+                <div class="text-3xl mb-1">💰</div>
+                <div class="text-gray-400 text-xs uppercase">แต้มบุญ</div>
+                <div class="text-2xl font-bold text-yellow-400" id="display-credits">0</div>
+                <button onclick="app.claimFreeCredits()" class="absolute top-1 right-1 bg-green-600/80 text-[10px] px-2 py-1 rounded-full animate-pulse hover:bg-green-500" style="position: absolute; top: 5px; right: 5px; font-size: 10px;">+รับฟรี</button>
+            </div>
+        </div>
+
+        <div class="w-full space-y-4 z-10">
+            <button onclick="app.goToShop()" class="w-full glass-panel p-4 flex items-center justify-between hover:bg-white/5 transition group mb-4">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-full bg-yellow-500/20 flex items-center justify-center text-yellow-400" style="color: #eab308;">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </div>
+                    <div class="text-left">
+                        <div class="font-bold">ร้านค้าธูปมงคล</div>
+                        <div class="text-xs text-gray-400">ซื้อธูปเพิ่มเพื่อขอเลขเด็ด</div>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-gray-500"></i>
+            </button>
+
+            <button onclick="app.goToRitual()" class="w-full btn-gold rounded-xl p-6 flex items-center justify-center gap-3 relative overflow-hidden group mb-4">
+                <i class="fa-solid fa-fire text-2xl"></i>
+                <div class="text-xl font-bold">จุดธูปขอเลข</div>
+            </button>
+
+            <button onclick="app.goToHistory()" class="w-full glass-panel p-4 flex items-center justify-between hover:bg-white/5 transition group">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400" style="color: #60a5fa;">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                    </div>
+                    <div class="text-left">
+                        <div class="font-bold">ประวัติการจุด</div>
+                        <div class="text-xs text-gray-400">ดูสถิติย้อนหลัง</div>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-gray-500"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- VIEW: SHOP -->
+    <div id="view-shop" class="view-section pt-10">
+        <div class="w-full flex items-center justify-between mb-6 z-10">
+            <button onclick="app.goToHome()" class="text-white hover:text-yellow-400"><i class="fa-solid fa-arrow-left"></i> กลับ</button>
+            <h2 class="text-xl font-bold text-yellow-400">ร้านค้าธูป</h2>
+            <div class="bg-black/40 px-3 py-1 rounded-full text-sm">💰 <span id="shop-credits">0</span></div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4 w-full z-10" style="display: grid; gap: 1rem;">
+            <div class="glass-panel p-4 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="text-3xl">🕯️</div>
+                    <div>
+                        <div class="font-bold">ธูป 1 ดอก</div>
+                        <div class="text-xs text-gray-400">สำหรับลองของ</div>
+                    </div>
+                </div>
+                <button onclick="app.buyItem(1, 100)" class="bg-white/10 hover:bg-yellow-500/80 hover:text-black border border-yellow-500/50 px-4 py-2 rounded-lg transition text-sm text-white">100 แต้ม</button>
+            </div>
+            <div class="glass-panel p-4 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="text-3xl">🧨</div>
+                    <div>
+                        <div class="font-bold">ธูป 5 ดอก</div>
+                        <div class="text-xs text-gray-400 text-green-400">คุ้มค่า!</div>
+                    </div>
+                </div>
+                <button onclick="app.buyItem(5, 450)" class="bg-white/10 hover:bg-yellow-500/80 hover:text-black border border-yellow-500/50 px-4 py-2 rounded-lg transition text-sm text-white">450 แต้ม</button>
+            </div>
+            <div class="glass-panel p-4 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="text-3xl">🔥</div>
+                    <div>
+                        <div class="font-bold">ธูป 10 ดอก</div>
+                        <div class="text-xs text-gray-400 text-green-400">สายมูตัวจริง</div>
+                    </div>
+                </div>
+                <button onclick="app.buyItem(10, 800)" class="bg-white/10 hover:bg-yellow-500/80 hover:text-black border border-yellow-500/50 px-4 py-2 rounded-lg transition text-sm text-white">800 แต้ม</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIEW: HISTORY -->
+    <div id="view-history" class="view-section pt-10">
+        <div class="w-full flex items-center justify-between mb-6 z-10">
+            <button onclick="app.goToHome()" class="text-white hover:text-yellow-400"><i class="fa-solid fa-arrow-left"></i> กลับ</button>
+            <h2 class="text-xl font-bold text-blue-400">บันทึกสถิติ</h2>
+            <div class="w-8"></div>
+        </div>
+        <div id="history-list" class="w-full space-y-3 z-10 pb-10"></div>
+    </div>
+
+    <!-- VIEW: RITUAL -->
+    <div id="view-ritual" class="view-section pt-4 relative">
+        <button onclick="app.goToHome()" class="absolute top-4 left-4 z-50 bg-black/30 backdrop-blur px-3 py-1 rounded-full text-sm hover:bg-white/20 transition border border-white/20" style="position: absolute; top: 1rem; left: 1rem; z-index: 50;">
+            <i class="fa-solid fa-house"></i> กลับหน้าหลัก
+        </button>
+
+        <div class="card-container mt-4" id="cardContainer">
+            <canvas id="effect-canvas"></canvas>
+            <canvas id="particle-canvas"></canvas>
+
+            <div id="card-burnt" class="card-layer">
+                <div class="texture"></div>
+                <div class="numbers-container">
+                    <span class="lucky-digit" id="digit-1">?</span>
+                    <span class="lucky-digit" id="digit-2">?</span>
+                    <span class="lucky-digit" id="digit-3">?</span>
+                </div>
+            </div>
+
+            <div id="card-base" class="card-layer theme-black">
+                <div class="texture"></div>
+                <div class="vertical-brand-text">รวย</div>
+            </div>
+        </div>
+
+        <div class="stick shadow-lg"></div>
+
+        <div class="mt-6 z-50 flex flex-col items-center gap-3 w-full px-4 mb-8">
+            <div class="text-center mb-2">
+                <span class="text-gray-400 text-sm">คงเหลือ:</span>
+                <span class="font-bold text-yellow-400 text-xl" id="ritual-inventory">0</span>
+                <span class="text-gray-400 text-sm">ดอก</span>
+            </div>
+
+            <div id="start-buttons-group" class="flex flex-col items-center gap-3 w-full">
+                <button onclick="ritual.start(60000)" class="btn-gold w-full max-w-xs py-3 rounded-full text-lg shadow-lg">
+                    🔥 จุดธูปขอเลข (1 นาที)
+                </button>
+                <button onclick="ritual.start(10000)" class="bg-purple-600 hover:bg-purple-500 text-white px-6 py-2 rounded-full text-sm transition shadow-lg w-full max-w-xs border border-purple-400" style="background-color: #9333ea; border: 1px solid #c084fc;">
+                    ⚡ จุดธูปด่วน (10 วินาที)
+                </button>
+            </div>
+
+            <div id="result-controls" class="hidden flex flex-col items-center gap-3 w-full">
+                <div class="text-green-400 font-bold animate-bounce">บันทึกสถิติเรียบร้อย!</div>
+                <button onclick="ritual.reset()" class="bg-gray-700 text-white px-8 py-3 rounded-full hover:bg-gray-600 transition shadow-lg border border-gray-500 font-bold">
+                    🔄 จุดอีกครั้ง
+                </button>
+                <button onclick="app.goToHistory()" class="text-sm text-gray-400 underline">ดูประวัติ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-gray-800 border border-gray-600 text-white px-6 py-3 rounded-full shadow-2xl opacity-0 pointer-events-none transition-opacity duration-300 z-[100] flex items-center gap-2" style="position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); background: #1f2937; border: 1px solid #4b5563; padding: 12px 24px; border-radius: 999px; z-index: 100; opacity: 0; transition: opacity 0.3s;">
+        <i class="fa-solid fa-circle-info text-yellow-400"></i>
+        <span id="toast-msg">Notification</span>
+    </div>
+
+    <!-- 2. ลิงก์ไฟล์ JavaScript -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/ritual.js"></script>
+    <script src="js/app.js"></script>
+
+    <!-- สั่งให้ทำงานเมื่อโหลดเสร็จ -->
+    <script>
+        window.onload = () => {
+            app.init();
+            ritual.init();
+        };
+    </script>
+</body>
+</html>
