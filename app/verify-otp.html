@@ -47,8 +47,8 @@
   let email = sessionStorage.getItem("MEEMON_EMAIL") || "";
   const inOtpFlow = sessionStorage.getItem("MEEMON_OTP_FLOW") === "1";
 
-  // ถ้าไม่มีอีเมล กลับไปสมัคร
-  if (!email) location.replace("register.html");
+  // ✅ ถ้าไม่มีอีเมล กลับไปสมัคร (ชี้ /app)
+  if (!email) location.replace("/app/register.html");
 
   document.getElementById("emailShow").innerText = email;
 
@@ -73,7 +73,8 @@
   }
 
   async function verifyOtp(){
-    const otp = document.getElementById("otp").value.trim();
+    // ✅ กัน space/แปลกๆ
+    const otp = (document.getElementById("otp").value || "").trim().replace(/\s+/g, "");
     const btn = document.getElementById("btnVerify");
 
     if (!otp || otp.length < 6) return setMsg("กรอก OTP ให้ครบ 6 หลัก");
@@ -89,11 +90,13 @@
         return;
       }
 
-      // ✅ สำเร็จ: ล้างธง OTP flow (กันเด้งกลับไป OTP / login วน)
+      // ✅ สำเร็จ: ล้างธง OTP flow (กันวน)
       sessionStorage.removeItem("MEEMON_OTP_FLOW");
 
       setMsg("ยืนยันสำเร็จ 🎉 กำลังไปหน้าเข้าสู่ระบบ…", true);
-      setTimeout(() => location.replace("login.html"), 500);
+
+      // ✅ ไป login ที่ถูก path (/app)
+      setTimeout(() => location.replace("/app/login.html"), 500);
 
     }catch(err){
       console.error(err);
@@ -127,10 +130,12 @@
     // ล้างค่าเพื่อให้สมัครใหม่ได้
     sessionStorage.removeItem("MEEMON_EMAIL");
     sessionStorage.removeItem("MEEMON_OTP_FLOW");
-    location.replace("register.html");
+
+    // ✅ กลับ register ที่ถูก path (/app)
+    location.replace("/app/register.html");
   }
 
-  // ✅ กันสคริปต์หน้าอื่นเด้งทับ: ถ้ายังอยู่ flow OTP ให้คงอยู่หน้านี้
+  // ✅ ถ้ายังอยู่ flow OTP ให้คงอยู่หน้านี้ (กันหน้าอื่นเด้งทับ)
   window.addEventListener("load", () => {
     if (inOtpFlow && email) {
       // อยู่ถูกหน้าแล้ว ไม่ต้องทำอะไร
