@@ -2,6 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/fireba
 import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
+// Firebase config (ของคุณ)
 const firebaseConfig = {
   apiKey: "AIzaSyBcEydl7HHzE3WdVgJc65O8-IEGYVUbZxY",
   authDomain: "meemon-app.firebaseapp.com",
@@ -14,36 +15,50 @@ const fbApp = initializeApp(firebaseConfig);
 const auth = getAuth(fbApp);
 const db = getFirestore(fbApp);
 
+// LIFF ID (ของคุณ)
 const LIFF_ID = "2008685502-NdidvjVm";
 
-function getEl(id) {
-  const el = document.getElementById(id);
-  if (!el) throw new Error(`Missing element id="${id}" in HTML`);
-  return el;
-}
+window.addEventListener("DOMContentLoaded", () => {
+  const logEl = document.getElementById("log");
 
-window.addEventListener("DOMContentLoaded", async () => {
-  const logEl = getEl("log");
-  const btnInit = getEl("btnInit");
-  const btnLogin = getEl("btnLogin");
-  const btnProfile = getEl("btnProfile");
-  const btnLogout = getEl("btnLogout");
-
-  const log = (msg, obj) => {
+  function log(msg, obj) {
     const text = obj ? `${msg}\n${JSON.stringify(obj, null, 2)}` : msg;
     console.log(text);
     logEl.textContent += "\n\n" + text;
-  };
-
-  async function initLiff() {
-    log("Init LIFF…");
-    await liff.init({ liffId: LIFF_ID });
-    log("LIFF Ready ✅");
-    log("isLoggedIn:", liff.isLoggedIn());
-    log("Current URL:", location.href);
   }
 
-  async function loginLine() {
+  // ✅ เช็ก element ให้ชัด ถ้าหายจะบอกทันที (แทนที่จะพังเงียบ)
+  const btnInit = document.getElementById("btnInit");
+  const btnLogin = document.getElementById("btnLogin");
+  const btnProfile = document.getElementById("btnProfile");
+  const btnLogout = document.getElementById("btnLogout");
+
+  if (!btnInit || !btnLogin || !btnProfile || !btnLogout || !logEl) {
+    console.error("Missing elements", { btnInit, btnLogin, btnProfile, btnLogout, logEl });
+    return;
+  }
+
+  let ready = false;
+
+  async function initLiff() {
+    try {
+      log("Init LIFF…");
+      await liff.init({ liffId: LIFF_ID });
+      ready = true;
+
+      log("LIFF Ready ✅");
+      log("isLoggedIn:", liff.isLoggedIn());
+      log("Current URL:", location.href);
+
+      // ถ้า login แล้ว สามารถกด Get Profile ได้เลย
+    } catch (e) {
+      log("LIFF ERROR: " + e.message);
+    }
+  }
+
+  async function loginWithLine() {
+    if (!ready) await initLiff();
+
     if (!liff.isLoggedIn()) {
       log("Redirect to LINE login…");
       liff.login();
@@ -53,36 +68,43 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 
   async function getProfileAndSave() {
+    if (!ready) await initLiff();
+
     if (!liff.isLoggedIn()) {
       log("Not logged in LINE ❌ (กด Login ก่อน)");
       return;
     }
 
-    const profile = await liff.getProfile();
-    log("LINE Profile ✅", profile);
+    try {
+      const profile = await liff.getProfile();
+      log("LINE Profile ✅", profile);
 
-    const idToken = liff.getIDToken();
-    log("ID Token exists?", { hasIdToken: !!idToken });
+      const idToken = liff.getIDToken();
+      log("ID Token exists?", { hasIdToken: !!idToken });
 
-    if (!auth.currentUser) {
-      log("Sign in Firebase anonymously…");
-      await signInAnonymously(auth);
-      log("Firebase login ✅");
+      if (!auth.currentUser) {
+        log("Sign in Firebase anonymously…");
+        await signInAnonymously(auth);
+        log("Firebase login ✅");
+      }
+
+      log("Save to Firestore…");
+      await setDoc(doc(db, "liff_test_users", profile.userId), {
+        userId: profile.userId,
+        displayName: profile.displayName || "",
+        pictureUrl: profile.pictureUrl || "",
+        currentUrl: location.href,
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+
+      log("✅ SAVE SUCCESS");
+    } catch (e) {
+      log("ERROR: " + e.message);
     }
-
-    log("Save to Firestore…");
-    await setDoc(doc(db, "liff_test_users", profile.userId), {
-      userId: profile.userId,
-      displayName: profile.displayName || "",
-      pictureUrl: profile.pictureUrl || "",
-      currentUrl: location.href,
-      updatedAt: serverTimestamp()
-    }, { merge: true });
-
-    log("✅ SAVE SUCCESS");
   }
 
-  async function logoutLine() {
+  async function logout() {
+    if (!ready) await initLiff();
     if (liff.isLoggedIn()) {
       liff.logout();
       log("Logged out LINE ✅ (refresh หน้า)");
@@ -91,12 +113,12 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // ผูกปุ่ม (ไม่มีทาง null แล้วเพราะเช็กไว้)
-  btnInit.onclick = () => initLiff().catch(e => log("LIFF ERROR: " + e.message));
-  btnLogin.onclick = () => loginLine().catch(e => log("LOGIN ERROR: " + e.message));
-  btnProfile.onclick = () => getProfileAndSave().catch(e => log("PROFILE ERROR: " + e.message));
-  btnLogout.onclick = () => logoutLine().catch(e => log("LOGOUT ERROR: " + e.message));
+  // ✅ ผูก event (ไม่มี null แล้ว)
+  btnInit.onclick = initLiff;
+  btnLogin.onclick = loginWithLine;
+  btnProfile.onclick = getProfileAndSave;
+  btnLogout.onclick = logout;
 
   // auto init
-  initLiff().catch(e => log("LIFF ERROR: " + e.message));
+  initLiff();
 });
