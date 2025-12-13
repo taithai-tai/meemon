@@ -41,6 +41,10 @@
       ส่ง OTP ใหม่
     </button>
 
+    <button onclick="backToRegister()" class="w-full mt-2 bg-white/10 p-2 rounded font-bold">
+      กลับไปแก้อีเมล
+    </button>
+
     <p id="otpMsg" class="text-sm mt-3 text-red-300"></p>
   </div>
 </div>
@@ -48,7 +52,10 @@
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbwL_b3IKYU3ghohEivA0uNcafTk5CAkVK6H5lZBkYaq14QT_cnOEMtNEib_40eOCtmc/exec";
 
-let currentEmail = "";
+// ✅ ปรับปลายทางหลังยืนยัน OTP สำเร็จได้เอง
+const AFTER_VERIFY_REDIRECT = ""; // เช่น "login.html" หรือ "home.html" (ว่าง = ไม่ redirect)
+
+let currentEmail = sessionStorage.getItem("MEEMON_EMAIL") || "";
 
 function setMsg(id, text, ok=false){
   const el = document.getElementById(id);
@@ -56,18 +63,46 @@ function setMsg(id, text, ok=false){
   el.innerText = text || "";
 }
 
+// ✅ ทนทานสุด: ต่อให้ server ส่ง HTML กลับมาก็ไม่พัง
 async function postForm(obj){
   const form = new URLSearchParams();
   Object.keys(obj).forEach(k => form.append(k, obj[k]));
-  const r = await fetch(API_URL, { method:"POST", body: form });
-  return await r.json();
+
+  const r = await fetch(API_URL, {
+    method:"POST",
+    body: form,
+    redirect: "follow"
+  });
+
+  const text = await r.text();
+  try {
+    return JSON.parse(text);
+  } catch (e) {
+    console.error("NOT JSON:", text);
+    return {
+      error: "Server ไม่ตอบกลับเป็น JSON (เช็ก Deploy / Permission ของ Apps Script)",
+      raw: text.slice(0, 250)
+    };
+  }
+}
+
+function showOtpStep(email){
+  document.getElementById("step-register").classList.add("hidden");
+  document.getElementById("step-otp").classList.remove("hidden");
+  document.getElementById("otpEmail").innerText = email;
+}
+
+function backToRegister(){
+  document.getElementById("step-otp").classList.add("hidden");
+  document.getElementById("step-register").classList.remove("hidden");
+  setMsg("otpMsg","");
 }
 
 async function register() {
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value.trim();
 
-  setMsg("msg","กำลังสมัคร…");
+  setMsg("msg","กำลังสมัคร…", true);
 
   if (!email || !password) return setMsg("msg","กรอกข้อมูลให้ครบ");
 
@@ -76,12 +111,9 @@ async function register() {
 
     if (data.success) {
       currentEmail = email;
+      sessionStorage.setItem("MEEMON_EMAIL", email);
 
-      // ไปขั้น OTP
-      document.getElementById("step-register").classList.add("hidden");
-      document.getElementById("step-otp").classList.remove("hidden");
-      document.getElementById("otpEmail").innerText = email;
-
+      showOtpStep(email);
       setMsg("otpMsg","สมัครสำเร็จ ✅ กรุณาเช็ค OTP ในอีเมล", true);
     } else {
       setMsg("msg", data.error || "สมัครไม่สำเร็จ");
@@ -94,10 +126,11 @@ async function register() {
 
 async function verifyOtp(){
   const otp = document.getElementById("otp").value.trim();
-  if (!currentEmail) currentEmail = document.getElementById("email").value.trim();
+  if (!currentEmail) currentEmail = sessionStorage.getItem("MEEMON_EMAIL") || "";
 
   setMsg("otpMsg","กำลังตรวจสอบ OTP…", true);
 
+  if (!currentEmail) return setMsg("otpMsg","ไม่พบอีเมล กรุณากลับไปสมัครใหม่");
   if (!otp || otp.length < 6) return setMsg("otpMsg","กรอก OTP ให้ครบ 6 หลัก");
 
   try{
@@ -106,10 +139,10 @@ async function verifyOtp(){
     if (data.success){
       setMsg("otpMsg","ยืนยันสำเร็จ 🎉 เข้าสู่ระบบได้แล้ว", true);
 
-      // ✅ ตรงนี้คุณจะ redirect ไปหน้า login หรือ home ก็ได้
-      // location.href = "login.html";
-      // หรือจะเข้า home เลย:
-      // location.href = "home.html";
+      // ✅ Redirect (ถ้าคุณตั้งค่าไว้)
+      if (AFTER_VERIFY_REDIRECT) {
+        setTimeout(() => location.href = AFTER_VERIFY_REDIRECT, 600);
+      }
     } else {
       setMsg("otpMsg", data.error || "OTP ไม่ถูกต้อง");
     }
@@ -120,7 +153,7 @@ async function verifyOtp(){
 }
 
 async function resendOtp(){
-  if (!currentEmail) currentEmail = document.getElementById("email").value.trim();
+  if (!currentEmail) currentEmail = sessionStorage.getItem("MEEMON_EMAIL") || "";
   if (!currentEmail) return setMsg("otpMsg","ไม่พบอีเมล กรุณากลับไปสมัครใหม่");
 
   setMsg("otpMsg","กำลังส่ง OTP ใหม่…", true);
@@ -137,6 +170,13 @@ async function resendOtp(){
     setMsg("otpMsg","เชื่อมต่อหลังบ้านไม่ได้");
   }
 }
+
+// ✅ ถ้าคุณ refresh แล้วอยากให้กลับเข้าหน้า OTP อัตโนมัติ
+window.addEventListener("load", () => {
+  if (currentEmail) {
+    showOtpStep(currentEmail);
+  }
+});
 </script>
 
 </body>
