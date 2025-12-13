@@ -40,8 +40,8 @@
   <p id="msg" class="text-sm mt-3 text-red-300 min-h-[20px]"></p>
 </div>
 
-<script>
-  const API_URL = "https://script.google.com/macros/s/AKfycbzVd-VNUeXbmecyTk1ITZOssdNm7uTb0ZFFHkcPgmjJaa6iJM56QLiwA9iKhG8HW3M/exec";
+<script src="config.js">
+  const API_URL = window.MEEMON_API_URL;
 
   // ✅ ต้องใช้ key เดียวกับ register.html
   let email = sessionStorage.getItem("MEEMON_EMAIL") || "";
