@@ -24,6 +24,17 @@
 
   <p id="msg" class="text-sm mt-3 text-red-300"></p>
 </div>
+  
+<script>
+  // ✅ ถ้าเรากำลังอยู่ใน flow OTP ห้าม redirect ไปหน้า login มาทับ
+  const inOtpFlow = sessionStorage.getItem("MEEMON_OTP_FLOW") === "1";
+  const hasEmail = !!sessionStorage.getItem("MEEMON_EMAIL");
+
+  // ถ้าควรไป OTP ให้เด้งกลับไป OTP ทันที
+  if (inOtpFlow && hasEmail) {
+    location.replace("/verify-otp.html");
+  }
+</script>
 
 <script>
 const API = "https://script.google.com/macros/s/AKfycbzVd-VNUeXbmecyTk1ITZOssdNm7uTb0ZFFHkcPgmjJaa6iJM56QLiwA9iKhG8HW3M/exec";
