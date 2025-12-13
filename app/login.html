@@ -2,70 +2,91 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Meemon | Login</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="min-h-screen flex items-center justify-center bg-slate-900 text-white">
+<body class="min-h-screen flex items-center justify-center bg-slate-900 text-white p-4">
 
 <div class="bg-white/10 p-8 rounded-xl w-full max-w-sm">
   <h1 class="text-xl font-bold mb-4">เข้าสู่ระบบ</h1>
 
-  <input id="email" class="w-full p-2 mb-3 rounded text-black" placeholder="Email">
-  <input id="password" type="password" class="w-full p-2 mb-3 rounded text-black" placeholder="Password">
+  <input id="email" class="w-full p-2 mb-3 rounded text-black" placeholder="Email" autocomplete="email">
+  <input id="password" type="password" class="w-full p-2 mb-3 rounded text-black" placeholder="Password" autocomplete="current-password">
 
-  <button onclick="login()" class="w-full bg-yellow-400 text-black p-2 rounded font-bold">
+  <button id="btnLogin" onclick="login()" class="w-full bg-yellow-400 text-black p-2 rounded font-bold">
     Login
   </button>
 
   <p class="text-sm mt-3">
     ยังไม่มีบัญชี?
-    <a href="register.html" class="underline text-yellow-300">สมัครสมาชิก</a>
+    <a href="/app/register.html" class="underline text-yellow-300">สมัครสมาชิก</a>
   </p>
 
-  <p id="msg" class="text-sm mt-3 text-red-300"></p>
+  <p id="msg" class="text-sm mt-3 text-red-300 min-h-[20px]"></p>
 </div>
-  
-<script>
-  // ✅ ถ้าเรากำลังอยู่ใน flow OTP ห้าม redirect ไปหน้า login มาทับ
-  const inOtpFlow = sessionStorage.getItem("MEEMON_OTP_FLOW") === "1";
-  const hasEmail = !!sessionStorage.getItem("MEEMON_EMAIL");
 
-  // ถ้าควรไป OTP ให้เด้งกลับไป OTP ทันที
+<script>
+  const API = "https://script.google.com/macros/s/AKfycbzVd-VNUeXbmecyTk1ITZOssdNm7uTb0ZFFHkcPgmjJaa6iJM56QLiwA9iKhG8HW3M/exec";
+
+  // ✅ ถ้าอยู่ใน flow OTP ให้เด้งไปหน้า OTP ที่ถูกต้องใน /app
+  const inOtpFlow = sessionStorage.getItem("MEEMON_OTP_FLOW") === "1";
+  const hasEmail  = !!sessionStorage.getItem("MEEMON_EMAIL");
   if (inOtpFlow && hasEmail) {
     location.replace("/app/verify-otp.html");
   }
-</script>
 
-<script>
-const API = "https://script.google.com/macros/s/AKfycbzVd-VNUeXbmecyTk1ITZOssdNm7uTb0ZFFHkcPgmjJaa6iJM56QLiwA9iKhG8HW3M/exec";
-
-async function login() {
-  msg("");
-  const email = emailEl.value.trim();
-  const password = passwordEl.value.trim();
-
-  const res = await fetch(API, {
-    method: "POST",
-    body: JSON.stringify({
-      action: "loginEmail",
-      email,
-      password
-    })
-  });
-
-  const data = await res.json();
-  if (!data.success) {
-    msg(data.error || "Login failed");
-    return;
+  function setMsg(t, ok=false){
+    const el = document.getElementById("msg");
+    el.className = "text-sm mt-3 min-h-[20px] " + (ok ? "text-green-400" : "text-red-300");
+    el.innerText = t || "";
   }
 
-  localStorage.setItem("MEEMON_UID", data.uid);
-  location.href = "home.html";
-}
+  async function postForm(obj){
+    const form = new URLSearchParams();
+    Object.keys(obj).forEach(k => form.append(k, obj[k]));
+    const r = await fetch(API, { method:"POST", body: form });
+    const text = await r.text();
+    try { return JSON.parse(text); }
+    catch { return { error: "Server ไม่ตอบกลับเป็น JSON", raw: text.slice(0, 250) }; }
+  }
 
-function msg(t){ document.getElementById("msg").innerText = t }
-const emailEl = document.getElementById("email");
-const passwordEl = document.getElementById("password");
+  async function login() {
+    setMsg("");
+    const btn = document.getElementById("btnLogin");
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    if (!email || !password) return setMsg("กรอกอีเมลและรหัสผ่านให้ครบ");
+
+    btn.disabled = true;
+    btn.innerText = "กำลังเข้าสู่ระบบ...";
+
+    try {
+      const data = await postForm({ action:"loginEmail", email, password });
+
+      if (!data.success) {
+        setMsg(data.error || "Login failed");
+        return;
+      }
+
+      // ✅ login สำเร็จ = ไม่อยู่ใน flow OTP แล้ว
+      sessionStorage.removeItem("MEEMON_OTP_FLOW");
+
+      // ✅ เก็บ uid ไว้ใช้ในหน้า home
+      localStorage.setItem("MEEMON_UID", data.uid);
+
+      // ✅ ไปหน้า home แบบ absolute
+      location.href = "/app/home.html";
+
+    } catch (err) {
+      console.error(err);
+      setMsg("เชื่อมต่อหลังบ้านไม่ได้");
+    } finally {
+      btn.disabled = false;
+      btn.innerText = "Login";
+    }
+  }
 </script>
 
 </body>
