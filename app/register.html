@@ -15,7 +15,9 @@
   <input id="email" class="w-full p-2 mb-3 rounded text-black" placeholder="Email">
   <input id="password" type="password" class="w-full p-2 mb-3 rounded text-black" placeholder="Password">
 
-  <button id="btn" onclick="register()" class="w-full bg-green-400 text-black p-2 rounded font-bold">
+  <!-- ✅ type=button กัน submit -->
+  <button id="btn" type="button" onclick="register(event)"
+          class="w-full bg-green-400 text-black p-2 rounded font-bold">
     สมัครสมาชิก & ส่ง OTP
   </button>
 
@@ -24,8 +26,6 @@
 
 <script>
   const API_URL = "https://script.google.com/macros/s/AKfycbzVd-VNUeXbmecyTk1ITZOssdNm7uTb0ZFFHkcPgmjJaa6iJM56QLiwA9iKhG8HW3M/exec";
-
-  const OTP_PAGE = "/verify-otp.html"; // ✅ แนะนำให้ใช้แบบนี้
 
   function setMsg(text, ok=false){
     const el = document.getElementById("msg");
@@ -36,13 +36,16 @@
   async function postForm(obj){
     const form = new URLSearchParams();
     Object.keys(obj).forEach(k => form.append(k, obj[k]));
+
     const r = await fetch(API_URL, { method: "POST", body: form });
     const text = await r.text();
     try { return JSON.parse(text); }
-    catch { return { error: "Server ไม่ตอบกลับเป็น JSON", raw: text.slice(0, 250) }; }
+    catch { return { error: "Server ไม่ตอบกลับเป็น JSON", raw: text.slice(0,200) }; }
   }
 
-  async function register() {
+  async function register(e){
+    if (e) e.preventDefault(); // ✅ กัน submit/refresh
+
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value.trim();
     const btn = document.getElementById("btn");
@@ -53,25 +56,28 @@
     btn.innerText = "กำลังสมัคร...";
     setMsg("กำลังสมัครและส่ง OTP…", true);
 
-    try {
+    try{
       const data = await postForm({ action: "register", email, password });
 
-      if (data.success) {
-        // ✅ เก็บอีเมล + ธงบอกว่าเรากำลังไปหน้า OTP
-        sessionStorage.setItem("MEEMON_EMAIL", email);
-        sessionStorage.setItem("MEEMON_OTP_FLOW", "1");
-
-        setMsg("สมัครสำเร็จ ✅ กำลังไปหน้ากรอก OTP…", true);
-
-        // ✅ กันโดนสคริปต์อื่นเด้งทับ: ใช้ replace + หน่วงนิดเดียว
-        setTimeout(() => location.replace(OTP_PAGE), 200);
-      } else {
+      if (!data.success){
         setMsg(data.error || "สมัครไม่สำเร็จ");
+        return;
       }
-    } catch (err) {
+
+      // ✅ เก็บค่าให้ verify-otp.html
+      sessionStorage.setItem("MEEMON_EMAIL", email);
+      sessionStorage.setItem("MEEMON_OTP_FLOW", "1");
+
+      setMsg("สมัครสำเร็จ ✅ กำลังไปหน้ากรอก OTP…", true);
+
+      // ✅ เด้งแบบชัวร์
+      const nextUrl = new URL("verify-otp.html", location.href).toString();
+      location.assign(nextUrl);
+
+    }catch(err){
       console.error(err);
       setMsg("เชื่อมต่อหลังบ้านไม่ได้");
-    } finally {
+    }finally{
       btn.disabled = false;
       btn.innerText = "สมัครสมาชิก & ส่ง OTP";
     }
