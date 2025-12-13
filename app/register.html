@@ -2,71 +2,69 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Meemon | Register</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="min-h-screen flex items-center justify-center bg-slate-900 text-white">
 
-  <div class="bg-white/10 p-8 rounded-xl w-full max-w-sm">
-    <h1 class="text-xl font-bold mb-4">สมัครสมาชิก</h1>
+<div class="bg-white/10 p-8 rounded-xl w-full max-w-sm">
+  <h1 class="text-xl font-bold mb-4">สมัครสมาชิก</h1>
 
-    <input id="email" class="w-full p-2 mb-3 rounded text-black" placeholder="Email">
-    <input id="password" type="password" class="w-full p-2 mb-3 rounded text-black" placeholder="Password">
+  <input id="email" class="w-full p-2 mb-3 rounded text-black" placeholder="Email">
+  <input id="password" type="password" class="w-full p-2 mb-3 rounded text-black" placeholder="Password">
 
-    <button type="button" onclick="register()" class="w-full bg-green-400 text-black p-2 rounded font-bold">
-      สมัครสมาชิก
-    </button>
+  <button onclick="register()" class="w-full bg-green-400 text-black p-2 rounded font-bold">
+    สมัครสมาชิก
+  </button>
 
-    <p id="msg" class="text-sm mt-3 text-red-300"></p>
-  </div>
+  <p id="msg" class="text-sm mt-3 text-red-300"></p>
+</div>
 
-  <script>
-    // ✅ ใช้ URL /exec ของ Web App ที่ deploy ล่าสุด “ตัวเดียวกับหลังบ้านจริง”
-    const API_URL = "https://script.google.com/macros/s/AKfycbzJPUsxMh6PGp7iU8uPSNXtDXWNVwBH4ApGC-vMtVtX9mYszlbfvwrpIUIcD0jTo2aN/exec";
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbzJPUsxMh6PGp7iU8uPSNXtDXWNVwBH4ApGC-vMtVtX9mYszlbfvwrpIUIcD0jTo2aN/exec";
 
-    const msgEl = document.getElementById("msg");
-    const setMsg = (t="") => msgEl.textContent = t;
+async function register() {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const msg = document.getElementById("msg");
 
-    async function register() {
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
+  msg.innerText = "กำลังสมัคร…";
 
-      setMsg("");
+  if (!email || !password) {
+    msg.innerText = "กรอกข้อมูลให้ครบ";
+    return;
+  }
 
-      if (!email || !password) {
-        setMsg("กรุณากรอก Email และ Password ให้ครบ");
-        return;
-      }
+  // ⭐ ส่งแบบ x-www-form-urlencoded (ไม่โดน CORS)
+  const form = new URLSearchParams();
+  form.append("action", "register");
+  form.append("email", email);
+  form.append("password", password);
 
-      try {
-        const r = await fetch(API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            action: "register",
-            email,
-            password
-          })
-        });
+  try {
+    const r = await fetch(API_URL, {
+      method: "POST",
+      body: form
+    });
 
-        const data = await r.json();
-        console.log("register:", data);
+    const data = await r.json();
+    console.log(data);
 
-        if (data.success) {
-          alert("สมัครสำเร็จ ✅ ส่ง OTP ไปที่อีเมลแล้ว");
-          // TODO: redirect ไปหน้า verify-otp.html ได้
-          // location.href = "verify-otp.html?email=" + encodeURIComponent(email);
-        } else {
-          setMsg(data.error || "สมัครไม่สำเร็จ");
-        }
-      } catch (err) {
-        console.error(err);
-        setMsg("เชื่อมต่อหลังบ้านไม่ได้ (ดู Console)");
-      }
+    if (data.success) {
+      msg.classList.remove("text-red-300");
+      msg.classList.add("text-green-400");
+      msg.innerText = "สมัครสำเร็จ 🎉 กรุณาเช็ค OTP ในอีเมล";
+      // 👉 redirect ไปหน้า OTP ต่อได้
+    } else {
+      msg.innerText = data.error || "สมัครไม่สำเร็จ";
     }
-  </script>
+  } catch (err) {
+    console.error(err);
+    msg.innerText = "เชื่อมต่อหลังบ้านไม่ได้";
+  }
+}
+</script>
 
 </body>
 </html>
