@@ -1,41 +1,21 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <title>Meemon</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <!-- Tailwind (CDN ใช้ได้กับ GitHub Pages / Netlify / Custom Domain) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <style>
-    body {
-      background: radial-gradient(circle at top, #1a1a1a, #050509);
-    }
-  </style>
+  <meta charset="UTF-8">
+  <title>LIFF Test</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
-<body class="min-h-screen flex items-center justify-center text-white">
+<body>
+  <h2>LIFF + Firebase Test</h2>
 
-  <div class="w-full max-w-sm p-6 rounded-2xl bg-white/10 border border-white/10 shadow-xl text-center">
-    <h1 class="text-xl font-semibold">Meemon</h1>
-    <p class="text-sm text-white/70 mt-1">LIFF + Firebase (100%)</p>
+  <button id="loginBtn">Login with LINE</button>
+  <pre id="log">Loading…</pre>
 
-    <button
-      id="btnLogin"
-      class="mt-6 w-full rounded-xl bg-green-500 hover:bg-green-600 transition text-black font-semibold py-3">
-      Login with LINE
-    </button>
-
-    <p id="status" class="mt-4 text-xs text-white/70">
-      Loading…
-    </p>
-  </div>
-
-  <!-- LIFF SDK (ต้องเป็น script ปกติ ห้ามเป็น module) -->
+  <!-- LIFF SDK -->
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
-  <!-- App JS (ชี้ไป path จริงของคุณ) -->
-  <script type="module" src="./js/app.js"></script>
+  <!-- App -->
+  <script type="module" src="./app.js"></script>
 </body>
 </html>
