@@ -21,36 +21,39 @@
 </div>
 
 <script>
-const API = "https://script.google.com/macros/s/AKfycbyJVuZ-8SU31f0QVAqhIzbjyH4L0Lra-nlNnJ4XjbophyuMFSJa-Tt5qyTZlBxNFJtb/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbyJVuZ-8SU31f0QVAqhIzbjyH4L0Lra-nlNnJ4XjbophyuMFSJa-Tt5qyTZlBxNFJtb/exec";
 
 async function register() {
-  msg("");
-  const email = emailEl.value.trim();
-  const password = passwordEl.value.trim();
+  const email = document.getElementById("regEmail").value.trim();
+  const password = document.getElementById("regPass").value.trim();
 
-  const res = await fetch(API, {
-    method: "POST",
-    body: JSON.stringify({
-      action: "register",
-      email,
-      password
-    })
-  });
+  try {
+    const r = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "register",   // ✅ สำคัญมาก
+        email,
+        password
+      })
+    });
 
-  const data = await res.json();
-  if (!data.success) {
-    msg(data.error || "Register failed");
-    return;
+    const data = await r.json();
+    console.log("register:", data);
+
+    if (data.success) {
+      alert("สมัครสำเร็จ ✅ ส่ง OTP ไปที่อีเมลแล้ว");
+      // ไปหน้า OTP ต่อได้เลย
+    } else {
+      alert(data.error || "สมัครไม่สำเร็จ");
+    }
+  } catch (err) {
+    console.error(err);
+    alert("เชื่อมต่อหลังบ้านไม่ได้");
   }
-
-  sessionStorage.setItem("OTP_EMAIL", email);
-  location.href = "verify-otp.html";
 }
-
-function msg(t){ document.getElementById("msg").innerText = t }
-const emailEl = document.getElementById("email");
-const passwordEl = document.getElementById("password");
 </script>
+
 
 </body>
 </html>
