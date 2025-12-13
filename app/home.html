@@ -1,160 +1,159 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8" />
   <title>Meemon | Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&family=Pattaya&display=swap" rel="stylesheet">
+
+  <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
   <style>
     body {
       background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
-      color: white;
       font-family: 'Sarabun', sans-serif;
+      color: white;
       min-height: 100vh;
-      margin: 0;
     }
     .glass {
-      background: rgba(255,255,255,0.10);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.18);
-      border-radius: 18px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.45);
-    }
-    .btn-outline {
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(14px);
       border: 1px solid rgba(255,255,255,0.25);
-      padding: 10px 12px;
-      border-radius: 12px;
-      background: rgba(0,0,0,0.18);
+      border-radius: 20px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.45);
     }
+    .btn-gold {
+      background: linear-gradient(45deg, #FFD700, #DAA520);
+      color: #3e2723;
+      font-weight: bold;
+      border-radius: 14px;
+      padding: 14px;
+      width: 100%;
+      transition: transform .15s ease;
+    }
+    .btn-gold:hover { transform: scale(1.03); }
   </style>
 </head>
 
-<body>
-  <div class="max-w-md mx-auto p-4">
-    <!-- Header -->
-    <div class="glass p-4 flex items-center justify-between mb-4">
-      <div class="flex items-center gap-3">
-        <div class="w-11 h-11 rounded-full bg-purple-700 flex items-center justify-center font-bold text-lg">
-          <span id="avatar">U</span>
-        </div>
-        <div class="overflow-hidden">
-          <div class="font-bold text-yellow-300 truncate w-52" id="name">User</div>
-          <div class="text-xs text-white/70 truncate w-52" id="uid">line_user_id</div>
-        </div>
-      </div>
-      <button id="btnLogout" class="text-xs text-red-300">ออก</button>
-    </div>
+<body class="px-4 py-6">
 
-    <!-- Wallet -->
-    <div class="grid grid-cols-2 gap-3 mb-4">
-      <div class="glass p-4 text-center">
-        <div class="text-2xl mb-1">💰</div>
-        <div class="text-xs text-white/70">แต้มบุญ</div>
-        <div class="text-2xl font-bold text-yellow-300" id="points">0</div>
-      </div>
-      <div class="glass p-4 text-center">
-        <div class="text-2xl mb-1">🕯️</div>
-        <div class="text-xs text-white/70">ธูปในคลัง</div>
-        <div class="text-2xl font-bold" id="incense">0</div>
-      </div>
+<!-- ===== Header ===== -->
+<div class="glass p-4 flex items-center justify-between mb-6">
+  <div class="flex items-center gap-3">
+    <div class="w-12 h-12 rounded-full bg-purple-700 flex items-center justify-center text-xl font-bold">
+      <span id="avatar">U</span>
     </div>
-
-    <!-- Actions -->
-    <div class="glass p-4 mb-3">
-      <button id="btnRefresh" class="w-full btn-outline mb-2">รีเฟรชยอดจากหลังบ้าน</button>
-      <div class="text-[12px] text-white/65">
-        * หน้านี้ดึงข้อมูลจาก Google Sheets โดยใช้ LINE idToken ที่ตรวจสอบแล้ว
-      </div>
+    <div>
+      <div id="username" class="font-bold text-yellow-300">User</div>
+      <div id="uidText" class="text-xs text-white/70 truncate w-40">uid</div>
     </div>
-
-    <div class="text-xs text-white/60 text-center" id="status"></div>
   </div>
 
-  <script>
-    // === ใส่ของคุณ ===
-    const LIFF_ID = "2008685502-NdidvjVm";
-    const LOGIN_URL = "/app/index.html";
-    const APPS_SCRIPT_WEBAPP_URL = "https://script.google.com/macros/s/AKfycby8MKRq01cQWUbuYmOaU2K5OlIluy5ZxcyBVf_eo7GUDxDOjcc6tAJxqiU50d8Kvh4_hQ/exec";
-    // ==================
+  <button onclick="logout()" class="text-sm text-red-300">
+    <i class="fa-solid fa-right-from-bracket"></i> ออก
+  </button>
+</div>
 
-    const el = (id) => document.getElementById(id);
-    const status = (t) => el("status").innerText = t;
+<!-- ===== Wallet ===== -->
+<div class="grid grid-cols-2 gap-4 mb-6">
+  <div class="glass p-4 text-center">
+    <div class="text-3xl mb-1">💰</div>
+    <div class="text-xs text-white/70">แต้มบุญ</div>
+    <div id="points" class="text-2xl font-bold text-yellow-300">0</div>
+  </div>
 
-    async function api(action, payload = {}) {
-      const idToken = sessionStorage.getItem("MEEMON_IDTOKEN") || "";
-      const res = await fetch(APPS_SCRIPT_WEBAPP_URL, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({ action, idToken, ...payload })
-      });
-      const text = await res.text();
-      let data;
-      try { data = JSON.parse(text); } catch { throw new Error("API ไม่ได้คืน JSON: " + text); }
-      if (!data.ok) throw new Error(data.error || "API error");
-      return data;
-    }
+  <div class="glass p-4 text-center">
+    <div class="text-3xl mb-1">🕯️</div>
+    <div class="text-xs text-white/70">ธูปคงเหลือ</div>
+    <div id="incense" class="text-2xl font-bold">0</div>
+  </div>
+</div>
 
-    async function boot() {
-      status("กำลังเริ่มระบบ…");
-      await liff.init({ liffId: LIFF_ID });
+<!-- ===== Main Actions ===== -->
+<div class="space-y-4">
 
-      // ถ้าไม่ได้ login LINE จริง ๆ ให้กลับหน้า login
-      if (!liff.isLoggedIn()) {
-        location.href = LOGIN_URL;
-        return;
-      }
+  <button class="btn-gold">
+    🔥 จุดธูปขอเลข
+  </button>
 
-      // เก็บ idToken ใหม่ทุกครั้ง กัน sessionStorage หาย
-      const idToken = liff.getIDToken();
-      sessionStorage.setItem("MEEMON_IDTOKEN", idToken || "");
+  <div class="glass p-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-full bg-yellow-500/20 flex items-center justify-center text-yellow-300">
+        <i class="fa-solid fa-shop"></i>
+      </div>
+      <div>
+        <div class="font-bold">ร้านค้าธูป</div>
+        <div class="text-xs text-white/70">ซื้อธูปด้วยแต้มบุญ</div>
+      </div>
+    </div>
+    <i class="fa-solid fa-chevron-right text-white/50"></i>
+  </div>
 
-      await refreshWallet();
-      status("พร้อมใช้งาน ✅");
-    }
+  <div class="glass p-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-300">
+        <i class="fa-solid fa-clock-rotate-left"></i>
+      </div>
+      <div>
+        <div class="font-bold">ประวัติการจุด</div>
+        <div class="text-xs text-white/70">ดูผลย้อนหลัง</div>
+      </div>
+    </div>
+    <i class="fa-solid fa-chevron-right text-white/50"></i>
+  </div>
 
-    async function refreshWallet() {
-      status("กำลังโหลดข้อมูล…");
-      const data = await api("getMe");
+</div>
 
-      el("name").innerText = data.profile.displayName || "User";
-      el("uid").innerText = data.profile.userId || data.sub || "";
-      el("avatar").innerText = (data.profile.displayName || "U").charAt(0).toUpperCase();
+<!-- ===== Footer ===== -->
+<div class="text-center text-xs text-white/40 mt-10">
+  Meemon © 2025
+</div>
 
-      el("points").innerText = (data.wallet.points || 0).toLocaleString();
-      el("incense").innerText = (data.wallet.incense || 0).toLocaleString();
-      status("อัปเดตแล้ว ✅");
-    }
+<script>
+/* ================= CONFIG ================= */
+const API = "https://script.google.com/macros/s/AKfycbzJPUsxMh6PGp7iU8uPSNXtDXWNVwBH4ApGC-vMtVtX9mYszlbfvwrpIUIcD0jTo2aN/exec";
 
-    async function logout() {
-      // ล้าง token ฝั่งเว็บ
-      sessionStorage.removeItem("MEEMON_IDTOKEN");
+/* ================= AUTH CHECK ================= */
+const uid = localStorage.getItem("MEEMON_UID");
+if (!uid) {
+  location.href = "login.html";
+}
 
-      // logout LINE ใน LIFF ด้วย
-      if (liff.isLoggedIn()) liff.logout();
-      location.href = LOGIN_URL;
-    }
+/* ================= UI ================= */
+document.getElementById("uidText").innerText = uid;
+document.getElementById("avatar").innerText = uid.charAt(0).toUpperCase();
 
-    el("btnRefresh").addEventListener("click", () => refreshWallet().catch(e => {
-      console.error(e);
-      status("โหลดไม่สำเร็จ: " + e.message);
-      alert(e.message);
-    }));
+/* ================= LOAD WALLET ================= */
+async function loadWallet() {
+  const res = await fetch(API, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "ping" // placeholder (ต่อยอด getWallet ได้)
+    })
+  });
 
-    el("btnLogout").addEventListener("click", logout);
+  // demo ค่าเริ่มต้น (ต่อ API จริงภายหลัง)
+  document.getElementById("points").innerText = "0";
+  document.getElementById("incense").innerText = "0";
 
-    window.addEventListener("load", () => {
-      boot().catch(e => {
-        console.error(e);
-        status("เกิดข้อผิดพลาด: " + e.message);
-        alert("ERROR: " + e.message);
-      });
-    });
-  </script>
+  // username แสดงจาก uid
+  document.getElementById("username").innerText =
+    uid.startsWith("email:") ? uid.replace("email:", "") : "LINE User";
+}
+
+function logout() {
+  localStorage.removeItem("MEEMON_UID");
+  location.href = "login.html";
+}
+
+loadWallet();
+</script>
+
 </body>
 </html>
-   

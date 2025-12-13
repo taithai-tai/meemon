@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>Meemon | Verify OTP</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen flex items-center justify-center bg-slate-900 text-white">
+
+<div class="bg-white/10 p-8 rounded-xl w-full max-w-sm">
+  <h1 class="text-xl font-bold mb-4">ยืนยัน OTP</h1>
+
+  <input id="otp" class="w-full p-2 mb-3 rounded text-black text-center text-xl" placeholder="XXXXXX">
+
+  <button onclick="verify()" class="w-full bg-blue-400 text-black p-2 rounded font-bold">
+    ยืนยัน
+  </button>
+
+  <p id="msg" class="text-sm mt-3 text-red-300"></p>
+</div>
+
+<script>
+const API = "https://script.google.com/macros/s/AKfycbzJPUsxMh6PGp7iU8uPSNXtDXWNVwBH4ApGC-vMtVtX9mYszlbfvwrpIUIcD0jTo2aN/exec";
+const email = sessionStorage.getItem("OTP_EMAIL");
+
+if (!email) location.href = "register.html";
+
+async function verify() {
+  msg("");
+  const otp = otpEl.value.trim();
+
+  const res = await fetch(API, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "verifyOtp",
+      email,
+      otp
+    })
+  });
+
+  const data = await res.json();
+  if (!data.success) {
+    msg(data.error || "OTP ไม่ถูกต้อง");
+    return;
+  }
+
+  location.href = "login.html";
+}
+
+function msg(t){ document.getElementById("msg").innerText = t }
+const otpEl = document.getElementById("otp");
+</script>
+
+</body>
+</html>

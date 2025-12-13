@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>Meemon | Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen flex items-center justify-center bg-slate-900 text-white">
+
+<div class="bg-white/10 p-8 rounded-xl w-full max-w-sm">
+  <h1 class="text-xl font-bold mb-4">เข้าสู่ระบบ</h1>
+
+  <input id="email" class="w-full p-2 mb-3 rounded text-black" placeholder="Email">
+  <input id="password" type="password" class="w-full p-2 mb-3 rounded text-black" placeholder="Password">
+
+  <button onclick="login()" class="w-full bg-yellow-400 text-black p-2 rounded font-bold">
+    Login
+  </button>
+
+  <p class="text-sm mt-3">
+    ยังไม่มีบัญชี?
+    <a href="register.html" class="underline text-yellow-300">สมัครสมาชิก</a>
+  </p>
+
+  <p id="msg" class="text-sm mt-3 text-red-300"></p>
+</div>
+
+<script>
+const API = "https://script.google.com/macros/s/AKfycbzJPUsxMh6PGp7iU8uPSNXtDXWNVwBH4ApGC-vMtVtX9mYszlbfvwrpIUIcD0jTo2aN/exec";
+
+async function login() {
+  msg("");
+  const email = emailEl.value.trim();
+  const password = passwordEl.value.trim();
+
+  const res = await fetch(API, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "loginEmail",
+      email,
+      password
+    })
+  });
+
+  const data = await res.json();
+  if (!data.success) {
+    msg(data.error || "Login failed");
+    return;
+  }
+
+  localStorage.setItem("MEEMON_UID", data.uid);
+  location.href = "home.html";
+}
+
+function msg(t){ document.getElementById("msg").innerText = t }
+const emailEl = document.getElementById("email");
+const passwordEl = document.getElementById("password");
+</script>
+
+</body>
+</html>
