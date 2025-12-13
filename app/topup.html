@@ -69,13 +69,15 @@
   <p id="msg" class="text-center text-sm min-h-[20px]"></p>
 
 </div>
+  
+<script src="config.js"></script>
 
 <script>
 /* ================= CONFIG ================= */
 
 const PROMPTPAY = "0661127624";
 const CREDIT_PER_BAHT = 10; // 1 บาท = 10 แต้ม
-const API_URL = "https://script.google.com/macros/s/AKfycbXXXXXXXX/exec"; // 🔴 ใส่ของคุณ
+const API_URL = window.MEEMON_API_URL; // 🔴 ใส่ของคุณ
 
 /* ================= STATE ================= */
 
