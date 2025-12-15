@@ -1,54 +1,45 @@
 <!doctype html>
 <html lang="th">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Meemon Lucky Envelope</title>
-  <link rel="stylesheet" href="./style.css" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Login | Meemon</title>
+
+  <link rel="stylesheet" href="./style.css">
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 </head>
 <body>
-  <div class="bg">
-    <main class="wrap">
-      <header class="top">
-        <h1>🧧 Meemon Lucky Envelope</h1>
-        <p class="sub">สุ่มได้ 1 ครั้งต่อ 1 คน • ผู้โชคดี 100 รางวัล จาก 2,000 สิทธิ</p>
-      </header>
+  <main class="app">
+    <h1>🔐 Login</h1>
+    <p class="sub">กรุณาเข้าสู่ระบบด้วย LINE เพื่อเปิดซอง</p>
 
-      <section class="panel">
-        <label class="label" for="identifier">ระบุตัวตน (ID / Email / เบอร์)</label>
-        <div class="row">
-          <input id="identifier" placeholder="เช่น danupol2005 หรือ you@email.com" maxlength="80" />
-          <button id="drawBtn" class="btn">เปิดซองเพื่อสุ่มโชค</button>
-        </div>
-        <div id="msg" class="msg"></div>
+    <button id="loginBtn">Login with LINE</button>
+  </main>
 
-        <div class="stage">
-          <div id="envelope" class="envelope">
-            <div class="env-back"></div>
-            <div class="env-front"></div>
-            <div class="seal">MEEMON</div>
+  <script>
+    const LIFF_ID = "PUT_YOUR_LIFF_ID_HERE"; // 🔴 ใส่ LIFF ID
 
-            <div id="paper" class="paper">
-              <div class="paper-title" id="paperTitle">ใบกระดาษ</div>
-              <div class="paper-body" id="paperBody">กรอก ID แล้วกด “เปิดซอง”</div>
-              <div class="paper-foot" id="paperFoot"></div>
-            </div>
-          </div>
-        </div>
+    async function main() {
+      await liff.init({ liffId: LIFF_ID });
 
-        <div class="meta">
-          <div class="chip"><span id="rightsUsed">0</span>/2000 ใช้สิทธิ (จำลอง)</div>
-          <div class="chip gold"><span id="winsUsed">0</span>/100 ผู้โชคดี (จำลอง)</div>
-        </div>
+      if (!liff.isLoggedIn()) {
+        document.getElementById("loginBtn").onclick = () => liff.login();
+        return;
+      }
 
-        <p class="note">
-          *เวอร์ชันเริ่มต้นนี้ยังไม่ใช้ API: ล็อก 1 ครั้งด้วย localStorage (ต่อเครื่อง/เบราว์เซอร์)
-        </p>
-      </section>
-    </main>
-  </div>
+      const profile = await liff.getProfile();
 
-  <script src="./app.js"></script>
+      localStorage.setItem("meemon_line_user", JSON.stringify({
+        userId: profile.userId,
+        name: profile.displayName,
+        picture: profile.pictureUrl
+      }));
+
+      // Login สำเร็จ → ไปหน้าเปิดซอง
+      window.location.href = "./draw.html";
+    }
+
+    main();
+  </script>
 </body>
 </html>
-
