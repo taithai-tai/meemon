@@ -4,59 +4,59 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Login | Meemon</title>
+
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <style>
-    body{background:#0b0611;color:#fff;font-family:sans-serif;display:grid;place-items:center;height:100vh;margin:0}
+    body{margin:0;height:100vh;display:grid;place-items:center;background:#0b0611;color:#fff;font-family:sans-serif}
     .box{width:min(420px,92vw);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:14px;padding:18px}
-    button{width:100%;padding:12px;border-radius:10px;border:1px solid rgba(212,175,55,.5);background:#a3121b;color:#fff;font-weight:700;cursor:pointer}
-    pre{white-space:pre-wrap;word-break:break-word;opacity:.9}
+    button{width:100%;padding:12px;border-radius:10px;border:1px solid rgba(212,175,55,.5);background:#a3121b;color:#fff;font-weight:800;cursor:pointer}
+    .sub{opacity:.8;font-size:13px}
+    pre{white-space:pre-wrap;word-break:break-word;opacity:.85;font-size:12px}
   </style>
 </head>
 <body>
   <div class="box">
     <h2>Login with LINE</h2>
+    <p class="sub">เข้าสู่ระบบก่อน เพื่อไปหน้าเปิดซอง</p>
     <button id="loginBtn" disabled>กำลังโหลด…</button>
     <pre id="log"></pre>
   </div>
 
   <script>
-    const LIFF_ID = "2008685502-15M0VarU";
+    const LIFF_ID = "2008685502-15M0VarU"; // ✅ ของคุณ
 
-    const logEl = document.getElementById("log");
     const btn = document.getElementById("loginBtn");
+    const logEl = document.getElementById("log");
     const log = (m) => logEl.textContent += m + "\n";
 
     (async () => {
       try {
-        log("Starting LIFF init…");
+        log("LIFF init…");
         await liff.init({ liffId: LIFF_ID });
         log("LIFF init OK");
-
         btn.disabled = false;
 
         if (liff.isLoggedIn()) {
-          log("Already logged in → getProfile");
+          log("Logged in → getProfile");
           const p = await liff.getProfile();
           localStorage.setItem("meemon_line_user", JSON.stringify({
-            userId: p.userId, name: p.displayName, picture: p.pictureUrl
+            userId: p.userId,
+            name: p.displayName,
+            picture: p.pictureUrl
           }));
-          log("Saved profile → redirect to draw.html");
+          log("Saved → draw.html");
           location.href = "./draw.html";
           return;
         }
 
-        log("Not logged in → waiting for click");
         btn.textContent = "Login with LINE";
         btn.onclick = () => {
-          log("Calling liff.login()…");
-          // redirect กลับมาหน้าเดิมหลังล็อกอิน (ช่วยมากเวลามี path)
-          liff.login({ redirectUri: location.href });
+          log("Calling liff.login()");
+          liff.login({ redirectUri: location.href }); // ✅ ชัวร์สุด
         };
-
       } catch (e) {
-        log("❌ ERROR:");
-        log(String(e?.message || e));
-        log("เช็ค: Endpoint URL ใน LIFF ต้องเป็น GitHub Pages URL ของคุณ");
+        log("❌ ERROR: " + String(e?.message || e));
+        log("เช็ค Endpoint URL ใน LIFF ให้เป็น GitHub Pages URL ของคุณ");
         btn.textContent = "Login ไม่ได้ (ดู error ด้านล่าง)";
       }
     })();
