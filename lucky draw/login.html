@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Login</title>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+</head>
+<body>
+  <button id="loginBtn">Login with LINE</button>
+  <script>
+    const LIFF_ID = "PUT_LIFF_ID_HERE"; // <-- แก้แค่นี้
+
+    (async () => {
+      await liff.init({ liffId: LIFF_ID });
+      if (!liff.isLoggedIn()) return liff.login();
+
+      const p = await liff.getProfile();
+      localStorage.setItem("meemon_line_user", JSON.stringify({
+        userId: p.userId, name: p.displayName
+      }));
+      location.href = "./index.html";
+    })();
+  </script>
+</body>
+</html>
