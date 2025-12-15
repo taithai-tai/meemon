@@ -1,3 +1,7 @@
+if (!localStorage.getItem("meemon_line_user")) {
+  window.location.href = "./index.html";
+}
+
 const $ = (id) => document.getElementById(id);
 
 const identifierEl = $("identifier");
