@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meemon - บัตรมูทำนายดวง</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <!-- Babel Standalone (Allows running JSX/TSX in browser without build) -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+      :root {
+        --gold: #d4af37;
+        --gold-glow: 0 0 15px rgba(212, 175, 55, 0.3);
+      }
+      body {
+        font-family: 'Prompt', sans-serif;
+        background-color: #05020a;
+        background-image: radial-gradient(circle at 50% 0%, #2e1065 0%, #000000 80%);
+        color: #e2e8f0;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+      .font-cinzel {
+        font-family: 'Cinzel', serif;
+      }
+      
+      /* Star Animation */
+      .star {
+        position: absolute;
+        background: white;
+        border-radius: 50%;
+        opacity: 0;
+        animation: twinkle var(--duration) ease-in-out infinite;
+        animation-delay: var(--delay);
+      }
+      @keyframes twinkle {
+        0% { opacity: 0; transform: scale(0.5); }
+        50% { opacity: var(--opacity); transform: scale(1.2); }
+        100% { opacity: 0; transform: scale(0.5); }
+      }
+
+      /* 3D Card Stuff */
+      .perspective-1000 {
+        perspective: 1000px;
+      }
+      .preserve-3d {
+        transform-style: preserve-3d;
+      }
+      .backface-hidden {
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+      }
+      .rotate-y-180 {
+        transform: rotateY(180deg);
+      }
+      
+      /* Mystic Button Glow */
+      .btn-mystic {
+        background: linear-gradient(180deg, #2d1b4e 0%, #1a0b2e 100%);
+        border: 1px solid rgba(212, 175, 55, 0.4);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+      .btn-mystic:hover {
+        border-color: var(--gold);
+        box-shadow: var(--gold-glow);
+        transform: translateY(-2px);
+      }
+      .btn-mystic::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        opacity: 0;
+        transform: scale(0.5);
+        transition: opacity 0.5s, transform 0.5s;
+      }
+      .btn-mystic:active::after {
+        opacity: 1;
+        transform: scale(1);
+        transition: 0s;
+      }
+
+      /* Stack Card Styles */
+      .stack-container {
+        perspective: 1200px;
+      }
+      .stack-card {
+        transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+        transform-style: preserve-3d;
+      }
+      /* Consecration Animation */
+      @keyframes floatAndFlip {
+        0% { transform: translateY(0) scale(1) rotateY(0); }
+        40% { transform: translateY(-60px) scale(1.1) rotateY(20deg); box-shadow: 0 0 50px var(--gold); }
+        100% { transform: translateY(-30px) scale(1.05) rotateY(180deg); }
+      }
+      .animate-consecrate {
+        animation: floatAndFlip 1.5s forwards cubic-bezier(0.45, 0, 0.55, 1);
+        z-index: 50 !important;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+
+    <!-- MAIN APPLICATION SCRIPT -->
+    <script type="text/babel" data-presets="react,typescript" data-type="module">
+      import React, { useState, useEffect, useRef, useMemo } from 'https://esm.sh/react@18.2.0';
+      import ReactDOM from 'https://esm.sh/react-dom@18.2.0/client';
+      import { Eye, Smartphone, ChevronRight, ArrowLeft, ChevronLeft, Sparkles, CheckCircle } from 'https://esm.sh/lucide-react@0.263.1';
+
+      // --- CONSTANTS & DATA ---
+      
+      const LOGO_URL = "https://raw.githubusercontent.com/taithai-tai/meemon/refs/heads/main/Picture/logo.png";
+      
+      const SOUNDS = {
+        click: 'https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3',
+        flip: 'https://cdn.pixabay.com/audio/2022/03/10/audio_71e4fc8a6e.mp3',
+        magic: 'https://cdn.pixabay.com/audio/2024/12/20/audio_d3efed8c6c.mp3',
+        success: 'https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3',
+      };
+
+      const FORTUNE_CARDS = [
+        { name: "The Sun", icon: "☀️", meaning: "แสงสว่างแห่งปัญญาจักส่องทาง ความสำเร็จอันรุ่งโรจน์รออยู่เบื้องหน้า อุปสรรคจักมลายสิ้น", lucky: "1, 9" },
+        { name: "The Lovers", icon: "❤️‍🔥", meaning: "ทางแยกแห่งโชคชะตา หัวใจจักนำทางเจ้า จงเลือกด้วยความรักมิใช่ความกลัว", lucky: "2, 6" },
+        { name: "Wheel of Fortune", icon: "☸️", meaning: "กงล้อแห่งกรรมกำลังหมุน สิ่งใดที่ทำไว้จักย้อนคืน โอกาสใหม่จักปรากฏดั่งปาฏิหาริย์", lucky: "10" },
+        { name: "The Magician", icon: "🔮", meaning: "อำนาจอยู่ในมือเจ้า ธาตุทั้งสี่จักเกื้อหนุน จงลงมือทำสิ่งที่คิดฝันให้เป็นจริง", lucky: "1, 5" },
+        { name: "The Star", icon: "✨", meaning: "ความหวังดั่งดาราบนฟากฟ้า การเยียวยาจิตวิญญาณ ความสงบสุขจักบังเกิด", lucky: "17" },
+        { name: "The Empress", icon: "👑", meaning: "ความอุดมสมบูรณ์พูนสุข เสน่ห์อันเหลือล้น ลาภยศสรรเสริญจักหลั่งไหลเข้ามา", lucky: "3" },
+        { name: "Ace of Pentacles", icon: "💎", meaning: "ประตูขุมทรัพย์เปิดออก ลาภลอยหรือโอกาสทองทางการเงินจักเข้ามา จงไขว่คว้าไว้", lucky: "8" },
+        { name: "The Moon", icon: "🌙", meaning: "ความลึกลับซ่อนเร้น จงเชื่อในสัญชาตญาณ ระวังภาพลวงตา แต่ความจริงจักเปิดเผยในไม่ช้า", lucky: "18" },
+        { name: "Death", icon: "💀", meaning: "จุดจบคือการเริ่มต้นใหม่ การเปลี่ยนแปลงครั้งใหญ่จักนำพาชีวิตไปสู่หนทางที่ดีกว่าเดิม", lucky: "13" }
+      ];
+
+      const ASPECT_OPTIONS = {
+        wealth: { 
+          id: 'wealth', label: 'มหาเศรษฐี', icon: '💰', sub: 'Wealth', 
+          colorClass: 'border-[#ffd700]',
+          bgPattern: 'radial-gradient(circle at 50% 30%, #15803d 0%, #14532d 60%, #022c22 100%)' 
+        },
+        love: { 
+          id: 'love', label: 'เสน่หา', icon: '💘', sub: 'Love', 
+          colorClass: 'border-[#f472b6]',
+          bgPattern: 'radial-gradient(circle at 50% 30%, #db2777 0%, #9d174d 60%, #500724 100%)'
+        },
+        work: { 
+          id: 'work', label: 'การงาน', icon: '💼', sub: 'Work', 
+          colorClass: 'border-[#60a5fa]',
+          bgPattern: 'radial-gradient(circle at 50% 30%, #2563eb 0%, #1e40af 60%, #172554 100%)'
+        },
+        health: { 
+          id: 'health', label: 'อายุวัฒนะ', icon: '🌿', sub: 'Health', 
+          colorClass: 'border-[#34d399]',
+          bgPattern: 'radial-gradient(circle at 50% 30%, #10b981 0%, #047857 60%, #064e3b 100%)'
+        },
+        power: { 
+          id: 'power', label: 'อำนาจ', icon: '🦁', sub: 'Power', 
+          colorClass: 'border-[#fb923c]',
+          bgPattern: 'radial-gradient(circle at 50% 30%, #ea580c 0%, #c2410c 60%, #7c2d12 100%)'
+        },
+        trade: { 
+          id: 'trade', label: 'ค้าขาย', icon: '⚖️', sub: 'Trade', 
+          colorClass: 'border-[#fb923c]',
+          bgPattern: 'radial-gradient(circle at 50% 30%, #ea580c 0%, #c2410c 60%, #7c2d12 100%)'
+        },
+        education: { 
+          id: 'education', label: 'การเรียน', icon: '🎓', sub: 'Education', 
+          colorClass: 'border-[#818cf8]',
+          bgPattern: 'radial-gradient(circle at 50% 30%, #4f46e5 0%, #4338ca 60%, #312e81 100%)'
+        },
+        mercy: { 
+          id: 'mercy', label: 'เมตตา', icon: '🤲', sub: 'Mercy', 
+          colorClass: 'border-[#e2e8f0]',
+          bgPattern: 'radial-gradient(circle at 50% 30%, #94a3b8 0%, #64748b 60%, #475569 100%)'
+        },
+        luck: { 
+          id: 'luck', label: 'โชคลาภ', icon: '🍀', sub: 'Luck', 
+          colorClass: 'border-[#facc15]',
+          bgPattern: 'radial-gradient(circle at 50% 30%, #ca8a04 0%, #a16207 60%, #713f12 100%)'
+        },
+        success: {
+          id: 'success', label: 'ความสำเร็จ', icon: '🏆', sub: 'Success',
+          colorClass: 'border-[#a855f7]',
+          bgPattern: 'radial-gradient(circle at 50% 30%, #581c87 0%, #3b0764 60%, #1e1b4b 100%)',
+          isNew: true
+        },
+        protection: {
+          id: 'protection', label: 'แคล้วคลาด', icon: '🛡️', sub: 'Protection',
+          colorClass: 'border-[#94a3b8]',
+          bgPattern: 'radial-gradient(circle at 50% 30%, #475569 0%, #334155 60%, #0f172a 100%)',
+          isNew: true
+        },
+        prestige: {
+          id: 'prestige', label: 'บารมี', icon: '🎖️', sub: 'Prestige',
+          colorClass: 'border-[#b91c1c]',
+          bgPattern: 'radial-gradient(circle at 50% 30%, #991b1b 0%, #7f1d1d 60%, #450a0a 100%)',
+          isNew: true
+        },
+        harmony: {
+          id: 'harmony', label: 'ร่มเย็น', icon: '🕊️', sub: 'Harmony',
+          colorClass: 'border-[#22c55e]',
+          bgPattern: 'radial-gradient(circle at 50% 30%, #15803d 0%, #166534 60%, #064e3b 100%)',
+          isNew: true
+        },
+        beginnings: {
+          id: 'beginnings', label: 'เริ่มต้นใหม่', icon: '🌱', sub: 'Beginnings',
+          colorClass: 'border-[#84cc16]',
+          bgPattern: 'radial-gradient(circle at 50% 30%, #65a30d 0%, #4d7c0f 60%, #365314 100%)',
+          isNew: true
+        }
+      };
+
+      const WALLPAPER_DB = {
+          sunday: {
+              wealth: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B8%AD%E0%B8%B2%E0%B8%97%E0%B8%B4%E0%B8%95%E0%B8%A2%E0%B9%8C/S__2908233_0.jpg?raw=true",
+              love: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B8%AD%E0%B8%B2%E0%B8%97%E0%B8%B4%E0%B8%95%E0%B8%A2%E0%B9%8C/S__2908234_0.jpg?raw=true",
+              work: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B8%AD%E0%B8%B2%E0%B8%97%E0%B8%B4%E0%B8%95%E0%B8%A2%E0%B9%8C/S__2908235_0.jpg?raw=true",
+              health: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B8%AD%E0%B8%B2%E0%B8%97%E0%B8%B4%E0%B8%95%E0%B8%A2%E0%B9%8C/S__2908236_0.jpg?raw=true"
+          },
+          monday: {
+              wealth: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B8%88%E0%B8%B1%E0%B8%99%E0%B8%97%E0%B8%A3%E0%B9%8C/S__2908191_0.jpg?raw=true",
+              love: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B8%88%E0%B8%B1%E0%B8%99%E0%B8%97%E0%B8%A3%E0%B9%8C/S__2908192_0.jpg?raw=true",
+              work: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B8%88%E0%B8%B1%E0%B8%99%E0%B8%97%E0%B8%A3%E0%B9%8C/S__2908193_0.jpg?raw=true",
+              health: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B8%88%E0%B8%B1%E0%B8%99%E0%B8%97%E0%B8%A3%E0%B9%8C/S__2908194_0.jpg?raw=true"
+          },
+          tuesday: {
+              wealth: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B8%AD%E0%B8%B1%E0%B8%87%E0%B8%84%E0%B8%B2%E0%B8%A3/S__2908197_0.jpg?raw=true",
+              love: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B8%AD%E0%B8%B1%E0%B8%87%E0%B8%84%E0%B8%B2%E0%B8%A3/S__2908198_0.jpg?raw=true",
+              work: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B8%AD%E0%B8%B1%E0%B8%87%E0%B8%84%E0%B8%B2%E0%B8%A3/S__2908199_0.jpg?raw=true",
+              health: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B8%AD%E0%B8%B1%E0%B8%87%E0%B8%84%E0%B8%B2%E0%B8%A3/S__2908200_0.jpg?raw=true"
+          },
+          wednesday_day: {
+              wealth: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B8%9E%E0%B8%B8%E0%B8%97%E0%B8%81%E0%B8%A5%E0%B8%B2%E0%B8%A7%E0%B8%A7%E0%B8%B1%E0%B8%99/S__2908204_0.jpg?raw=true",
+              love: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B8%9E%E0%B8%B8%E0%B8%97%E0%B8%81%E0%B8%A5%E0%B8%B2%E0%B8%A7%E0%B8%A7%E0%B8%B1%E0%B8%99/S__2908203_0.jpg?raw=true",
+              work: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B8%9E%E0%B8%B8%E0%B8%97%E0%B8%81%E0%B8%A5%E0%B8%B2%E0%B8%A7%E0%B8%A7%E0%B8%B1%E0%B8%99/S__2908205_0.jpg?raw=true",
+              health: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B8%9E%E0%B8%B8%E0%B8%97%E0%B8%81%E0%B8%A5%E0%B8%B2%E0%B8%A7%E0%B8%A7%E0%B8%B1%E0%B8%99/S__2908206_0.jpg?raw=true"
+          },
+          wednesday_night: {
+              wealth: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B8%9E%E0%B8%B8%E0%B8%97%E0%B8%81%E0%B8%A5%E0%B8%B2%E0%B8%87%E0%B8%84%E0%B8%B7%E0%B8%99/S__2908209_0.jpg?raw=true",
+              love: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B8%9E%E0%B8%B8%E0%B8%97%E0%B8%81%E0%B8%A5%E0%B8%B2%E0%B8%87%E0%B8%84%E0%B8%B7%E0%B8%99/S__2908210_0.jpg?raw=true",
+              work: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B8%9E%E0%B8%B8%E0%B8%97%E0%B8%81%E0%B8%A5%E0%B8%B2%E0%B8%87%E0%B8%84%E0%B8%B7%E0%B8%99/S__2908211_0.jpg?raw=true",
+              health: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B8%9E%E0%B8%B8%E0%B8%97%E0%B8%81%E0%B8%A5%E0%B8%B2%E0%B8%87%E0%B8%84%E0%B8%B7%E0%B8%99/S__2908212_0.jpg?raw=true"
+          },
+          thursday: {
+              wealth: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B8%9E%E0%B8%A4%E0%B8%AB%E0%B8%B1%E0%B8%AA%E0%B8%9A%E0%B8%94%E0%B8%B5/S__2908215_0.jpg?raw=true",
+              love: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B8%9E%E0%B8%A4%E0%B8%AB%E0%B8%B1%E0%B8%AA%E0%B8%9A%E0%B8%94%E0%B8%B5/S__2908216_0.jpg?raw=true",
+              work: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B8%9E%E0%B8%A4%E0%B8%AB%E0%B8%B1%E0%B8%AA%E0%B8%9A%E0%B8%94%E0%B8%B5/S__2908217_0.jpg?raw=true",
+              health: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B8%9E%E0%B8%A4%E0%B8%AB%E0%B8%B1%E0%B8%AA%E0%B8%9A%E0%B8%94%E0%B8%B5/S__2908218_0.jpg?raw=true"
+          },
+          friday: {
+              wealth: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B8%A8%E0%B8%B8%E0%B8%81%E0%B8%A3%E0%B9%8C/S__2908221_0.jpg?raw=true",
+              love: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B8%A8%E0%B8%B8%E0%B8%81%E0%B8%A3%E0%B9%8C/S__2908222_0.jpg?raw=true",
+              work: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B8%A8%E0%B8%B8%E0%B8%81%E0%B8%A3%E0%B9%8C/S__2908223_0.jpg?raw=true",
+              health: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B8%A8%E0%B8%B8%E0%B8%81%E0%B8%A3%E0%B9%8C/S__2908224_0.jpg?raw=true"
+          },
+          saturday: {
+              wealth: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B9%80%E0%B8%AA%E0%B8%B2%E0%B8%A3%E0%B9%8C/S__2908227_0.jpg?raw=true",
+              love: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B9%80%E0%B8%AA%E0%B8%B2%E0%B8%A3%E0%B9%8C/S__2908228_0.jpg?raw=true",
+              work: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B9%80%E0%B8%AA%E0%B8%B2%E0%B8%A3%E0%B9%8C/S__2908229_0.jpg?raw=true",
+              health: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B9%80%E0%B8%AA%E0%B8%B2%E0%B8%A3%E0%B9%8C/S__2908230_0.jpg?raw=true"
+          },
+          anyday: {
+              wealth: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908240_0.jpg?raw=true",
+              work: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908241_0.jpg?raw=true",
+              love: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908242_0.jpg?raw=true",
+              health: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908243_0.jpg?raw=true",
+              power: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908244_0.jpg?raw=true",
+              trade: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908245_0.jpg?raw=true",
+              education: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908246_0.jpg?raw=true",
+              mercy: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908248.jpg?raw=true",
+              luck: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908251.jpg?raw=true",
+              success: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__15785987.jpg?raw=true",
+              protection: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__15785988.jpg?raw=true",
+              prestige: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__15785989.jpg?raw=true",
+              harmony: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__15785990.jpg?raw=true",
+              beginnings: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__15785992.jpg?raw=true"
+          }
+      };
+
+      // --- COMPONENTS ---
+
+      const StarBackground = () => {
+        const [stars, setStars] = useState([]);
+
+        useEffect(() => {
+          const newStars = Array.from({ length: 30 }).map((_, i) => ({
+            id: i,
+            left: Math.random() * 100,
+            top: Math.random() * 100,
+            size: Math.random() * 3 + 1,
+            duration: Math.random() * 3 + 2,
+            delay: Math.random() * 5,
+            opacity: Math.random() * 0.5 + 0.3,
+          }));
+          setStars(newStars);
+        }, []);
+
+        return (
+          <div className="fixed top-0 left-0 w-full h-full pointer-events-none -z-10 overflow-hidden">
+            {stars.map((star) => (
+              <div
+                key={star.id}
+                className="star"
+                style={{
+                  left: `${star.left}%`,
+                  top: `${star.top}%`,
+                  width: `${star.size}px`,
+                  height: `${star.size}px`,
+                  '--duration': `${star.duration}s`,
+                  '--delay': `${star.delay}s`,
+                  '--opacity': star.opacity,
+                }}
+              />
+            ))}
+          </div>
+        );
+      };
+
+      const HomeView = ({ onNavigate, playSound }) => {
+        return (
+          <div className="w-full flex flex-col gap-6 animate-fade-in">
+            <div className="mystic-panel p-8 text-center relative overflow-hidden group border border-yellow-500/20 rounded-2xl bg-black/40 backdrop-blur-md">
+              <div className="absolute inset-0 bg-gradient-to-b from-purple-500/5 to-transparent pointer-events-none"></div>
+              <div className="relative z-10">
+                <div className="w-56 h-56 mx-auto mb-6 drop-shadow-[0_0_25px_rgba(212,175,55,0.4)]">
+                  <img src={LOGO_URL} className="w-full h-full object-contain" alt="Logo" />
+                </div>
+                <h2 className="text-2xl font-bold text-yellow-100 mb-2 font-cinzel">ยินดีต้อนรับสู่ MEEMON</h2>
+                <p className="text-sm text-gray-400 font-light leading-relaxed">ดวงชะตาฟ้าลิขิต หรือจิตท่านกำหนด</p>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <button
+                onClick={() => {
+                  playSound('click');
+                  onNavigate('fortune');
+                }}
+                className="btn-mystic w-full p-5 rounded-xl flex items-center justify-between group"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="bg-black/40 border border-purple-500/30 p-3 rounded-lg">
+                    <Eye className="text-purple-300 w-6 h-6" />
+                  </div>
+                  <div className="text-left">
+                    <h3 className="font-bold text-lg text-yellow-50">ทำนายดวงชะตา</h3>
+                    <p className="text-[10px] text-purple-200/60">Pick a Card</p>
+                  </div>
+                </div>
+                <ChevronRight className="text-purple-500/50 group-hover:text-yellow-400 transition-colors" />
+              </button>
+
+              <button
+                onClick={() => {
+                  playSound('click');
+                  onNavigate('wallpaper');
+                }}
+                className="btn-mystic w-full p-5 rounded-xl flex items-center justify-between group"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="bg-black/40 border border-teal-500/30 p-3 rounded-lg">
+                    <Smartphone className="text-teal-300 w-6 h-6" />
+                  </div>
+                  <div className="text-left">
+                    <h3 className="font-bold text-lg text-yellow-50">ยันต์วอลเปเปอร์</h3>
+                    <p className="text-[10px] text-teal-200/60">Sacred Wallpaper</p>
+                  </div>
+                </div>
+                <ChevronRight className="text-teal-500/50 group-hover:text-yellow-400 transition-colors" />
+              </button>
+            </div>
+          </div>
+        );
+      };
+
+      const FortuneView = ({ onBack, playSound }) => {
+        const [isFlipped, setIsFlipped] = useState(false);
+        const [cardData, setCardData] = useState(FORTUNE_CARDS[0]); 
+        const [animating, setAnimating] = useState(false);
+
+        const flipCard = () => {
+          if (isFlipped || animating) return;
+          
+          setAnimating(true);
+          playSound('flip');
+          
+          const randomCard = FORTUNE_CARDS[Math.floor(Math.random() * FORTUNE_CARDS.length)];
+          setCardData(randomCard);
+          
+          setIsFlipped(true);
+          setTimeout(() => setAnimating(false), 800);
+        };
+
+        const resetCard = () => {
+          if (animating) return;
+          setAnimating(true);
+          playSound('flip');
+          setIsFlipped(false);
+          setTimeout(() => setAnimating(false), 800);
+        };
+
+        return (
+          <div className="w-full flex flex-col items-center">
+            <button 
+              onClick={() => { playSound('click'); onBack(); }}
+              className="self-start mb-6 flex items-center text-xs text-yellow-500/70 hover:text-yellow-400 uppercase tracking-widest transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" /> Back
+            </button>
+
+            <div 
+              className="perspective-1000 w-64 h-96 cursor-pointer group mb-4" 
+              onClick={flipCard}
+            >
+              <div className={`card-inner w-full h-full relative text-center transition-transform duration-700 preserve-3d ${isFlipped ? 'rotate-y-180' : ''}`}>
+                {/* Front */}
+                <div className="card-front absolute w-full h-full backface-hidden bg-[#1a1a1a] border-2 border-[#d4af37] rounded-xl flex items-center justify-center shadow-2xl">
+                   <div className="w-[80%] h-[80%] border border-yellow-500/50 flex items-center justify-center relative">
+                     <div className="absolute w-[70%] h-[70%] border border-yellow-500/30 rotate-45"></div>
+                     
+                      <div className="text-center transform translate-y-2 z-10">
+                          <img src={LOGO_URL} className="w-32 h-32 mx-auto mb-4 object-contain opacity-90 drop-shadow-md" alt="Back" />
+                          <span className="font-cinzel text-yellow-600/80 font-bold tracking-[0.3em] text-2xl block">FATE</span>
+                          <div className="mt-4 w-20 h-[2px] bg-yellow-600/30 mx-auto"></div>
+                      </div>
+                   </div>
+                </div>
+
+                {/* Back */}
+                <div className="card-back absolute w-full h-full backface-hidden bg-gradient-to-br from-[#fffbeb] to-[#fef3c7] text-[#1e1b4b] rounded-xl flex flex-col items-center justify-between p-6 border-4 border-double border-[#d4af37] shadow-2xl rotate-y-180">
+                  <div className="w-full text-center border-b border-yellow-200 pb-2">
+                      <div className="text-[10px] text-gray-500 uppercase tracking-[0.2em] mb-1">The Oracle Says</div>
+                      <h3 className="text-xl font-bold text-slate-800 font-cinzel">{cardData.name}</h3>
+                  </div>
+                  <div className="text-5xl my-2 opacity-90">{cardData.icon}</div>
+                  <div className="text-center px-1 flex-grow flex items-center">
+                    <p className="text-sm text-slate-600 leading-7 font-light">{cardData.meaning}</p>
+                  </div>
+                  <div className="w-full border-t border-yellow-200 pt-2 flex justify-between items-center px-4">
+                    <span className="text-[10px] text-gray-400">Lucky No.</span>
+                    <span className="text-lg font-bold text-yellow-700">{cardData.lucky}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <p className={`text-xs text-purple-300/50 mb-6 italic transition-opacity duration-300 ${isFlipped ? 'opacity-0' : 'opacity-100'}`}>
+              แตะที่ไพ่เพื่อเปิดคำทำนาย
+            </p>
+
+            <button 
+              onClick={resetCard} 
+              disabled={!isFlipped}
+              className={`btn-mystic px-8 py-3 rounded-full text-sm font-bold text-yellow-100 border border-yellow-500/30 transition-all duration-300 ${!isFlipped ? 'opacity-0 pointer-events-none translate-y-4' : 'opacity-100 translate-y-0'}`}
+            >
+              สุ่มชะตาใหม่
+            </button>
+          </div>
+        );
+      };
+
+      const DAY_BUTTONS = [
+        { key: 'sunday', label: 'อาทิตย์', icon: '☀️', styleClass: 'bg-gradient-to-br from-red-800/40 to-red-950/60 text-red-300 border-red-500/30' },
+        { key: 'monday', label: 'จันทร์', icon: '🌕', styleClass: 'bg-gradient-to-br from-yellow-700/40 to-yellow-950/60 text-yellow-300 border-yellow-500/30' },
+        { key: 'tuesday', label: 'อังคาร', icon: '🌸', styleClass: 'bg-gradient-to-br from-pink-800/40 to-pink-950/60 text-pink-300 border-pink-500/30' },
+        { key: 'wednesday_day', label: 'พุธกลางวัน', icon: '🌳', styleClass: 'bg-gradient-to-br from-emerald-800/40 to-emerald-950/60 text-emerald-300 border-emerald-500/30' },
+        { key: 'wednesday_night', label: 'พุธกลางคืน', icon: '🌑', styleClass: 'bg-gradient-to-br from-slate-700/40 to-slate-900/60 text-slate-300 border-slate-500/30' },
+        { key: 'thursday', label: 'พฤหัสบดี', icon: '🧘', styleClass: 'bg-gradient-to-br from-orange-800/40 to-orange-950/60 text-orange-300 border-orange-500/30' },
+        { key: 'friday', label: 'ศุกร์', icon: '💎', styleClass: 'bg-gradient-to-br from-blue-800/40 to-blue-950/60 text-blue-300 border-blue-500/30' },
+        { key: 'saturday', label: 'เสาร์', icon: '🔥', styleClass: 'bg-gradient-to-br from-purple-800/40 to-purple-950/60 text-purple-300 border-purple-500/30' },
+        { key: 'anyday', label: 'ใช้ได้ทุกวัน', icon: '✨', styleClass: 'bg-white/5 text-white border-white/20 col-span-2 justify-center', isNew: true },
+      ];
+
+      const WallpaperView = ({ onBack, playSound }) => {
+        const [step, setStep] = useState('day');
+        const [selectedDay, setSelectedDay] = useState(null);
+        const [activeCardIndex, setActiveCardIndex] = useState(0);
+        const [isConsecrating, setIsConsecrating] = useState(false);
+        const [generatedImageUrl, setGeneratedImageUrl] = useState(null);
+        const [showToast, setShowToast] = useState(false);
+
+        const aspects = useMemo(() => {
+          if (!selectedDay) return [];
+          if (selectedDay === 'anyday') {
+            return Object.values(ASPECT_OPTIONS);
+          }
+          return [
+            ASPECT_OPTIONS.wealth,
+            ASPECT_OPTIONS.love,
+            ASPECT_OPTIONS.work,
+            ASPECT_OPTIONS.health
+          ];
+        }, [selectedDay]);
+
+        const handleDaySelect = (day) => {
+          playSound('click');
+          setSelectedDay(day);
+          setActiveCardIndex(0);
+          setStep('aspect');
+        };
+
+        const handleNextCard = () => {
+          playSound('flip');
+          setActiveCardIndex((prev) => (prev + 1) % aspects.length);
+        };
+
+        const handlePrevCard = () => {
+          playSound('flip');
+          setActiveCardIndex((prev) => (prev - 1 + aspects.length) % aspects.length);
+        };
+
+        const handleConsecrate = () => {
+          if (isConsecrating) return;
+          playSound('magic');
+          setIsConsecrating(true);
+
+          const aspect = aspects[activeCardIndex];
+          const url = WALLPAPER_DB[selectedDay]?.[aspect.id] || "https://via.placeholder.com/1080x1920?text=No+Image";
+
+          setTimeout(() => {
+            setGeneratedImageUrl(url);
+            playSound('success');
+            setShowToast(true);
+            setStep('result');
+            setIsConsecrating(false);
+            
+            setTimeout(() => setShowToast(false), 3000);
+          }, 1600);
+        };
+
+        const downloadImage = async () => {
+          if (!generatedImageUrl) return;
+          try {
+            const response = await fetch(generatedImageUrl);
+            const blob = await response.blob();
+            const blobUrl = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.download = `meemon-${selectedDay}.jpg`;
+            link.href = blobUrl;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(blobUrl);
+          } catch (e) {
+            const link = document.createElement('a');
+            link.download = `meemon-${selectedDay}.jpg`;
+            link.href = generatedImageUrl;
+            link.target = "_blank";
+            link.click();
+          }
+        };
+
+        if (step === 'day') {
+          return (
+            <div className="w-full flex flex-col items-center animate-fade-in">
+              <button onClick={() => { playSound('click'); onBack(); }} className="self-start mb-6 flex items-center text-xs text-yellow-500/70 hover:text-yellow-400 uppercase tracking-widest transition-colors"><ArrowLeft className="w-4 h-4 mr-2" /> Back</button>
+              
+              <div className="mystic-panel w-full p-6 mb-6 border border-yellow-500/20 bg-black/40">
+                <label className="block text-center text-sm text-yellow-100/90 uppercase tracking-wider mb-4 font-bold">เลือกวันเกิดของท่าน</label>
+                <div className="day-grid grid grid-cols-2 gap-3">
+                  {DAY_BUTTONS.map((btn) => (
+                    <button
+                      key={btn.key}
+                      onClick={() => handleDaySelect(btn.key)}
+                      className={`day-card-btn relative h-16 rounded-xl border flex items-center px-4 gap-3 overflow-hidden transition-all duration-300 hover:-translate-y-1 ${btn.styleClass}`}
+                    >
+                      <span className="text-2xl drop-shadow-md">{btn.icon}</span>
+                      <span className="text-sm font-bold uppercase tracking-wide">{btn.label}</span>
+                      {btn.isNew && (
+                        <div className="absolute top-0 right-0 bg-red-600 text-white text-[10px] px-2 py-0.5 rounded-bl-lg shadow-sm z-10 font-bold">
+                          ใหม่
+                        </div>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          );
+        }
+
+        if (step === 'aspect') {
+          return (
+            <div className="w-full flex flex-col items-center animate-fade-in relative">
+              <button 
+                  onClick={() => { playSound('click'); setStep('day'); }} 
+                  className="self-start mb-6 flex items-center text-xs text-yellow-500/70 hover:text-yellow-400 uppercase tracking-widest transition-colors"
+              >
+                  <ArrowLeft className="w-3 h-3 mr-1" /> เลือกวันใหม่
+              </button>
+
+              <div className="flex items-center justify-between w-full max-w-xs mb-2 z-20">
+                  <button onClick={handlePrevCard} className="p-3 bg-black/40 border border-white/20 rounded-full text-white/80 hover:bg-white/10 hover:text-yellow-400 transition-all active:scale-90"><ChevronLeft /></button>
+                  <h3 className="text-transparent bg-clip-text bg-gradient-to-b from-yellow-300 to-yellow-600 font-bold text-lg tracking-widest">เลือกไพ่ที่ปรารถนา</h3>
+                  <button onClick={handleNextCard} className="p-3 bg-black/40 border border-white/20 rounded-full text-white/80 hover:bg-white/10 hover:text-yellow-400 transition-all active:scale-90"><ChevronRight /></button>
+              </div>
+
+              <div className="stack-container relative w-[260px] h-[380px] my-6 z-10">
+                {aspects.map((aspect, index) => {
+                   let className = "stack-card absolute w-full h-full rounded-2xl border-2 flex flex-col items-center justify-center overflow-hidden cursor-pointer shadow-2xl bg-[#1a1a1a] ";
+                   
+                   const offset = (index - activeCardIndex + aspects.length) % aspects.length;
+                   let zIndex = 0;
+                   let transform = '';
+                   let opacity = 1;
+                   let filter = '';
+                   let pointerEvents = 'none';
+
+                   if (offset === 0) {
+                       zIndex = 20;
+                       transform = 'translateY(0) scale(1)';
+                       pointerEvents = 'auto';
+                       className += " active shadow-[0_0_35px_rgba(255,255,255,0.25)]";
+                       if (isConsecrating) className += " animate-consecrate";
+                   } else if (offset === 1) {
+                       zIndex = 10;
+                       transform = 'translateY(30px) scale(0.92)';
+                       filter = 'brightness(0.5)';
+                   } else if (offset === aspects.length - 1) {
+                       zIndex = 5;
+                       transform = 'translateY(50px) scale(0.85)';
+                       filter = 'brightness(0.3)';
+                       pointerEvents = 'auto';
+                   } else {
+                       zIndex = 0;
+                       transform = 'translateY(50px) scale(0.85)';
+                       opacity = 0;
+                   }
+
+                   return (
+                       <div
+                          key={aspect.id}
+                          className={`${className} ${aspect.colorClass}`}
+                          style={{ 
+                              zIndex, 
+                              transform, 
+                              opacity, 
+                              filter, 
+                              pointerEvents: pointerEvents,
+                              background: aspect.bgPattern
+                          }}
+                          onClick={() => {
+                              if (offset === 0) return;
+                              if (offset === 1) handleNextCard();
+                              else if (offset === aspects.length - 1) handlePrevCard();
+                              else {
+                                  setActiveCardIndex(index);
+                                  playSound('flip');
+                              }
+                          }}
+                       >
+                          <div className="absolute w-full h-full backface-hidden flex flex-col items-center justify-center">
+                              <div className="absolute inset-2 border-2 border-white/40 rounded-xl pointer-events-none"></div>
+                              <div className="text-6xl mb-4 drop-shadow-md">{aspect.icon}</div>
+                              <h3 className="font-bold text-2xl text-white tracking-wider drop-shadow-md font-cinzel">{aspect.label}</h3>
+                              <div className="w-12 h-[1px] bg-white/30 my-3"></div>
+                              <p className="text-xs text-white/50 uppercase tracking-[0.3em] font-sans">{aspect.sub}</p>
+                              
+                              {/* New Tag */}
+                              {aspect.isNew && (
+                                <div className="absolute top-4 right-4 bg-red-600 text-white text-xs px-3 py-1 rounded-full shadow-lg z-30 font-bold border border-white/20 animate-pulse">
+                                  ใหม่
+                                </div>
+                              )}
+                          </div>
+
+                          <div className="absolute w-full h-full backface-hidden rotate-y-180 bg-black border-2 border-[#d4af37] rounded-2xl overflow-hidden">
+                              {isConsecrating && generatedImageUrl && (
+                                   <img src={generatedImageUrl} className="w-full h-full object-cover" alt="Result" />
+                              )}
+                          </div>
+
+                           {offset === 0 && isConsecrating && (
+                              <div className="absolute inset-0 bg-white mix-blend-overlay animate-pulse"></div>
+                           )}
+                       </div>
+                   );
+                })}
+              </div>
+
+              <div className="text-xs text-white/40 mb-4 animate-pulse">แตะที่ไพ่ใบหลังเพื่อเปลี่ยน</div>
+
+              <button 
+                  onClick={handleConsecrate}
+                  disabled={isConsecrating}
+                  className="mt-2 w-full max-w-xs bg-gradient-to-r from-yellow-700 to-yellow-600 hover:from-yellow-600 hover:to-yellow-500 text-white font-bold py-4 rounded-full shadow-lg shadow-yellow-900/40 transition-all border border-yellow-400/30 active:scale-95 flex items-center justify-center gap-2 group z-20"
+              >
+                  <Sparkles className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+                  <span>{isConsecrating ? 'กำลังปลุกเสก...' : 'ปลุกเสกวอลเปเปอร์'}</span>
+              </button>
+
+              <div className={`fixed inset-0 z-40 bg-white/20 mix-blend-overlay transition-opacity duration-500 pointer-events-none ${isConsecrating ? 'opacity-100' : 'opacity-0'}`}></div>
+            </div>
+          );
+        }
+
+        return (
+          <div className="w-full flex flex-col items-center animate-fade-in pb-10">
+            <div className={`fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-[#333] text-white px-6 py-4 rounded-xl border border-yellow-500 shadow-2xl flex items-center gap-3 transition-all duration-300 ${showToast ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'}`}>
+                <CheckCircle className="text-green-400 w-6 h-6" />
+                <div className="text-center">
+                  <p className="font-bold text-yellow-400 text-sm">ปลุกเสกสำเร็จ!</p>
+                  <p className="text-xs text-gray-400">กดที่รูปภาพค้างไว้เพื่อดาวน์โหลด</p>
+                </div>
+            </div>
+
+            <button onClick={() => { playSound('click'); setStep('aspect'); }} className="self-start mb-4 flex items-center text-xs text-yellow-500/70 hover:text-yellow-400 uppercase tracking-widest transition-colors"><ArrowLeft className="w-3 h-3 mr-1" /> เปลี่ยนคำขอ</button>
+            
+            <div className="relative w-2/3 group mb-4 cursor-pointer" onClick={downloadImage}>
+                <div className="absolute -inset-1 bg-gradient-to-r from-yellow-600 to-purple-600 rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
+                {generatedImageUrl && (
+                  <img src={generatedImageUrl} className="relative w-full rounded-xl shadow-2xl border border-white/10" alt="Sacred Wallpaper" />
+                )}
+            </div>
+            
+            <div className="text-center space-y-1">
+                <p className="text-xs text-yellow-200/80">แตะค้างที่รูปเพื่อดาวน์โหลด</p>
+                <p className="text-[10px] text-gray-500 uppercase tracking-widest">Sacred Image Generated</p>
+            </div>
+          </div>
+        );
+      };
+
+      // --- APP COMPONENT ---
+
+      function App() {
+        const [currentView, setCurrentView] = useState('home');
+        const soundsRef = useRef({});
+
+        useEffect(() => {
+          Object.entries(SOUNDS).forEach(([key, url]) => {
+            soundsRef.current[key] = new Audio(url);
+          });
+        }, []);
+
+        const playSound = (type) => {
+          const audio = soundsRef.current[type];
+          if (audio) {
+            audio.currentTime = 0;
+            audio.play().catch(e => console.log('Audio blocked:', e));
+          }
+        };
+
+        return (
+          <div className="flex flex-col items-center justify-between p-4 min-h-screen relative z-0">
+            <StarBackground />
+            
+            <header className="w-full text-center py-6 z-10">
+              <div className="inline-flex items-center gap-3 mb-2">
+                  <img src={LOGO_URL} alt="Logo" className="w-16 h-16 object-contain drop-shadow-md" />
+                  <h1 className="text-5xl font-bold tracking-widest text-transparent bg-clip-text bg-gradient-to-b from-[#ffd700] to-[#b8860b] drop-shadow-md mt-2 font-cinzel">MEEMON</h1>
+                  <img src={LOGO_URL} alt="Logo" className="w-16 h-16 object-contain drop-shadow-md" />
+              </div>
+              <div className="flex items-center justify-center gap-2 opacity-60">
+                  <div className="h-[1px] w-8 bg-gradient-to-r from-transparent to-yellow-500"></div>
+                  <p className="text-[10px] tracking-[0.2em] text-yellow-100 uppercase font-light">Destiny & Faith</p>
+                  <div className="h-[1px] w-8 bg-gradient-to-l from-transparent to-yellow-500"></div>
+              </div>
+            </header>
+
+            <main className="w-full max-w-md flex-grow flex flex-col items-center justify-center relative z-10">
+              {currentView === 'home' && (
+                <HomeView onNavigate={setCurrentView} playSound={playSound} />
+              )}
+              {currentView === 'fortune' && (
+                <FortuneView onBack={() => setCurrentView('home')} playSound={playSound} />
+              )}
+              {currentView === 'wallpaper' && (
+                <WallpaperView onBack={() => setCurrentView('home')} playSound={playSound} />
+              )}
+            </main>
+
+            <footer className="mt-8 text-center pb-4 z-10">
+              <p className="text-[10px] text-white/20 uppercase tracking-[0.3em] font-sans">MEEMON Card</p>
+            </footer>
+          </div>
+        );
+      }
+
+      // --- MOUNT ---
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>
+      );
+    </script>
+  </body>
+</html>
