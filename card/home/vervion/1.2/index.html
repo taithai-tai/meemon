@@ -11,13 +11,13 @@
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
     
-    <!-- Babel Standalone (must be before scripts) -->
+    <!-- Babel Standalone -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <style>
       :root {
         --gold: #d4af37;
-        --gold-glow: 0 0 15px rgba(212, 175, 55, 0.3);
+        --gold-glow: 0 0 20px rgba(212, 175, 55, 0.4);
       }
       body {
         font-family: 'Prompt', sans-serif;
@@ -51,7 +51,7 @@
       .btn-mystic {
         background: linear-gradient(180deg, #2d1b4e 0%, #1a0b2e 100%);
         border: 1px solid rgba(212, 175, 55, 0.4);
-        transition: all 0.3s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
       .btn-mystic:hover { border-color: var(--gold); box-shadow: var(--gold-glow); transform: translateY(-2px); }
       
@@ -85,14 +85,13 @@
       .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
       @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-      /* Custom pulse for "ใหม่" tags */
       .badge-pulse {
         animation: badgePulse 2s infinite;
       }
       @keyframes badgePulse {
-        0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-        70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
-        100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        0% { transform: scale(1); filter: brightness(1); }
+        50% { transform: scale(1.05); filter: brightness(1.3); box-shadow: 0 0 15px rgba(239, 68, 68, 0.6); }
+        100% { transform: scale(1); filter: brightness(1); }
       }
     </style>
 
@@ -103,6 +102,7 @@
     "react-dom": "https://esm.sh/react-dom@18.2.0",
     "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
     "lucide-react": "https://esm.sh/lucide-react@0.263.1",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
     "react/": "https://esm.sh/react@^19.2.4/"
   }
 }
@@ -111,23 +111,8 @@
   <body>
     <div id="root"></div>
     <!-- 
-      Using type="text/babel" and data-type="module" allows Babel-standalone 
-      to handle 'import' statements correctly within the browser.
+      Using data-type="module" is critical for Babel to handle 'import' statements correctly.
     -->
-    <script type="text/babel" data-type="module">
-      import React from 'react';
-      import ReactDOM from 'react-dom/client';
-      import App from './App.tsx';
-
-      const rootElement = document.getElementById('root');
-      if (rootElement) {
-        const root = ReactDOM.createRoot(rootElement);
-        root.render(
-          <React.StrictMode>
-            <App />
-          </React.StrictMode>
-        );
-      }
-    </script>
+    <script type="text/babel" data-type="module" src="index.tsx"></script>
   </body>
 </html>
