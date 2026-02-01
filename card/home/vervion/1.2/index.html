@@ -11,15 +11,8 @@
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
     
-    <!-- React & ReactDOM (Global version for stability) -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    
-    <!-- Babel Standalone -->
+    <!-- Babel Standalone (must be before scripts) -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
       :root {
@@ -35,6 +28,7 @@
         overflow-x: hidden;
       }
       .font-cinzel { font-family: 'Cinzel', serif; }
+      
       .star {
         position: absolute;
         background: white;
@@ -48,16 +42,19 @@
         50% { opacity: var(--opacity); transform: scale(1.2); }
         100% { opacity: 0; transform: scale(0.5); }
       }
+      
       .perspective-1000 { perspective: 1000px; }
       .preserve-3d { transform-style: preserve-3d; }
       .backface-hidden { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
       .rotate-y-180 { transform: rotateY(180deg); }
+      
       .btn-mystic {
         background: linear-gradient(180deg, #2d1b4e 0%, #1a0b2e 100%);
         border: 1px solid rgba(212, 175, 55, 0.4);
         transition: all 0.3s ease;
       }
       .btn-mystic:hover { border-color: var(--gold); box-shadow: var(--gold-glow); transform: translateY(-2px); }
+      
       .stack-container { perspective: 1200px; }
       .stack-card { transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1); transform-style: preserve-3d; }
       
@@ -87,44 +84,50 @@
       
       .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
       @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+      /* Custom pulse for "ใหม่" tags */
+      .badge-pulse {
+        animation: badgePulse 2s infinite;
+      }
+      @keyframes badgePulse {
+        0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+        70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+        100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+      }
     </style>
-  <script type="importmap">
+
+    <script type="importmap">
 {
   "imports": {
-    "react": "https://esm.sh/react@^19.2.4",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
-    "react/": "https://esm.sh/react@^19.2.4/",
-    "lucide-react": "https://esm.sh/lucide-react@^0.563.0"
+    "react": "https://esm.sh/react@18.2.0",
+    "react-dom": "https://esm.sh/react-dom@18.2.0",
+    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+    "lucide-react": "https://esm.sh/lucide-react@0.263.1",
+    "react/": "https://esm.sh/react@^19.2.4/"
   }
 }
 </script>
-</head>
+  </head>
   <body>
     <div id="root"></div>
-    <!-- Babel configuration to find external modules correctly -->
-    <script type="text/babel" data-presets="react,typescript">
-      // Map global React to window for Babel
-      const { useState, useEffect, useRef, useMemo } = React;
-      
-      // Load icons as components
-      const { Eye, Smartphone, ChevronRight, ArrowLeft, ChevronLeft, Sparkles, CheckCircle } = {
-        Eye: (props) => <i data-lucide="eye" {...props}></i>,
-        Smartphone: (props) => <i data-lucide="smartphone" {...props}></i>,
-        ChevronRight: (props) => <i data-lucide="chevron-right" {...props}></i>,
-        ChevronLeft: (props) => <i data-lucide="chevron-left" {...props}></i>,
-        ArrowLeft: (props) => <i data-lucide="arrow-left" {...props}></i>,
-        Sparkles: (props) => <i data-lucide="sparkles" {...props}></i>,
-        CheckCircle: (props) => <i data-lucide="check-circle" {...props}></i>,
-      };
-
-      // Import the consolidated logic
+    <!-- 
+      Using type="text/babel" and data-type="module" allows Babel-standalone 
+      to handle 'import' statements correctly within the browser.
+    -->
+    <script type="text/babel" data-type="module">
+      import React from 'react';
+      import ReactDOM from 'react-dom/client';
       import App from './App.tsx';
-      
-      const root = ReactDOM.createRoot(document.getElementById('root'));
-      root.render(<App />);
-      
-      // Initialize Lucide after each render
-      setTimeout(() => lucide.createIcons(), 100);
+
+      const rootElement = document.getElementById('root');
+      if (rootElement) {
+        const root = ReactDOM.createRoot(rootElement);
+        root.render(
+          <React.StrictMode>
+            <App />
+          </React.StrictMode>
+        );
+      }
     </script>
   </body>
 </html>
