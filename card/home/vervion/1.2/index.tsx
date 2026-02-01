@@ -1,7 +1,6 @@
-
-// Add missing imports for React and ReactDOM
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import ReactDOM from 'react-dom/client';
+import { Eye, Smartphone, ChevronRight, ArrowLeft, ChevronLeft, Sparkles, CheckCircle } from 'lucide-react';
 
 // --- Constants ---
 const LOGO_URL = "https://raw.githubusercontent.com/taithai-tai/meemon/refs/heads/main/Picture/logo.png";
@@ -120,28 +119,7 @@ const DAY_BUTTONS = [
   { key: 'anyday', label: 'ใช้ได้ทุกวัน', icon: '✨', styleClass: 'bg-white/5 text-white border-white/20 col-span-2 justify-center', isNew: true },
 ];
 
-// --- Components ---
-// Fix Lucide components destructuring with a fallback for missing window.lucide
-const LucideIcons = (window as any).lucide ? {
-  Eye: (p: any) => <i {...p} data-lucide="eye"></i>,
-  Smartphone: (p: any) => <i {...p} data-lucide="smartphone"></i>,
-  ChevronRight: (p: any) => <i {...p} data-lucide="chevron-right"></i>,
-  ChevronLeft: (p: any) => <i {...p} data-lucide="chevron-left"></i>,
-  ArrowLeft: (p: any) => <i {...p} data-lucide="arrow-left"></i>,
-  Sparkles: (p: any) => <i {...p} data-lucide="sparkles"></i>,
-  CheckCircle: (p: any) => <i {...p} data-lucide="check-circle"></i>,
-} : {
-  Eye: (p: any) => <span {...p} />,
-  Smartphone: (p: any) => <span {...p} />,
-  ChevronRight: (p: any) => <span {...p} />,
-  ChevronLeft: (p: any) => <span {...p} />,
-  ArrowLeft: (p: any) => <span {...p} />,
-  Sparkles: (p: any) => <span {...p} />,
-  CheckCircle: (p: any) => <span {...p} />,
-};
-
-const { Eye, Smartphone, ChevronRight, ArrowLeft, ChevronLeft, Sparkles, CheckCircle } = LucideIcons;
-
+// --- Star Background Component ---
 const StarBackground = () => {
   const [stars, setStars] = useState<any[]>([]);
   useEffect(() => {
@@ -154,13 +132,13 @@ const StarBackground = () => {
   return (
     <div className="fixed top-0 left-0 w-full h-full pointer-events-none -z-10 overflow-hidden">
       {stars.map((star) => (
-        // Fix style casting for CSS custom properties
         <div key={star.id} className="star" style={{ left: `${star.left}%`, top: `${star.top}%`, width: `${star.size}px`, height: `${star.size}px`, '--duration': `${star.duration}s`, '--delay': `${star.delay}s`, '--opacity': star.opacity } as any} />
       ))}
     </div>
   );
 };
 
+// --- View Components ---
 const HomeView = ({ onNavigate, playSound }: any) => (
   <div className="w-full flex flex-col gap-6 animate-fade-in">
     <div className="mystic-panel p-8 text-center relative overflow-hidden group border border-yellow-500/20 rounded-2xl bg-black/40 backdrop-blur-md">
@@ -197,20 +175,20 @@ const FortuneView = ({ onBack, playSound }: any) => {
   const resetCard = () => { if (animating) return; setAnimating(true); playSound('flip'); setIsFlipped(false); setTimeout(() => setAnimating(false), 800); };
   return (
     <div className="w-full flex flex-col items-center">
-      <button onClick={() => { playSound('click'); onBack(); }} className="self-start mb-6 flex items-center text-xs text-yellow-500/70 hover:text-yellow-400 uppercase tracking-widest"><ArrowLeft className="w-4 h-4 mr-2" /> Back</button>
+      <button onClick={() => { playSound('click'); onBack(); }} className="self-start mb-6 flex items-center text-xs text-yellow-500/70 hover:text-yellow-400 uppercase tracking-widest transition-colors"><ArrowLeft className="w-4 h-4 mr-2" /> Back</button>
       <div className="perspective-1000 w-64 h-96 cursor-pointer group mb-4" onClick={flipCard}>
         <div className={`card-inner w-full h-full relative text-center transition-transform duration-700 preserve-3d ${isFlipped ? 'rotate-y-180' : ''}`}>
           <div className="card-front absolute w-full h-full backface-hidden bg-[#1a1a1a] border-2 border-[#d4af37] rounded-xl flex items-center justify-center shadow-2xl">
             <div className="w-[85%] h-[85%] border border-yellow-500/30 flex items-center justify-center relative">
               <div className="absolute w-[70%] h-[70%] border border-yellow-500/20 rotate-45"></div>
-              <div className="text-center z-10"><img src={LOGO_URL} className="w-24 h-24 mx-auto mb-4 object-contain opacity-90" /><span className="font-cinzel text-yellow-600/80 font-bold tracking-[0.3em] text-2xl block">FATE</span></div>
+              <div className="text-center z-10"><img src={LOGO_URL} className="w-24 h-24 mx-auto mb-4 object-contain opacity-90" alt="Card Back" /><span className="font-cinzel text-yellow-600/80 font-bold tracking-[0.3em] text-2xl block">FATE</span></div>
             </div>
           </div>
           <div className="card-back absolute w-full h-full backface-hidden bg-gradient-to-br from-[#fffbeb] to-[#fef3c7] text-[#1e1b4b] rounded-xl flex flex-col items-center justify-between p-6 border-4 border-double border-[#d4af37] shadow-2xl rotate-y-180">
-            <div className="w-full text-center border-b border-yellow-200 pb-2"><h3 className="text-xl font-bold font-cinzel">{cardData.name}</h3></div>
+            <div className="w-full text-center border-b border-yellow-200 pb-2"><h3 className="text-xl font-bold font-cinzel text-slate-800">{cardData.name}</h3></div>
             <div className="text-5xl my-2">{cardData.icon}</div>
-            <p className="text-sm text-center leading-7 font-light">{cardData.meaning}</p>
-            <div className="w-full border-t border-yellow-200 pt-2 flex justify-between items-center px-4"><span className="text-[10px] text-gray-400">Lucky No.</span><span className="text-lg font-bold text-yellow-700">{cardData.lucky}</span></div>
+            <div className="flex-grow flex items-center"><p className="text-sm text-center leading-7 font-light text-slate-600">{cardData.meaning}</p></div>
+            <div className="w-full border-t border-yellow-200 pt-2 flex justify-between items-center px-4"><span className="text-[10px] text-gray-400 uppercase">Lucky No.</span><span className="text-lg font-bold text-yellow-700">{cardData.lucky}</span></div>
           </div>
         </div>
       </div>
@@ -231,7 +209,7 @@ const WallpaperView = ({ onBack, playSound }: any) => {
   
   if (step === 'day') return (
     <div className="w-full flex flex-col items-center animate-fade-in px-2">
-      <button onClick={() => { playSound('click'); onBack(); }} className="self-start mb-6 flex items-center text-xs text-yellow-500/70 uppercase tracking-widest"><ArrowLeft className="w-4 h-4 mr-2" /> Back</button>
+      <button onClick={() => { playSound('click'); onBack(); }} className="self-start mb-6 flex items-center text-xs text-yellow-500/70 hover:text-yellow-400 uppercase tracking-widest"><ArrowLeft className="w-4 h-4 mr-2" /> Back</button>
       <div className="mystic-panel w-full p-6 border border-yellow-500/20 bg-black/40 rounded-2xl">
         <label className="block text-center text-sm text-yellow-100 uppercase mb-4 font-bold">เลือกวันเกิดของท่าน</label>
         <div className="day-grid grid grid-cols-2 gap-3">
@@ -248,11 +226,11 @@ const WallpaperView = ({ onBack, playSound }: any) => {
   );
   if (step === 'aspect') return (
     <div className="w-full flex flex-col items-center animate-fade-in px-2 relative">
-      <button onClick={() => setStep('day')} className="self-start mb-6 flex items-center text-xs text-yellow-500/70"><ArrowLeft className="w-3 h-3 mr-1" /> เลือกวันใหม่</button>
+      <button onClick={() => setStep('day')} className="self-start mb-6 flex items-center text-xs text-yellow-500/70 hover:text-yellow-400 uppercase transition-colors"><ArrowLeft className="w-3 h-3 mr-1" /> เลือกวันใหม่</button>
       <div className="flex items-center justify-between w-full max-w-xs mb-2 z-20">
-          <button onClick={() => { playSound('flip'); setActiveCardIndex(p => (p - 1 + aspects.length) % aspects.length); }} className="p-3 bg-black/40 border border-white/20 rounded-full text-white/80 active:scale-90"><ChevronLeft className="w-6 h-6" /></button>
+          <button onClick={() => { playSound('flip'); setActiveCardIndex(p => (p - 1 + aspects.length) % aspects.length); }} className="p-3 bg-black/40 border border-white/20 rounded-full text-white/80 active:scale-90 transition-all"><ChevronLeft className="w-6 h-6" /></button>
           <h3 className="text-transparent bg-clip-text bg-gradient-to-b from-yellow-300 to-yellow-600 font-bold text-lg tracking-widest text-center">เลือกความปรารถนา</h3>
-          <button onClick={() => { playSound('flip'); setActiveCardIndex(p => (p + 1) % aspects.length); }} className="p-3 bg-black/40 border border-white/20 rounded-full text-white/80 active:scale-90"><ChevronRight className="w-6 h-6" /></button>
+          <button onClick={() => { playSound('flip'); setActiveCardIndex(p => (p + 1) % aspects.length); }} className="p-3 bg-black/40 border border-white/20 rounded-full text-white/80 active:scale-90 transition-all"><ChevronRight className="w-6 h-6" /></button>
       </div>
       <div className="stack-container relative w-[260px] h-[380px] my-6 z-10">
         {aspects.map((aspect: any, index: number) => {
@@ -265,47 +243,49 @@ const WallpaperView = ({ onBack, playSound }: any) => {
                 <div className="text-6xl mb-4 drop-shadow-md">{aspect.icon}</div>
                 <h3 className="font-bold text-2xl text-white tracking-wider font-cinzel text-center px-4">{aspect.label}</h3>
                 <p className="text-xs text-white/50 uppercase tracking-[0.3em] mt-2">{aspect.sub}</p>
-                {/* Fix isNew property access on aspect union */}
                 {aspect.isNew && <div className="new-ribbon badge-pulse">NEW</div>}
              </div>
            );
         })}
       </div>
-      <button onClick={() => { playSound('magic'); setIsConsecrating(true); setTimeout(() => { setGeneratedImageUrl((WALLPAPER_DB as any)[selectedDay!]?.[aspects[activeCardIndex].id] || WALLPAPER_DB.anyday[aspects[activeCardIndex].id]); playSound('success'); setShowToast(true); setStep('result'); setIsConsecrating(false); setTimeout(() => setShowToast(false), 3000); }, 1600); }} disabled={isConsecrating} className="mt-2 w-full max-w-xs bg-yellow-600 hover:bg-yellow-500 text-white font-bold py-4 rounded-full shadow-lg flex items-center justify-center gap-2 z-20"><Sparkles className="w-5 h-5" /> {isConsecrating ? 'กำลังปลุกเสก...' : 'ปลุกเสกวอลเปเปอร์'}</button>
+      <button onClick={() => { playSound('magic'); setIsConsecrating(true); setTimeout(() => { setGeneratedImageUrl((WALLPAPER_DB as any)[selectedDay!]?.[aspects[activeCardIndex].id] || (WALLPAPER_DB as any).anyday[aspects[activeCardIndex].id]); playSound('success'); setShowToast(true); setStep('result'); setIsConsecrating(false); setTimeout(() => setShowToast(false), 3000); }, 1600); }} disabled={isConsecrating} className="mt-2 w-full max-w-xs bg-gradient-to-r from-yellow-700 to-yellow-600 hover:from-yellow-600 hover:to-yellow-500 text-white font-bold py-4 rounded-full shadow-lg flex items-center justify-center gap-2 z-20 group"><Sparkles className="w-5 h-5 group-hover:rotate-12 transition-transform" /> <span>{isConsecrating ? 'กำลังปลุกเสก...' : 'ปลุกเสกวอลเปเปอร์'}</span></button>
     </div>
   );
   return (
     <div className="w-full flex flex-col items-center animate-fade-in pb-10 px-2">
-      <div className={`fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-[#333] text-white px-6 py-4 rounded-xl border border-yellow-500 shadow-2xl flex items-center gap-3 transition-all duration-300 ${showToast ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'}`}><CheckCircle className="text-green-400" /> ปลุกเสกสำเร็จ!</div>
-      <button onClick={() => setStep('aspect')} className="self-start mb-4 text-xs text-yellow-500/70"><ArrowLeft className="w-3 h-3 mr-1" /> เปลี่ยนคำขอ</button>
-      <img src={generatedImageUrl} className="w-2/3 rounded-xl shadow-2xl border border-white/10 mb-4 cursor-pointer" onClick={() => window.open(generatedImageUrl, '_blank')} />
+      <div className={`fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-[#333] text-white px-6 py-4 rounded-xl border border-yellow-500 shadow-2xl flex items-center gap-3 transition-all duration-300 ${showToast ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'}`}><CheckCircle className="text-green-400 w-6 h-6" /> ปลุกเสกสำเร็จ!</div>
+      <button onClick={() => setStep('aspect')} className="self-start mb-4 text-xs text-yellow-500/70 uppercase transition-colors"><ArrowLeft className="w-3 h-3 mr-1" /> เปลี่ยนคำขอ</button>
+      <div className="relative w-full max-w-[280px] group mb-4 cursor-pointer" onClick={() => window.open(generatedImageUrl, '_blank')}>
+          <img src={generatedImageUrl} className="relative w-full rounded-xl shadow-2xl border border-white/10" alt="Sacred Wallpaper" />
+      </div>
       <p className="text-xs text-yellow-200/80 text-center">แตะที่รูปเพื่อดูภาพขนาดเต็มและดาวน์โหลด</p>
     </div>
   );
 };
 
+// --- App Component ---
 function App() {
   const [currentView, setCurrentView] = useState('home');
   const soundsRef = useRef<any>({});
+  
   useEffect(() => { 
-    Object.entries(SOUNDS).forEach(([k, u]) => (soundsRef.current as any)[k] = new Audio(u)); 
-    setTimeout(() => { 
-      // Fix window.lucide check
-      if ((window as any).lucide) (window as any).lucide.createIcons(); 
-    }, 100); 
+    Object.entries(SOUNDS).forEach(([k, u]) => soundsRef.current[k] = new Audio(u));
   }, []);
+
   const playSound = (t: string) => { 
-    const a = (soundsRef.current as any)[t]; 
-    if (a) { 
-      a.currentTime = 0; 
-      a.play().catch(() => {}); 
-    } 
+    const a = soundsRef.current[t]; 
+    if (a) { a.currentTime = 0; a.play().catch(() => {}); } 
   };
+
   return (
     <div className="flex flex-col items-center justify-between p-4 min-h-screen relative z-0">
       <StarBackground />
       <header className="w-full text-center py-6 z-10">
-        <div className="inline-flex items-center gap-3 mb-2"><img src={LOGO_URL} className="w-16 h-16 object-contain" /><h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-[#ffd700] to-[#b8860b] font-cinzel tracking-widest">MEEMON</h1><img src={LOGO_URL} className="w-16 h-16 object-contain" /></div>
+        <div className="inline-flex items-center gap-3 mb-2">
+            <img src={LOGO_URL} className="w-16 h-16 object-contain" alt="Logo" />
+            <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-[#ffd700] to-[#b8860b] font-cinzel tracking-widest mt-2">MEEMON</h1>
+            <img src={LOGO_URL} className="w-16 h-16 object-contain" alt="Logo" />
+        </div>
         <p className="text-[10px] tracking-[0.2em] text-yellow-100 uppercase opacity-60 font-light">Destiny & Faith</p>
       </header>
       <main className="w-full max-w-md flex-grow flex flex-col items-center justify-center z-10">
@@ -313,12 +293,12 @@ function App() {
         {currentView === 'fortune' && <FortuneView onBack={() => setCurrentView('home')} playSound={playSound} />}
         {currentView === 'wallpaper' && <WallpaperView onBack={() => setCurrentView('home')} playSound={playSound} />}
       </main>
-      <footer className="mt-8 text-center pb-4 opacity-20 text-[10px] tracking-[0.3em] uppercase">MEEMON Card</footer>
+      <footer className="mt-8 text-center pb-4 opacity-20 text-[10px] tracking-[0.3em] uppercase z-10">MEEMON Card</footer>
     </div>
   );
 }
 
-// Fix ReactDOM usage for React 18
+// Initial Render
 const rootElement = document.getElementById('root');
 if (rootElement) {
   const root = ReactDOM.createRoot(rootElement);
