@@ -443,7 +443,13 @@ body::after { content:''; position:fixed; inset:0; z-index:1; pointer-events:non
         >
         <div class="result-badge">✦ SACRED WALLPAPER ✦</div>
       </div>
-      <button id="r-dl" class="btn-gold dl-btn" onclick="doDownload()">⬇ &nbsp;ดาวน์โหลด</button>
+      <div style="margin-bottom:4px;padding:16px 20px;border-radius:16px;background:rgba(212,175,55,0.07);border:1px solid rgba(212,175,55,0.2);text-align:center;">
+        <div style="font-size:1.2rem;margin-bottom:8px;">💡</div>
+        <div style="font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.1em;color:var(--gold);margin-bottom:6px;">วิธีบันทึกรูปภาพ</div>
+        <div style="font-size:0.78rem;color:rgba(212,175,55,0.6);line-height:1.8;font-weight:300;">
+          กดค้างที่รูปภาพด้านบน<br>แล้วเลือก <strong style="color:var(--gold);">"บันทึกรูปภาพ"</strong><br>เพื่อดาวน์โหลดลงเครื่อง
+        </div>
+      </div>
       <div class="divider"><div class="div-line"></div><div class="div-orn">✦ ✦ ✦</div><div class="div-line"></div></div>
       <button class="btn-ghost" onclick="resetWP()">↩ เริ่มใหม่</button>
     </div>
@@ -671,39 +677,10 @@ function showResult(){
   const dl=DAYS.find(d=>d.id===selDay);
   document.getElementById('r-sub').textContent='วันเกิด: '+(selDay==='anyday'?'ทุกวัน':(dl?.thai||''))+'  •  ด้าน: '+a.name;
   document.getElementById('r-img').src=url;
-  document.getElementById('r-dl')._url=url;document.getElementById('r-dl')._name='meemon-'+a.name+'.jpg';
+
   toast('🧧 ได้รับยันต์มงคลแล้ว!','#d4af37');
 }
 
-function doDownload(){
-  const btn = document.getElementById('r-dl');
-  const url = btn._url;
-  const name = btn._name || 'meemon-wallpaper.jpg';
-  if(!url){ toast('ไม่พบรูปภาพ','#ef4444'); return; }
-  btn.textContent = '⏳ กำลังโหลด...';
-  btn.disabled = true;
-  fetch(url)
-    .then(r => { if(!r.ok) throw new Error('fetch failed'); return r.blob(); })
-    .then(blob => {
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = name;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      setTimeout(() => URL.revokeObjectURL(a.href), 5000);
-      btn.innerHTML = '⬇ &nbsp;ดาวน์โหลด';
-      btn.disabled = false;
-      toast('💾 บันทึกสำเร็จ!', '#4ade80');
-    })
-    .catch(() => {
-      // fallback: open in new tab
-      window.open(url, '_blank');
-      btn.innerHTML = '⬇ &nbsp;ดาวน์โหลด';
-      btn.disabled = false;
-      toast('📂 เปิดในแท็บใหม่แล้ว กด hold เพื่อบันทึก', '#d4af37');
-    });
-}
 
 function resetWP(){snd('click');initWP();}
 </script>
