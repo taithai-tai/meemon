@@ -5,8 +5,8 @@
     <script>
       window.onload = () => {
         Token.create({
-          target: "/NFCV.2/home/index.html"
-          // หรือ "/NFCV.2/home/" ถ้ามี index.html อยู่ในนั้น
+          target: "./index.html"
+          // ใช้ path แบบ relative เพื่อรองรับทั้ง /NFCV.2/home/ และ /meemon/NFCV.2/home/
         });
       };
     </script>
