@@ -6,17 +6,17 @@
   <title>MeeMon | ดูดวงออนไลน์</title>
   <style>
     :root {
-      --bg: #07070d;
-      --bg-soft: #111322;
-      --card: #171a2b;
+      --bg: #070910;
+      --bg2: #101626;
+      --card: #151b2d;
       --text: #f8fbff;
-      --muted: #9ca5be;
-      --gold: #f5c056;
-      --gold-2: #ffd98a;
-      --line: rgba(255,255,255,0.12);
+      --muted: #a9b1c8;
+      --gold: #f6c35d;
+      --gold2: #ffe09b;
+      --line: rgba(255,255,255,.14);
       --ok: #22c55e;
-      --shadow: 0 18px 38px rgba(0,0,0,.42);
-      --radius: 18px;
+      --radius: 22px;
+      --shadow: 0 18px 40px rgba(0,0,0,.42);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -25,181 +25,116 @@
       font-family: "Prompt", "Sukhumvit Set", system-ui, -apple-system, sans-serif;
       color: var(--text);
       background:
-        radial-gradient(1000px 400px at 80% -10%, #3a2a09 0%, transparent 70%),
-        radial-gradient(900px 420px at -10% -20%, #172248 0%, transparent 72%),
-        var(--bg);
+        radial-gradient(900px 420px at 82% -8%, #4a350f 0%, transparent 72%),
+        radial-gradient(820px 390px at -8% -20%, #1d2d5e 0%, transparent 70%),
+        linear-gradient(180deg, var(--bg2), var(--bg));
       min-height: 100vh;
     }
 
-    .page {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 16px;
-    }
+    .page { max-width: 1180px; margin: 0 auto; padding: 16px; }
 
     .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 14px;
-      padding: 12px 14px;
+      display: flex; justify-content: space-between; align-items: center; gap: 12px;
+      padding: 14px 16px;
       border: 1px solid var(--line);
-      border-radius: 14px;
-      background: rgba(16,19,35,.72);
-      backdrop-filter: blur(6px);
+      border-radius: 16px;
+      background: rgba(13,17,31,.75);
+      backdrop-filter: blur(8px);
+      margin-bottom: 14px;
     }
 
-    .brand { display: flex; align-items: center; gap: 10px; }
-    .brand img { width: 48px; height: 48px; object-fit: contain; }
-    .brand h1 { font-size: clamp(18px, 2.3vw, 22px); }
-    .brand p { color: var(--muted); font-size: 12px; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand img { width: 56px; height: 56px; object-fit: contain; }
+    .brand h1 { font-size: clamp(19px, 2.5vw, 24px); }
+    .brand p { color: var(--muted); font-size: 13px; }
 
     .online {
       display: inline-flex; align-items: center; gap: 8px;
-      padding: 7px 12px;
-      border-radius: 999px;
-      border: 1px solid #2a6d43;
-      background: rgba(34,197,94,.1);
+      padding: 8px 12px; border-radius: 999px;
+      border: 1px solid #2f7a4b; background: rgba(34,197,94,.12);
       font-size: 12px;
     }
-
-    .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--ok); }
+    .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--ok); }
 
     .hero {
-      display: grid;
-      grid-template-columns: 1.3fr .7fr;
-      gap: 12px;
-      margin-bottom: 14px;
+      display: grid; grid-template-columns: 1.28fr .72fr; gap: 14px;
+      margin-bottom: 16px;
     }
 
     .hero-main, .hero-side {
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      background: linear-gradient(165deg, rgba(245,192,86,.14), rgba(23,26,43,.96) 40%);
       box-shadow: var(--shadow);
     }
 
-    .hero-main { padding: 20px; }
+    .hero-main {
+      padding: 24px;
+      background: linear-gradient(155deg, rgba(246,195,93,.22), rgba(21,27,45,.98) 45%);
+    }
     .hero-side {
-      padding: 16px;
-      background: linear-gradient(175deg, rgba(58,80,153,.22), rgba(23,26,43,.96) 45%);
-      display: flex; flex-direction: column; justify-content: center; gap: 10px;
+      padding: 18px;
+      background: linear-gradient(170deg, rgba(61,88,170,.34), rgba(21,27,45,.97) 50%);
+      display: flex; flex-direction: column; justify-content: center; gap: 12px;
     }
 
-    .title {
-      font-size: clamp(24px, 4.2vw, 40px);
-      line-height: 1.14;
-      margin-bottom: 8px;
-    }
-
-    .subtitle { color: var(--muted); margin-bottom: 16px; }
+    .title { font-size: clamp(28px, 4.4vw, 46px); line-height: 1.1; margin-bottom: 10px; }
+    .subtitle { color: var(--muted); font-size: 16px; margin-bottom: 18px; }
 
     .cta { display: flex; flex-wrap: wrap; gap: 10px; }
-
     .btn {
-      text-decoration: none;
-      font-weight: 700;
-      border-radius: 12px;
-      padding: 11px 15px;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
+      text-decoration: none; font-weight: 800; border-radius: 14px;
+      padding: 12px 18px; display: inline-flex; align-items: center; gap: 10px;
       transition: transform .15s ease, filter .2s ease;
     }
+    .btn:hover { transform: translateY(-1px); filter: brightness(1.06); }
+    .btn-primary { color: #181208; background: linear-gradient(135deg, var(--gold), var(--gold2)); }
+    .btn-secondary { color: var(--text); border: 1px solid var(--line); background: rgba(255,255,255,.02); }
 
-    .btn:hover { transform: translateY(-1px); filter: brightness(1.05); }
-
-    .btn-primary { background: linear-gradient(135deg, var(--gold), var(--gold-2)); color: #19140a; }
-    .btn-secondary { background: transparent; color: var(--text); border: 1px solid var(--line); }
-
-    .hero-side .hint {
-      color: var(--muted);
-      font-size: 14px;
+    .quick-title { color: var(--muted); font-size: 14px; }
+    .quick {
+      text-decoration: none; color: var(--text);
+      padding: 12px 13px; border-radius: 13px; border: 1px solid var(--line);
+      background: rgba(255,255,255,.04); font-size: 16px; font-weight: 600;
     }
 
-    .hero-side .quick {
-      font-size: 15px;
-      padding: 10px 12px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: rgba(255,255,255,.03);
-    }
+    .section-title { font-size: 20px; margin: 8px 0 12px; }
 
-    .section-title {
-      margin: 14px 0 10px;
-      font-size: 18px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0,1fr));
-      gap: 12px;
-    }
-
+    .grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; }
     .card {
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      min-height: 170px;
+      border: 1px solid var(--line); border-radius: 18px; background: var(--card);
+      padding: 16px; display: flex; flex-direction: column; gap: 10px; min-height: 204px;
     }
 
     .icon {
-      width: 44px; height: 44px;
-      border-radius: 12px;
-      display: grid; place-items: center;
-      font-size: 24px;
-      background: rgba(245,192,86,.14);
-      border: 1px solid rgba(245,192,86,.34);
+      width: 72px; height: 72px; border-radius: 18px;
+      display: grid; place-items: center; font-size: 40px;
+      border: 1px solid rgba(246,195,93,.45);
+      background: rgba(246,195,93,.16);
     }
 
-    .card h3 { font-size: 18px; }
-    .card p { color: var(--muted); font-size: 14px; flex: 1; }
+    .card h3 { font-size: 20px; }
+    .card p { color: var(--muted); font-size: 15px; flex: 1; }
     .card a {
-      text-decoration: none;
-      color: #141005;
-      background: linear-gradient(135deg, var(--gold), var(--gold-2));
-      padding: 9px 11px;
-      border-radius: 10px;
-      font-weight: 700;
-      text-align: center;
+      text-decoration: none; text-align: center; border-radius: 12px;
+      font-weight: 800; padding: 10px 12px;
+      color: #181208; background: linear-gradient(135deg, var(--gold), var(--gold2));
     }
 
-    .status {
-      margin-top: 14px;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: var(--bg-soft);
-      padding: 11px 12px;
-      color: #d8dcef;
-      font-size: 14px;
-    }
+    footer { margin-top: 18px; text-align: center; color: var(--muted); font-size: 12px; padding-bottom: 18px; }
 
-    footer {
-      margin-top: 16px;
-      text-align: center;
-      color: var(--muted);
-      font-size: 12px;
-      padding-bottom: 16px;
-    }
-
-    @media (max-width: 980px) {
+    @media (max-width: 1024px) {
       .grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
       .hero { grid-template-columns: 1fr; }
     }
 
-    @media (max-width: 560px) {
+    @media (max-width: 620px) {
       .page { padding: 12px; }
       .topbar { align-items: flex-start; }
-      .brand img { width: 42px; height: 42px; }
+      .brand img { width: 46px; height: 46px; }
       .grid { grid-template-columns: 1fr; }
-      .card { min-height: 0; }
       .btn { width: 100%; justify-content: center; }
-      .online { font-size: 11px; padding: 6px 10px; }
+      .card { min-height: 0; }
+      .icon { width: 78px; height: 78px; font-size: 44px; }
     }
   </style>
 </head>
@@ -218,17 +153,17 @@
 
     <section class="hero">
       <article class="hero-main">
-        <h2 class="title">ดูดวงง่ายขึ้น<br>UI ชัดเจน ใช้งานสบายตา ✨</h2>
-        <p class="subtitle">เลือกประเภทการทำนายที่ต้องการได้ทันที พร้อมปุ่มชัดเจนและไอคอนเข้าใจง่าย</p>
+        <h2 class="title">เปิดดวงประจำวัน<br>ด้วยประสบการณ์ที่ชัดเจนกว่าเดิม ✨</h2>
+        <p class="subtitle">เลือกหมวดที่ต้องการ แล้วเริ่มทำนายได้ทันที</p>
         <div class="cta">
           <a class="btn btn-primary" href="token.html">🔐 เริ่มเข้าใช้งาน</a>
           <a class="btn btn-secondary" href="../taro/10/index.html">🃏 ไพ่ทาโรต์ 10 ใบ</a>
         </div>
       </article>
       <aside class="hero-side">
-        <div class="hint">เมนูลัดยอดนิยม</div>
+        <div class="quick-title">เมนูลัด</div>
         <a class="quick" href="../taro/1/index.html">🪄 เปิดไพ่ทาโรต์ 1 ใบ</a>
-        <a class="quick" href="../number/index.html">🔢 ทำนายเลข</a>
+        <a class="quick" href="../number/index.html">🔢 ทำนายเลขนำโชค</a>
         <a class="quick" href="../Seimsee/index.html">🧿 เสี่ยงเซียมซี</a>
       </aside>
     </section>
@@ -238,30 +173,29 @@
       <article class="card">
         <div class="icon" aria-hidden="true">🧿</div>
         <h3>เซียมซี</h3>
-        <p>ขอแนวทางชีวิตและคำแนะนำแบบรวดเร็ว</p>
+        <p>สุ่มเซียมซีออนไลน์เพื่อรับแนวทางและคำแนะนำในวันนี้</p>
         <a href="../Seimsee/index.html">เข้าใช้งาน</a>
       </article>
       <article class="card">
         <div class="icon" aria-hidden="true">🔢</div>
         <h3>เลขนำโชค</h3>
-        <p>วิเคราะห์พลังตัวเลขประจำวันและแนวโน้มดวง</p>
+        <p>วิเคราะห์พลังตัวเลขเพื่อดูแนวโน้มและโอกาสที่ดี</p>
         <a href="../number/index.html">เข้าใช้งาน</a>
       </article>
       <article class="card">
         <div class="icon" aria-hidden="true">🌿</div>
         <h3>ไพ่ไม้</h3>
-        <p>รับคำตอบสั้น กระชับ พร้อมกำลังใจเชิงบวก</p>
+        <p>รับคำตอบแบบกระชับ พร้อมข้อความกำลังใจเชิงบวก</p>
         <a href="../Wood/index.html">เข้าใช้งาน</a>
       </article>
       <article class="card">
         <div class="icon" aria-hidden="true">🃏</div>
         <h3>ไพ่ทาโรต์</h3>
-        <p>เลือกเปิดไพ่ได้หลายรูปแบบ ตามคำถามของคุณ</p>
+        <p>เปิดไพ่ได้หลายรูปแบบตามคำถามที่คุณต้องการค้นหา</p>
         <a href="../taro/1/index.html">เข้าใช้งาน</a>
       </article>
     </section>
 
-    <div class="status">✅ ออกแบบใหม่ให้รองรับหน้าจอคอมพิวเตอร์ โทรศัพท์ และ iPad พร้อมปุ่มและไอคอนที่มองเห็นชัดเจน</div>
     <footer>© 2026 MeeMon</footer>
   </main>
 </body>
