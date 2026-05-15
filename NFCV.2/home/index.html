@@ -57,11 +57,11 @@
     .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--ok); }
 
     .hero {
-      display: grid; grid-template-columns: 1.28fr .72fr; gap: 14px;
+      display: grid; grid-template-columns: 1fr; gap: 14px;
       margin-bottom: 16px;
     }
 
-    .hero-main, .hero-side {
+    .hero-main {
       border: 1px solid var(--line);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
@@ -70,11 +70,6 @@
     .hero-main {
       padding: 24px;
       background: linear-gradient(155deg, rgba(246,195,93,.22), rgba(21,27,45,.98) 45%);
-    }
-    .hero-side {
-      padding: 18px;
-      background: linear-gradient(170deg, rgba(61,88,170,.34), rgba(21,27,45,.97) 50%);
-      display: flex; flex-direction: column; justify-content: center; gap: 12px;
     }
 
     .title { font-size: clamp(28px, 4.4vw, 46px); line-height: 1.1; margin-bottom: 10px; }
@@ -89,13 +84,6 @@
     .btn:hover { transform: translateY(-1px); filter: brightness(1.06); }
     .btn-primary { color: #181208; background: linear-gradient(135deg, var(--gold), var(--gold2)); }
     .btn-secondary { color: var(--text); border: 1px solid var(--line); background: rgba(255,255,255,.02); }
-
-    .quick-title { color: var(--muted); font-size: 14px; }
-    .quick {
-      text-decoration: none; color: var(--text);
-      padding: 12px 13px; border-radius: 13px; border: 1px solid var(--line);
-      background: rgba(255,255,255,.04); font-size: 16px; font-weight: 600;
-    }
 
     .section-title { font-size: 20px; margin: 8px 0 12px; }
 
@@ -153,19 +141,14 @@
 
     <section class="hero">
       <article class="hero-main">
-        <h2 class="title">เปิดดวงประจำวัน<br>ด้วยประสบการณ์ที่ชัดเจนกว่าเดิม ✨</h2>
-        <p class="subtitle">เลือกหมวดที่ต้องการ แล้วเริ่มทำนายได้ทันที</p>
+        <h2 class="title">มาดูดวงแบบสบายใจ<br>เหมือนมีเพื่อนสายมูอยู่ข้างๆ ✨</h2>
+        <p class="subtitle">เลือกคำทำนายที่ตรงกับใจในวันนี้ แล้วค่อย ๆ เปิดรับคำแนะนำดี ๆ ไปพร้อมกัน</p>
         <div class="cta">
           <a class="btn btn-primary" href="token.html">🔐 เริ่มเข้าใช้งาน</a>
           <a class="btn btn-secondary" href="../taro/10/index.html">🃏 ไพ่ทาโรต์ 10 ใบ</a>
         </div>
       </article>
-      <aside class="hero-side">
-        <div class="quick-title">เมนูลัด</div>
-        <a class="quick" href="../taro/1/index.html">🪄 เปิดไพ่ทาโรต์ 1 ใบ</a>
-        <a class="quick" href="../number/index.html">🔢 ทำนายเลขนำโชค</a>
-        <a class="quick" href="../Seimsee/index.html">🧿 เสี่ยงเซียมซี</a>
-      </aside>
+      
     </section>
 
     <h3 class="section-title">เลือกบริการดูดวง</h3>
@@ -173,25 +156,25 @@
       <article class="card">
         <div class="icon" aria-hidden="true">🧿</div>
         <h3>เซียมซี</h3>
-        <p>สุ่มเซียมซีออนไลน์เพื่อรับแนวทางและคำแนะนำในวันนี้</p>
+        <p>สุ่มเซียมซีเพื่อรับถ้อยคำเตือนใจและแนวทางที่เหมาะกับจังหวะชีวิตของคุณ</p>
         <a href="../Seimsee/index.html">เข้าใช้งาน</a>
       </article>
       <article class="card">
         <div class="icon" aria-hidden="true">🔢</div>
         <h3>เลขนำโชค</h3>
-        <p>วิเคราะห์พลังตัวเลขเพื่อดูแนวโน้มและโอกาสที่ดี</p>
+        <p>เช็กพลังตัวเลขประจำวัน ดูแนวโน้มเรื่องงาน เงิน และความรักแบบเข้าใจง่าย</p>
         <a href="../number/index.html">เข้าใช้งาน</a>
       </article>
       <article class="card">
         <div class="icon" aria-hidden="true">🌿</div>
         <h3>ไพ่ไม้</h3>
-        <p>รับคำตอบแบบกระชับ พร้อมข้อความกำลังใจเชิงบวก</p>
+        <p>เปิดไพ่ไม้เพื่อรับข้อความสั้น ๆ ที่ช่วยย้ำความมั่นใจและเติมพลังใจ</p>
         <a href="../Wood/index.html">เข้าใช้งาน</a>
       </article>
       <article class="card">
         <div class="icon" aria-hidden="true">🃏</div>
         <h3>ไพ่ทาโรต์</h3>
-        <p>เปิดไพ่ได้หลายรูปแบบตามคำถามที่คุณต้องการค้นหา</p>
+        <p>ถามสิ่งที่คาใจ แล้วเปิดไพ่ทาโรต์เพื่อมองภาพรวมและแนวทางก้าวต่อไป</p>
         <a href="../taro/1/index.html">เข้าใช้งาน</a>
       </article>
     </section>
