@@ -1,473 +1,131 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <title>หน้าโฮม ดูดวงออนไลน์</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- ฟอนต์ Prompt -->
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MeeMon | หน้าแรกดูดวงออนไลน์</title>
   <style>
     :root {
-      --bg-main: radial-gradient(circle at top, #1a1a1a, #050509);
+      --bg: #09090f;
+      --card: #151523;
+      --soft: #202035;
       --gold: #f5c056;
-      --gold-soft: #ffe6a3;
-      --card-bg: rgba(20, 20, 24, 0.92);
-      --text-main: #f9fafb;
-      --text-muted: #9ca3af;
-      --border-gold: rgba(245, 192, 86, 0.6);
-      --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.7);
-      --radius-xl: 26px;
+      --text: #f8fafc;
+      --muted: #a1a1b3;
+      --ok: #22c55e;
     }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: "Prompt", system-ui, -apple-system, BlinkMacSystemFont,
-        "Sukhumvit Set", sans-serif;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
+      font-family: "Prompt", system-ui, -apple-system, sans-serif;
+      background: radial-gradient(circle at top, #1e1b31, var(--bg) 45%);
+      color: var(--text);
       min-height: 100vh;
-      background: var(--bg-main);
-      color: var(--text-main);
-      display: flex;
-      justify-content: center;
-    }
-
-    .app-shell {
-      width: 100%;
-      max-width: 480px;
-      padding: 16px 16px 24px;
-    }
-
-    /* HEADER */
-    .top-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 16px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .brand-logo-img {
-      width: 70px;
-      height: 70px;
-      object-fit: contain;
-      border-radius: 0;         /* ตามทรงโลโก้จริง ถ้าคุณไม่อยากให้เป็นเหลี่ยม */
-      background: transparent;
-      padding: 0;               /* เอาขอบหนา ๆ ออก */
-      box-shadow: none;
-    }
-
-    .brand-text-main {
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      font-size: 13px;
-    }
-
-    .brand-text-sub {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .user-pill {
-      padding: 6px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.35);
-      font-size: 11px;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(15, 23, 42, 0.9);
-    }
-
-    .dot-online {
-      width: 7px;
-      height: 7px;
-      border-radius: 999px;
-      background: #22c55e;
-      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.18);
-    }
-
-    /* HERO CARD */
-    .hero-card {
-      margin-top: 6px;
-      padding: 16px 16px 14px;
-      border-radius: 26px;
-      background: radial-gradient(circle at top left, #2f1b00, #050509);
-      border: 1px solid rgba(248, 250, 252, 0.06);
-      box-shadow: var(--shadow-soft);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero-glow {
-      position: absolute;
-      right: -40px;
-      top: -40px;
-      width: 180px;
-      height: 180px;
-      background: radial-gradient(circle, rgba(255, 237, 213, 0.2), transparent);
-      pointer-events: none;
-    }
-
-    .hero-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: rgba(15, 23, 42, 0.7);
-      border: 1px solid rgba(250, 204, 21, 0.4);
-      font-size: 11px;
-      color: var(--gold-soft);
-      margin-bottom: 10px;
-    }
-
-    .hero-title {
-      font-size: 20px;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      margin-bottom: 4px;
-    }
-
-    .hero-sub {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-bottom: 12px;
-    }
-
-    .hero-cta-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .hero-main-btn {
-      flex: 1;
-      padding: 10px 14px;
-      border-radius: 999px;
-      border: none;
-      background: linear-gradient(90deg, #fbbf24, #f59e0b);
-      color: #1a1305;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.75);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      text-decoration: none;
-    }
-
-    .hero-main-btn span.icon {
-      font-size: 15px;
-    }
-
-    .hero-text-right {
-      font-size: 11px;
-      color: var(--gold-soft);
-      text-align: right;
-    }
-
-    /* SECTION TITLE */
-    .section-title {
-      margin-top: 18px;
-      margin-bottom: 10px;
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .section-title span.main {
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-size: 11px;
-    }
-
-    /* ICON GRID แบบใหม่ */
-    .icon-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: 10px;
-    }
-
-    /* ปุ่มแบบใหม่: มีแค่ไอคอน + ข้อความด้านล่าง */
-    .icon-button {
-      background: var(--card-bg);
-      border-radius: 22px;
-      padding: 12px 10px 10px;
-      border: 1px solid rgba(148, 163, 184, 0.32);
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.7);
-      text-decoration: none;
-      color: inherit;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      transition: transform 0.14s ease, box-shadow 0.14s ease,
-        border-color 0.14s ease, background 0.14s ease;
-    }
-
-    .icon-button:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 16px 38px rgba(0, 0, 0, 0.9);
-      border-color: var(--border-gold);
-      background: radial-gradient(circle at top, rgba(250, 204, 21, 0.08), #020617);
-    }
-
-    .icon-button-icon-wrap {
-      width: 100px;
-      height: 100px;
-      border-radius: 18px;
-      background: transparent;        /* ← ตรงนี้สำคัญ */
-      box-shadow: none;               /* ← ตัดเงาดำออก */
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    .icon-button-icon-wrap img {
-      width: 95%;
-      height: 95%;
-      object-fit: contain;
-      display: block;
-    }
-
-    .icon-button-label {
-      font-size: 11px;
       line-height: 1.5;
-      text-align: center;
-      color: var(--text-muted);
     }
-
-    .icon-button-label span.title {
-      display: block;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-main);
-      margin-bottom: 2px;
+    .container { max-width: 980px; margin: 0 auto; padding: 22px 16px 40px; }
+    .topbar {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 18px;
     }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand img { width: 54px; height: 54px; object-fit: contain; }
+    .badge { font-size: 12px; color: var(--muted); border: 1px solid #ffffff2c; padding: 6px 10px; border-radius: 999px; }
+    .hero {
+      background: linear-gradient(145deg, #2b1a00, #161626 60%);
+      border: 1px solid #ffffff12;
+      border-radius: 22px;
+      padding: 20px;
+      box-shadow: 0 18px 45px #00000088;
+      margin-bottom: 18px;
+    }
+    h1 { font-size: clamp(24px, 4.2vw, 38px); margin-bottom: 6px; }
+    .sub { color: var(--muted); margin-bottom: 16px; }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn {
+      text-decoration: none; color: #111;
+      background: var(--gold); padding: 10px 16px; border-radius: 12px;
+      font-weight: 700;
+    }
+    .btn.secondary { background: transparent; color: var(--text); border: 1px solid #ffffff32; }
 
-    /* BOTTOM AREA */
-    .bottom-area {
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+    .card {
+      background: var(--card);
+      border: 1px solid #ffffff10;
+      border-radius: 16px;
+      padding: 14px;
+    }
+    .card h3 { font-size: 18px; margin-bottom: 6px; }
+    .card p { color: var(--muted); font-size: 14px; margin-bottom: 10px; }
+    .card a { color: var(--gold); text-decoration: none; font-weight: 600; }
+
+    .status {
       margin-top: 18px;
-      padding: 10px 13px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.35);
-      background: rgba(15, 23, 42, 0.94);
+      background: var(--soft);
+      border: 1px solid #ffffff18;
+      border-radius: 14px;
+      padding: 12px;
       display: flex;
+      gap: 8px;
       align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      font-size: 11px;
-      color: var(--text-muted);
+      color: #d4d4e3;
+      font-size: 14px;
     }
-
-    .bottom-area strong {
-      color: var(--gold-soft);
-      font-weight: 600;
-    }
-
-    .bottom-chip {
-      padding: 4px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(55, 65, 81, 0.9);
-      background: rgba(15, 23, 42, 0.9);
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: rgba(148, 163, 184, 0.9);
-    }
+    .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 6px #22c55e22; }
+    footer { color: var(--muted); font-size: 12px; margin-top: 18px; text-align: center; }
   </style>
 </head>
-
-<body style="display:none;">
-  <script src="https://taithai-tai.github.io/app/token.js"></script>
-  <script>
-    window.onload = () => {
-      Token.useOnce({
-        cleanUrl: false,
-
-        // ครั้งแรก → เงียบ ๆ แค่เปิดหน้าให้ดู
-        onFirstUse() {
-          document.body.style.display = "block";
-        },
-
-        // ถ้าใช้โทเคนเดิมเข้าใหม่ (เช่น refresh / ส่งลิงก์ให้เพื่อนในเครื่องเดียวกัน)
-        onAlreadyUsed() {
-          window.location.href = "https://raw.githubusercontent.com/taithai-tai/meemon/refs/heads/main/NFCV.2/sorry.jpg";
-        },
-
-        // ถ้าไม่มีโทเคน หรือโทเคนไม่ถูกต้อง
-        onInvalid() {
-          window.location.href = "https://raw.githubusercontent.com/taithai-tai/meemon/refs/heads/main/NFCV.2/sorry.jpg";
-        },
-      });
-    };
-  </script>
-
-  <div class="app-shell">
-    <!-- HEADER -->
-    <header class="top-bar">
+<body>
+  <main class="container">
+    <header class="topbar">
       <div class="brand">
-        <img class="brand-logo-img"
-             src="https://raw.githubusercontent.com/taithai-tai/meemon/main/NFCV.2/home/logo.png"
-             alt="MEEMON Logo">
+        <img src="logo.png" alt="MeeMon Logo" />
         <div>
-          <div class="brand-text-main">MEEMON</div>
-          <div class="brand-text-sub">เว็บรวมดูดวง & เสี่ยงทายออนไลน์</div>
+          <strong>MeeMon</strong>
+          <div style="font-size:12px;color:var(--muted)">ดูดวงออนไลน์ • ไพ่ • เสี่ยงทาย</div>
         </div>
       </div>
-
-      <div class="user-pill">
-        <div class="dot-online"></div>
-        <span>พร้อมดูดวงวันนี้ ✨</span>
-      </div>
+      <div class="badge">ออนไลน์</div>
     </header>
 
-    <!-- HERO CARD -->
-    <section class="hero-card">
-      <div class="hero-glow"></div>
-      <div class="hero-label">
-        🔮 วันนี้ดวงคุณจะเป็นอย่างไร?
-      </div>
-      <div class="hero-title">เริ่มดูดวง เสี่ยงเซียมซี 24 ใบ</div>
-      <div class="hero-sub">
-        เลือกวิธีเสี่ยงทายที่ชอบได้เลย ทั้งไพ่ เสี่ยงเซียมซี โยนไม้ และสุ่มเลขมงคลในที่เดียว
-      </div>
-      <div class="hero-cta-row">
-        <a href="https://taithai-tai.github.io/meemon/NFCV.2/Seimsee/token.html" class="hero-main-btn">
-          <span class="icon">✨</span>
-          <span>เริ่มดูดวง เซียมซี 24 ใบ</span>
-        </a>
-        <div class="hero-text-right">
-          แตะปุ่มด้านล่าง<br>เพื่อไปยังหน้าอื่น ๆ
-        </div>
+    <section class="hero">
+      <h1>เริ่มดูดวงกับ MeeMon ✨</h1>
+      <p class="sub">เลือกหมวดที่ต้องการ แล้วเริ่มทำนายได้ทันที รองรับทั้งมือถือและเดสก์ท็อป</p>
+      <div class="actions">
+        <a class="btn" href="token.html">เริ่มใช้งาน</a>
+        <a class="btn secondary" href="../taro/10/index.html">ไพ่ทาโรต์ 10 ใบ</a>
       </div>
     </section>
 
-    <!-- MAIN FEATURE GRID -->
-    <div class="section-title">
-      <span class="main">เมนูดูดวงหลัก</span>
-      <span style="font-size:11px;color:var(--gold-soft);">เลือกหนึ่งอย่างเพื่อต่อไปยังหน้าใหม่</span>
+    <section class="grid" aria-label="เมนูบริการ">
+      <article class="card">
+        <h3>เซียมซี</h3>
+        <p>ขอคำแนะนำและแนวทางด้วยการเสี่ยงเซียมซีแบบออนไลน์</p>
+        <a href="../Seimsee/index.html">เข้าใช้งาน →</a>
+      </article>
+      <article class="card">
+        <h3>ทำนายจากตัวเลข</h3>
+        <p>วิเคราะห์พลังตัวเลขเพื่อดูแนวโน้มชีวิตประจำวัน</p>
+        <a href="../number/index.html">เข้าใช้งาน →</a>
+      </article>
+      <article class="card">
+        <h3>ไพ่ไม้</h3>
+        <p>สุ่มไพ่ไม้เพื่อรับข้อความกำลังใจและคำตอบเชิงบวก</p>
+        <a href="../Wood/index.html">เข้าใช้งาน →</a>
+      </article>
+      <article class="card">
+        <h3>ไพ่ทาโรต์</h3>
+        <p>เลือกการเปิดไพ่แบบ 1 ใบ, 3 ใบ หรือ 10 ใบ ตามคำถามของคุณ</p>
+        <a href="../taro/1/index.html">เริ่มจาก 1 ใบ →</a>
+      </article>
+    </section>
+
+    <div class="status">
+      <span class="dot" aria-hidden="true"></span>
+      <span>ระบบพร้อมใช้งาน: หน้าใหม่ถูกออกแบบให้เรียบง่ายและโหลดไว</span>
     </div>
 
-    <section class="icon-grid">
-      <!-- Tarot 10 -->
-      <a href="https://taithai-tai.github.io/meemon/NFCV.2/taro/10/token.html"
-         class="icon-button">
-        <div class="icon-button-icon-wrap">
-          <img src="https://taithai-tai.github.io/meemon/NFCV.2/Pictures/taro10.png" alt="ไพ่ทาโรต์ 10 ใบ">
-        </div>
-        <div class="icon-button-label">
-          <span class="title">ดูดวงไพ่ทาโรต์ 10 ใบ</span>
-        </div>
-      </a>
-
-      <!-- Tarot 3 -->
-      <a href="https://taithai-tai.github.io/meemon/NFCV.2/taro/3/token.html"
-         class="icon-button">
-        <div class="icon-button-icon-wrap">
-          <img src="https://taithai-tai.github.io/meemon/NFCV.2/Pictures/taro3.png" alt="ไพ่ทาโรต์ 3 ใบ">
-        </div>
-        <div class="icon-button-label">
-          <span class="title">ดูดวงไพ่ทาโรต์ 3 ใบ</span>
-        </div>
-      </a>
-
-      <!-- Tarot 1 -->
-      <a href="https://taithai-tai.github.io/meemon/NFCV.2/taro/1/token.html"
-         class="icon-button">
-        <div class="icon-button-icon-wrap">
-          <img src="https://taithai-tai.github.io/meemon/NFCV.2/Pictures/taro1.png" alt="ไพ่ทาโรต์ 1 ใบ">
-        </div>
-        <div class="icon-button-label">
-          <span class="title">ดูดวงไพ่ทาโรต์ 1 ใบ</span>
-        </div>
-      </a>
-
-      <!-- Lucky Number -->
-      <a href="https://taithai-tai.github.io/meemon/NFCV.2/number/token.html"
-         class="icon-button">
-        <div class="icon-button-icon-wrap">
-          <img src="https://taithai-tai.github.io/meemon/NFCV.2/Pictures/number.png" alt="สุ่มเลขมงคล">
-        </div>
-        <div class="icon-button-label">
-          <span class="title">สุ่มเลขมงคล</span>
-        </div>
-      </a>
-
-      <!-- เซียมซี -->
-      <a href="https://taithai-tai.github.io/meemon/NFCV.2/Seimsee/token.html"
-         class="icon-button">
-        <div class="icon-button-icon-wrap">
-          <img src="https://taithai-tai.github.io/meemon/NFCV.2/Pictures/seimsee.png" alt="เสี่ยงเซียมซี">
-        </div>
-        <div class="icon-button-label">
-          <span class="title">เสี่ยงเซียมซี</span>
-        </div>
-      </a>
-
-      <!-- ไม้เซ้งปวย -->
-      <a href="https://taithai-tai.github.io/meemon/NFCV.2/Wood/token.html"
-         class="icon-button">
-        <div class="icon-button-icon-wrap">
-          <img src="https://taithai-tai.github.io/meemon/NFCV.2/Pictures/wood.png" alt="ไม้เซ้งปวย">
-        </div>
-        <div class="icon-button-label">
-          <span class="title">เสี่ยงทายโยนไม้เซ้งปวย</span>
-        </div>
-      </a>
-
-      <!-- ดวงประจำวัน -->
-      <a href="https://meemon.net/NFCV.2/Lucky%20day/"
-         class="icon-button">
-        <div class="icon-button-icon-wrap">
-          <img src="https://taithai-tai.github.io/meemon/NFCV.2/Pictures/daily.png" alt="ดวงประจำวัน">
-        </div>
-        <div class="icon-button-label">
-          <span class="title">ดวงประจำวัน</span>
-        </div>
-      </a>
-
-      <!-- ช่องทางติดต่อ -->
-      <a href="https://meemon.com/mutelu2"
-         class="icon-button">
-        <div class="icon-button-icon-wrap">
-          <img src="https://taithai-tai.github.io/meemon/NFCV.2/Pictures/contact.png" alt="ช่องทางติดต่อ">
-        </div>
-        <div class="icon-button-label">
-          <span class="title">ช่องทางติดต่อ</span>
-        </div>
-      </a>
-    </section>
-
-    <!-- BOTTOM INFO -->
-    <footer class="bottom-area">
-      <div>
-        <strong></strong>
-      </div>
-      <div class="bottom-chip">V1.5</div>
-    </footer>
-  </div>
+    <footer>© 2026 MeeMon. สงวนลิขสิทธิ์</footer>
+  </main>
 </body>
 </html>
