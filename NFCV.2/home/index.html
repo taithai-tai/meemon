@@ -3,129 +3,266 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MeeMon | หน้าแรกดูดวงออนไลน์</title>
+  <title>MeeMon | ดูดวงออนไลน์</title>
   <style>
     :root {
-      --bg: #09090f;
-      --card: #151523;
-      --soft: #202035;
+      --bg: #07070d;
+      --bg-soft: #111322;
+      --card: #171a2b;
+      --text: #f8fbff;
+      --muted: #9ca5be;
       --gold: #f5c056;
-      --text: #f8fafc;
-      --muted: #a1a1b3;
+      --gold-2: #ffd98a;
+      --line: rgba(255,255,255,0.12);
       --ok: #22c55e;
+      --shadow: 0 18px 38px rgba(0,0,0,.42);
+      --radius: 18px;
     }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      font-family: "Prompt", system-ui, -apple-system, sans-serif;
-      background: radial-gradient(circle at top, #1e1b31, var(--bg) 45%);
+      font-family: "Prompt", "Sukhumvit Set", system-ui, -apple-system, sans-serif;
       color: var(--text);
+      background:
+        radial-gradient(1000px 400px at 80% -10%, #3a2a09 0%, transparent 70%),
+        radial-gradient(900px 420px at -10% -20%, #172248 0%, transparent 72%),
+        var(--bg);
       min-height: 100vh;
-      line-height: 1.5;
     }
-    .container { max-width: 980px; margin: 0 auto; padding: 22px 16px 40px; }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
     .topbar {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 18px;
-    }
-    .brand { display: flex; align-items: center; gap: 10px; }
-    .brand img { width: 54px; height: 54px; object-fit: contain; }
-    .badge { font-size: 12px; color: var(--muted); border: 1px solid #ffffff2c; padding: 6px 10px; border-radius: 999px; }
-    .hero {
-      background: linear-gradient(145deg, #2b1a00, #161626 60%);
-      border: 1px solid #ffffff12;
-      border-radius: 22px;
-      padding: 20px;
-      box-shadow: 0 18px 45px #00000088;
-      margin-bottom: 18px;
-    }
-    h1 { font-size: clamp(24px, 4.2vw, 38px); margin-bottom: 6px; }
-    .sub { color: var(--muted); margin-bottom: 16px; }
-    .actions { display: flex; gap: 10px; flex-wrap: wrap; }
-    .btn {
-      text-decoration: none; color: #111;
-      background: var(--gold); padding: 10px 16px; border-radius: 12px;
-      font-weight: 700;
-    }
-    .btn.secondary { background: transparent; color: var(--text); border: 1px solid #ffffff32; }
-
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
-    .card {
-      background: var(--card);
-      border: 1px solid #ffffff10;
-      border-radius: 16px;
-      padding: 14px;
-    }
-    .card h3 { font-size: 18px; margin-bottom: 6px; }
-    .card p { color: var(--muted); font-size: 14px; margin-bottom: 10px; }
-    .card a { color: var(--gold); text-decoration: none; font-weight: 600; }
-
-    .status {
-      margin-top: 18px;
-      background: var(--soft);
-      border: 1px solid #ffffff18;
-      border-radius: 14px;
-      padding: 12px;
       display: flex;
-      gap: 8px;
       align-items: center;
-      color: #d4d4e3;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(16,19,35,.72);
+      backdrop-filter: blur(6px);
+    }
+
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand img { width: 48px; height: 48px; object-fit: contain; }
+    .brand h1 { font-size: clamp(18px, 2.3vw, 22px); }
+    .brand p { color: var(--muted); font-size: 12px; }
+
+    .online {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: 1px solid #2a6d43;
+      background: rgba(34,197,94,.1);
+      font-size: 12px;
+    }
+
+    .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--ok); }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.3fr .7fr;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .hero-main, .hero-side {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(165deg, rgba(245,192,86,.14), rgba(23,26,43,.96) 40%);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-main { padding: 20px; }
+    .hero-side {
+      padding: 16px;
+      background: linear-gradient(175deg, rgba(58,80,153,.22), rgba(23,26,43,.96) 45%);
+      display: flex; flex-direction: column; justify-content: center; gap: 10px;
+    }
+
+    .title {
+      font-size: clamp(24px, 4.2vw, 40px);
+      line-height: 1.14;
+      margin-bottom: 8px;
+    }
+
+    .subtitle { color: var(--muted); margin-bottom: 16px; }
+
+    .cta { display: flex; flex-wrap: wrap; gap: 10px; }
+
+    .btn {
+      text-decoration: none;
+      font-weight: 700;
+      border-radius: 12px;
+      padding: 11px 15px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform .15s ease, filter .2s ease;
+    }
+
+    .btn:hover { transform: translateY(-1px); filter: brightness(1.05); }
+
+    .btn-primary { background: linear-gradient(135deg, var(--gold), var(--gold-2)); color: #19140a; }
+    .btn-secondary { background: transparent; color: var(--text); border: 1px solid var(--line); }
+
+    .hero-side .hint {
+      color: var(--muted);
       font-size: 14px;
     }
-    .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 6px #22c55e22; }
-    footer { color: var(--muted); font-size: 12px; margin-top: 18px; text-align: center; }
+
+    .hero-side .quick {
+      font-size: 15px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255,255,255,.03);
+    }
+
+    .section-title {
+      margin: 14px 0 10px;
+      font-size: 18px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 12px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 170px;
+    }
+
+    .icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: grid; place-items: center;
+      font-size: 24px;
+      background: rgba(245,192,86,.14);
+      border: 1px solid rgba(245,192,86,.34);
+    }
+
+    .card h3 { font-size: 18px; }
+    .card p { color: var(--muted); font-size: 14px; flex: 1; }
+    .card a {
+      text-decoration: none;
+      color: #141005;
+      background: linear-gradient(135deg, var(--gold), var(--gold-2));
+      padding: 9px 11px;
+      border-radius: 10px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .status {
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--bg-soft);
+      padding: 11px 12px;
+      color: #d8dcef;
+      font-size: 14px;
+    }
+
+    footer {
+      margin-top: 16px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      padding-bottom: 16px;
+    }
+
+    @media (max-width: 980px) {
+      .grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .hero { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 560px) {
+      .page { padding: 12px; }
+      .topbar { align-items: flex-start; }
+      .brand img { width: 42px; height: 42px; }
+      .grid { grid-template-columns: 1fr; }
+      .card { min-height: 0; }
+      .btn { width: 100%; justify-content: center; }
+      .online { font-size: 11px; padding: 6px 10px; }
+    }
   </style>
 </head>
 <body>
-  <main class="container">
+  <main class="page">
     <header class="topbar">
       <div class="brand">
         <img src="logo.png" alt="MeeMon Logo" />
         <div>
-          <strong>MeeMon</strong>
-          <div style="font-size:12px;color:var(--muted)">ดูดวงออนไลน์ • ไพ่ • เสี่ยงทาย</div>
+          <h1>MeeMon Fortune</h1>
+          <p>ดูดวงออนไลน์ ใช้งานง่ายทั้งมือถือ แท็บเล็ต และคอมพิวเตอร์</p>
         </div>
       </div>
-      <div class="badge">ออนไลน์</div>
+      <div class="online"><span class="dot"></span>ระบบออนไลน์</div>
     </header>
 
     <section class="hero">
-      <h1>เริ่มดูดวงกับ MeeMon ✨</h1>
-      <p class="sub">เลือกหมวดที่ต้องการ แล้วเริ่มทำนายได้ทันที รองรับทั้งมือถือและเดสก์ท็อป</p>
-      <div class="actions">
-        <a class="btn" href="token.html">เริ่มใช้งาน</a>
-        <a class="btn secondary" href="../taro/10/index.html">ไพ่ทาโรต์ 10 ใบ</a>
-      </div>
+      <article class="hero-main">
+        <h2 class="title">ดูดวงง่ายขึ้น<br>UI ชัดเจน ใช้งานสบายตา ✨</h2>
+        <p class="subtitle">เลือกประเภทการทำนายที่ต้องการได้ทันที พร้อมปุ่มชัดเจนและไอคอนเข้าใจง่าย</p>
+        <div class="cta">
+          <a class="btn btn-primary" href="token.html">🔐 เริ่มเข้าใช้งาน</a>
+          <a class="btn btn-secondary" href="../taro/10/index.html">🃏 ไพ่ทาโรต์ 10 ใบ</a>
+        </div>
+      </article>
+      <aside class="hero-side">
+        <div class="hint">เมนูลัดยอดนิยม</div>
+        <a class="quick" href="../taro/1/index.html">🪄 เปิดไพ่ทาโรต์ 1 ใบ</a>
+        <a class="quick" href="../number/index.html">🔢 ทำนายเลข</a>
+        <a class="quick" href="../Seimsee/index.html">🧿 เสี่ยงเซียมซี</a>
+      </aside>
     </section>
 
-    <section class="grid" aria-label="เมนูบริการ">
+    <h3 class="section-title">เลือกบริการดูดวง</h3>
+    <section class="grid" aria-label="บริการดูดวง">
       <article class="card">
+        <div class="icon" aria-hidden="true">🧿</div>
         <h3>เซียมซี</h3>
-        <p>ขอคำแนะนำและแนวทางด้วยการเสี่ยงเซียมซีแบบออนไลน์</p>
-        <a href="../Seimsee/index.html">เข้าใช้งาน →</a>
+        <p>ขอแนวทางชีวิตและคำแนะนำแบบรวดเร็ว</p>
+        <a href="../Seimsee/index.html">เข้าใช้งาน</a>
       </article>
       <article class="card">
-        <h3>ทำนายจากตัวเลข</h3>
-        <p>วิเคราะห์พลังตัวเลขเพื่อดูแนวโน้มชีวิตประจำวัน</p>
-        <a href="../number/index.html">เข้าใช้งาน →</a>
+        <div class="icon" aria-hidden="true">🔢</div>
+        <h3>เลขนำโชค</h3>
+        <p>วิเคราะห์พลังตัวเลขประจำวันและแนวโน้มดวง</p>
+        <a href="../number/index.html">เข้าใช้งาน</a>
       </article>
       <article class="card">
+        <div class="icon" aria-hidden="true">🌿</div>
         <h3>ไพ่ไม้</h3>
-        <p>สุ่มไพ่ไม้เพื่อรับข้อความกำลังใจและคำตอบเชิงบวก</p>
-        <a href="../Wood/index.html">เข้าใช้งาน →</a>
+        <p>รับคำตอบสั้น กระชับ พร้อมกำลังใจเชิงบวก</p>
+        <a href="../Wood/index.html">เข้าใช้งาน</a>
       </article>
       <article class="card">
+        <div class="icon" aria-hidden="true">🃏</div>
         <h3>ไพ่ทาโรต์</h3>
-        <p>เลือกการเปิดไพ่แบบ 1 ใบ, 3 ใบ หรือ 10 ใบ ตามคำถามของคุณ</p>
-        <a href="../taro/1/index.html">เริ่มจาก 1 ใบ →</a>
+        <p>เลือกเปิดไพ่ได้หลายรูปแบบ ตามคำถามของคุณ</p>
+        <a href="../taro/1/index.html">เข้าใช้งาน</a>
       </article>
     </section>
 
-    <div class="status">
-      <span class="dot" aria-hidden="true"></span>
-      <span>ระบบพร้อมใช้งาน: หน้าใหม่ถูกออกแบบให้เรียบง่ายและโหลดไว</span>
-    </div>
-
-    <footer>© 2026 MeeMon. สงวนลิขสิทธิ์</footer>
+    <div class="status">✅ ออกแบบใหม่ให้รองรับหน้าจอคอมพิวเตอร์ โทรศัพท์ และ iPad พร้อมปุ่มและไอคอนที่มองเห็นชัดเจน</div>
+    <footer>© 2026 MeeMon</footer>
   </main>
 </body>
 </html>
