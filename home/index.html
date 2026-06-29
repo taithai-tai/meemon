@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="description" content="มีมนต์ - ช้อปปิ้งออนไลน์ สินค้าหลากหลาย ราคาถูก จัดส่งรวดเร็ว">
+  <meta name="theme-color" content="#5B1D6E">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>มีมนต์ Shop - ช้อปง่าย จ่ายสะดวก</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- QR Code Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Twinkling Stars Background -->
+    <canvas id="stars-canvas"></canvas>
+
+    <!-- ============ HEADER ============ -->
+    <header id="main-header">
+      <div class="header-top">
+        <div class="header-logo">
+          <div class="logo-icon">✦</div>
+          <span class="logo-text">มีมนต์</span>
+        </div>
+        <div class="header-actions">
+          <button id="btn-chat" aria-label="Chat">
+            <i class="fa-regular fa-comment-dots"></i>
+          </button>
+          <button id="btn-notifications" aria-label="Notifications">
+            <i class="fa-regular fa-bell"></i>
+            <span class="badge-dot"></span>
+          </button>
+        </div>
+      </div>
+      <div class="search-bar">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="search-input" placeholder="ค้นหาสินค้าที่มีมนต์...">
+        <button class="search-btn" id="search-btn" aria-label="Search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- ============ MAIN CONTENT ============ -->
+    <main id="main-content">
+
+      <!-- ======== HOME VIEW ======== -->
+      <div id="view-home" class="view active">
+        
+        <!-- Banner Carousel -->
+        <div class="banner-carousel">
+          <div class="banner-container">
+            <div class="banner-track" id="banner-track">
+              <div class="banner-slide" style="background: linear-gradient(135deg, #7B2D8E 0%, #3D1249 50%, #D4AF37 100%);">
+                <div class="banner-content">
+                  <div class="banner-title">🎉 เปิดร้านใหม่!</div>
+                  <div class="banner-subtitle">ลดสูงสุด 70% ทุกชิ้น</div>
+                  <span class="banner-badge">ช้อปเลย</span>
+                </div>
+              </div>
+              <div class="banner-slide" style="background: linear-gradient(135deg, #D4AF37 0%, #8B35A3 100%);">
+                <div class="banner-content">
+                  <div class="banner-title">⚡ Flash Sale</div>
+                  <div class="banner-subtitle">ดีลพิเศษ เวลาจำกัด</div>
+                  <span class="banner-badge">ลดสูงสุด 80%</span>
+                </div>
+              </div>
+              <div class="banner-slide" style="background: linear-gradient(135deg, #1A1A2E 0%, #8B35A3 50%, #D4AF37 100%);">
+                <div class="banner-content">
+                  <div class="banner-title">🚚 ส่งฟรี!</div>
+                  <div class="banner-subtitle">ทุกออเดอร์ ไม่มีขั้นต่ำ</div>
+                  <span class="banner-badge">วันนี้เท่านั้น</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="banner-dots" id="banner-dots">
+            <span class="dot active" data-index="0"></span>
+            <span class="dot" data-index="1"></span>
+            <span class="dot" data-index="2"></span>
+          </div>
+        </div>
+
+        <!-- Categories -->
+        <div class="categories-section">
+          <div class="section-title">
+            <span>หมวดหมู่</span>
+            <button class="see-all" id="btn-see-all-cats">ดูทั้งหมด <i class="fa-solid fa-chevron-right"></i></button>
+          </div>
+          <div class="categories-grid" id="categories-grid">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Flash Sale -->
+        <div class="flash-sale-section">
+          <div class="flash-sale-header">
+            <div class="flash-sale-title">
+              <i class="fa-solid fa-bolt"></i>
+              <span>Flash Sale</span>
+            </div>
+            <div class="countdown" id="flash-countdown">
+              <span class="countdown-item" id="countdown-h">00</span>
+              <span class="countdown-sep">:</span>
+              <span class="countdown-item" id="countdown-m">00</span>
+              <span class="countdown-sep">:</span>
+              <span class="countdown-item" id="countdown-s">00</span>
+            </div>
+          </div>
+          <div class="flash-sale-scroll" id="flash-sale-list">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Products -->
+        <div class="products-section">
+          <div class="section-title">
+            <span>สินค้าแนะนำ</span>
+          </div>
+          <div class="products-grid" id="products-grid">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ======== SEARCH RESULTS VIEW ======== -->
+      <div id="view-search" class="view">
+        <div class="search-results-header">
+          <h3>ผลการค้นหา: <strong id="search-query-display"></strong></h3>
+        </div>
+        <div class="products-section">
+          <div class="products-grid" id="search-results-grid">
+          </div>
+        </div>
+        <div id="search-empty" class="cart-empty hidden">
+          <i class="fa-solid fa-search"></i>
+          <p>ไม่พบสินค้าที่ค้นหา</p>
+          <button class="btn btn-primary btn-sm" onclick="MeemonApp.navigateTo('home')">กลับหน้าแรก</button>
+        </div>
+      </div>
+
+      <!-- ======== CATEGORY VIEW ======== -->
+      <div id="view-category" class="view">
+        <div class="page-back-header">
+          <button class="back-btn" onclick="MeemonApp.navigateTo('home')">
+            <i class="fa-solid fa-arrow-left"></i>
+          </button>
+          <h2 id="category-page-title">หมวดหมู่</h2>
+        </div>
+        <div class="products-section">
+          <div class="products-grid" id="category-products-grid">
+          </div>
+        </div>
+      </div>
+
+      <!-- ======== PRODUCT DETAIL VIEW ======== -->
+      <div id="view-product" class="view">
+        <div class="product-detail" id="product-detail-content">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <!-- ======== CART VIEW ======== -->
+      <div id="view-cart" class="view">
+        <div class="cart-view">
+          <div class="page-back-header" style="padding-left:0">
+            <h2><i class="fa-solid fa-shopping-cart text-accent"></i> ตะกร้าสินค้า</h2>
+          </div>
+          <div id="cart-content">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ======== CHECKOUT VIEW ======== -->
+      <div id="view-checkout" class="view">
+        <div class="checkout-view">
+          <div class="page-back-header" style="padding-left:0">
+            <button class="back-btn" onclick="MeemonApp.navigateTo('cart')">
+              <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <h2>ชำระเงิน</h2>
+          </div>
+          <div id="checkout-content">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ======== PAYMENT VIEW ======== -->
+      <div id="view-payment" class="view">
+        <div class="payment-view">
+          <div id="payment-content">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ======== PROFILE VIEW ======== -->
+      <div id="view-profile" class="view">
+        <div class="profile-view">
+          <div id="profile-content">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ======== ORDERS VIEW ======== -->
+      <div id="view-orders" class="view">
+        <div class="orders-view">
+          <div class="page-back-header" style="padding-left:0">
+            <button class="back-btn" onclick="MeemonApp.navigateTo('profile')">
+              <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <h2>ประวัติคำสั่งซื้อ</h2>
+          </div>
+          <div id="orders-content">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ======== ADMIN VIEW ======== -->
+      <div id="view-admin" class="view">
+        <div class="admin-view">
+          <div class="page-back-header" style="padding-left:0">
+            <button class="back-btn" onclick="MeemonApp.navigateTo('profile')">
+              <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <h2>แดชบอร์ดแอดมิน ✦</h2>
+          </div>
+          
+          <!-- Admin Tabs -->
+          <div class="admin-tabs">
+            <button class="admin-tab active" data-tab="products" id="tab-admin-products">สินค้า</button>
+            <button class="admin-tab" data-tab="flash" id="tab-admin-flash">Flash Sale</button>
+            <button class="admin-tab" data-tab="banners" id="tab-admin-banners">แบนเนอร์</button>
+            <button class="admin-tab" data-tab="orders" id="tab-admin-orders">คำสั่งซื้อ</button>
+          </div>
+
+          <!-- Tab Content: Products -->
+          <div id="admin-panel-products" class="admin-panel-content">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px;">
+              <span class="text-sm text-muted" id="admin-products-count">ทั้งหมด 0 รายการ</span>
+              <button class="btn btn-accent btn-sm" onclick="Admin.openAddProductModal()" style="width:auto; padding: 6px 12px;">
+                <i class="fa-solid fa-plus"></i> เพิ่มสินค้า
+              </button>
+            </div>
+            <div id="admin-products-list" class="admin-list-container">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+
+          <!-- Tab Content: Flash Sale -->
+          <div id="admin-panel-flash" class="admin-panel-content hidden">
+            <div class="checkout-section" style="margin-bottom: 16px; padding: 12px;">
+              <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">ปรับแต่งเวลา Flash Sale ที่เหลืออยู่ (นาที):</div>
+              <div style="display:flex; gap:8px;">
+                <input type="number" id="admin-flash-duration" class="form-input" style="padding:8px;" value="15">
+                <button class="btn btn-primary btn-sm" onclick="Admin.updateFlashDuration()" style="width:auto; white-space:nowrap;">อัปเดตเวลา</button>
+              </div>
+            </div>
+            <div id="admin-flash-list" class="admin-list-container">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+
+          <!-- Tab Content: Banners -->
+          <div id="admin-panel-banners" class="admin-panel-content hidden">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px;">
+              <span class="text-sm text-muted">ทั้งหมด 3 สไลด์</span>
+              <button class="btn btn-accent btn-sm" onclick="Admin.openAddBannerModal()" style="width:auto; padding: 6px 12px;">
+                <i class="fa-solid fa-plus"></i> เพิ่มโฆษณา
+              </button>
+            </div>
+            <div id="admin-banners-list" class="admin-list-container">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+
+          <!-- Tab Content: Orders -->
+          <div id="admin-panel-orders" class="admin-panel-content hidden">
+            <div class="search-bar" style="margin-bottom:16px; box-shadow:none; background:rgba(255,255,255,0.06);">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="admin-order-search" placeholder="ค้นหาเลขออเดอร์หรือชื่อ..." oninput="Admin.filterOrders()">
+            </div>
+            <div id="admin-orders-list" class="admin-list-container">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+
+    <!-- ============ BOTTOM NAVIGATION ============ -->
+    <nav id="bottom-nav">
+      <button class="nav-item active" data-view="home" id="nav-home">
+        <i class="fa-solid fa-house"></i>
+        <span>หน้าแรก</span>
+      </button>
+      <button class="nav-item" data-view="all-categories" id="nav-categories">
+        <i class="fa-solid fa-grid-2"></i>
+        <span>หมวดหมู่</span>
+      </button>
+      <button class="nav-item" data-view="cart" id="nav-cart">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span>ตะกร้า</span>
+        <span class="cart-badge" id="cart-badge">0</span>
+      </button>
+      <button class="nav-item" data-view="profile" id="nav-profile">
+        <i class="fa-solid fa-user"></i>
+        <span>บัญชี</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- ============ AUTH MODAL ============ -->
+  <div class="modal-overlay" id="auth-modal">
+    <div class="modal-content">
+      <div class="modal-handle"></div>
+      
+      <h2 class="modal-title">ยินดีต้อนรับ ✦</h2>
+      <p class="modal-subtitle">เข้าสู่ระบบเพื่อช้อปปิ้งกับมีมนต์</p>
+
+      <!-- Auth Tabs -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-tab="login" id="tab-login">เข้าสู่ระบบ</button>
+        <button class="auth-tab" data-tab="register" id="tab-register">สมัครสมาชิก</button>
+      </div>
+
+      <!-- Login Form -->
+      <div id="auth-login" class="auth-form-content">
+        <div class="social-login">
+          <button class="social-btn line" id="btn-login-line">
+            <i class="fa-brands fa-line"></i>
+            เข้าสู่ระบบด้วย LINE
+          </button>
+          <button class="social-btn google" id="btn-login-google">
+            <i class="fa-brands fa-google" style="color:#4285F4;"></i>
+            เข้าสู่ระบบด้วย Gmail
+          </button>
+        </div>
+
+        <div class="divider">หรือ</div>
+
+        <form id="login-form">
+          <div class="form-group">
+            <label class="form-label">อีเมล</label>
+            <input type="email" class="form-input" id="login-email" placeholder="your@email.com" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">รหัสผ่าน</label>
+            <input type="password" class="form-input" id="login-password" placeholder="รหัสผ่าน" required>
+          </div>
+          <button type="submit" class="btn btn-accent btn-lg mt-md">เข้าสู่ระบบ</button>
+        </form>
+      </div>
+
+      <!-- Register Form -->
+      <div id="auth-register" class="auth-form-content hidden">
+        <div class="social-login">
+          <button class="social-btn line" id="btn-register-line">
+            <i class="fa-brands fa-line"></i>
+            สมัครด้วย LINE
+          </button>
+          <button class="social-btn google" id="btn-register-google">
+            <i class="fa-brands fa-google" style="color:#4285F4;"></i>
+            สมัครด้วย Gmail
+          </button>
+        </div>
+
+        <div class="divider">หรือสมัครด้วยอีเมล</div>
+
+        <form id="register-form">
+          <div class="form-group">
+            <label class="form-label">ชื่อ-นามสกุล</label>
+            <input type="text" class="form-input" id="register-name" placeholder="ชื่อ นามสกุล" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">เบอร์โทรศัพท์</label>
+            <input type="tel" class="form-input" id="register-phone" placeholder="08X-XXX-XXXX" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">อีเมล</label>
+            <input type="email" class="form-input" id="register-email" placeholder="your@email.com" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">รหัสผ่าน</label>
+            <input type="password" class="form-input" id="register-password" placeholder="อย่างน้อย 6 ตัวอักษร" required minlength="6">
+          </div>
+          <div class="form-group">
+            <label class="form-label">ยืนยันรหัสผ่าน</label>
+            <input type="password" class="form-input" id="register-confirm" placeholder="ยืนยันรหัสผ่าน" required>
+          </div>
+          <button type="submit" class="btn btn-accent btn-lg mt-md">สมัครสมาชิก</button>
+        </form>
+      </div>
+
+      <button class="btn btn-ghost mt-md" id="btn-close-auth">
+        <i class="fa-solid fa-xmark"></i> ปิด
+      </button>
+    </div>
+  </div>
+
+  <!-- ============ ADMIN PRODUCT MODAL ============ -->
+  <div class="modal-overlay" id="admin-product-modal">
+    <div class="modal-content">
+      <div class="modal-handle"></div>
+      <h2 class="modal-title" id="admin-product-modal-title">เพิ่มสินค้าใหม่ ✦</h2>
+      
+      <form id="admin-product-form" onsubmit="Admin.handleProductSubmit(event)">
+        <input type="hidden" id="admin-product-id">
+        
+        <div class="form-group">
+          <label class="form-label">ชื่อสินค้า</label>
+          <input type="text" class="form-input" id="admin-product-name" placeholder="ชื่อสินค้า..." required>
+        </div>
+
+        <div style="display:flex; gap:12px;">
+          <div class="form-group" style="flex:1;">
+            <label class="form-label">ราคาขาย (บาท)</label>
+            <input type="number" class="form-input" id="admin-product-price" placeholder="299" required min="1">
+          </div>
+          <div class="form-group" style="flex:1;">
+            <label class="form-label">ราคาเต็ม (บาท)</label>
+            <input type="number" class="form-input" id="admin-product-original-price" placeholder="590" required min="1">
+          </div>
+        </div>
+
+        <div style="display:flex; gap:12px;">
+          <div class="form-group" style="flex:1;">
+            <label class="form-label">หมวดหมู่</label>
+            <select class="form-input" id="admin-product-category" required style="background:var(--bg-input); padding:12px;">
+              <option value="fashion">แฟชั่น 👗</option>
+              <option value="electronics">อิเล็กทรอนิกส์ 📱</option>
+              <option value="beauty">ความงาม 💄</option>
+              <option value="health">สุขภาพ 💊</option>
+              <option value="home">บ้านและสวน 🏠</option>
+              <option value="sports">กีฬา ⚽</option>
+              <option value="food">อาหาร 🍜</option>
+              <option value="accessories">เครื่องประดับ 💎</option>
+            </select>
+          </div>
+          <div class="form-group" style="flex:1;">
+            <label class="form-label">อิโมจิสินค้า (Emoji)</label>
+            <input type="text" class="form-input" id="admin-product-emoji" placeholder="👕" required maxLength="4">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">รายละเอียดสินค้า</label>
+          <textarea class="form-input" id="admin-product-description" rows="3" placeholder="รายละเอียดสินค้าอย่างย่อ..." required style="resize:none; font-family:inherit;"></textarea>
+        </div>
+
+        <div class="checkout-section" style="padding:12px; margin-bottom:16px;">
+          <label class="form-label" style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+            <input type="checkbox" id="admin-product-flash" onchange="document.getElementById('admin-flash-progress-group').style.display = this.checked ? 'block' : 'none'">
+            <span>เข้าร่วม Flash Sale ⚡</span>
+          </label>
+          
+          <div class="form-group" id="admin-flash-progress-group" style="display:none; margin-top:12px; margin-bottom:0;">
+            <label class="form-label">ความคืบหน้าการขาย Flash Sale (%)</label>
+            <input type="number" class="form-input" id="admin-product-flash-progress" placeholder="50" min="0" max="100" value="50">
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-accent btn-lg mt-md">บันทึกสินค้า</button>
+      </form>
+      
+      <button class="btn btn-ghost mt-md" onclick="Admin.closeModals()">
+        <i class="fa-solid fa-xmark"></i> ยกเลิก
+      </button>
+    </div>
+  </div>
+
+  <!-- ============ ADMIN BANNER MODAL ============ -->
+  <div class="modal-overlay" id="admin-banner-modal">
+    <div class="modal-content">
+      <div class="modal-handle"></div>
+      <h2 class="modal-title" id="admin-banner-modal-title">เพิ่มแบนเนอร์โฆษณา ✦</h2>
+      
+      <form id="admin-banner-form" onsubmit="Admin.handleBannerSubmit(event)">
+        <input type="hidden" id="admin-banner-id">
+        
+        <div class="form-group">
+          <label class="form-label">หัวข้อ (Title)</label>
+          <input type="text" class="form-input" id="admin-banner-title" placeholder="🎉 โปรเด็ดพิเศษ!" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">รายละเอียด (Subtitle)</label>
+          <input type="text" class="form-input" id="admin-banner-subtitle" placeholder="รายละเอียดโปรโมชั่นสั้นๆ..." required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">ข้อความบนปุ่ม (Badge)</label>
+          <input type="text" class="form-input" id="admin-banner-badge" placeholder="ช้อปเลย" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">สีพื้นหลัง (CSS Gradient หรือสีพื้น)</label>
+          <input type="text" class="form-input" id="admin-banner-bg" placeholder="linear-gradient(135deg, #8B35A3 0%, #D4AF37 100%)" required>
+          <div style="font-size:0.65rem; color:var(--text-muted); margin-top:4px;">ตัวอย่างเช่น: linear-gradient(135deg, #สี1 0%, #สี2 100%) หรือรหัสสีปกติ #3D1249</div>
+        </div>
+
+        <button type="submit" class="btn btn-accent btn-lg mt-md">บันทึกแบนเนอร์</button>
+      </form>
+      
+      <button class="btn btn-ghost mt-md" onclick="Admin.closeModals()">
+        <i class="fa-solid fa-xmark"></i> ยกเลิก
+      </button>
+    </div>
+  </div>
+
+  <!-- ============ ADMIN ORDER DETAILS MODAL ============ -->
+  <div class="modal-overlay" id="admin-order-modal">
+    <div class="modal-content" style="max-height:85vh;">
+      <div class="modal-handle"></div>
+      <h2 class="modal-title">รายละเอียดคำสั่งซื้อ ✦</h2>
+      <p class="modal-subtitle" id="admin-order-detail-id">#MM2026-0000</p>
+      
+      <div id="admin-order-detail-content" style="text-align:left;">
+        <!-- Loaded by JS -->
+      </div>
+      
+      <div class="checkout-section" style="margin-top:16px; padding:16px; text-align:left;">
+        <label class="form-label">ปรับเปลี่ยนสถานะการจัดส่ง</label>
+        <select class="form-input" id="admin-order-status-select" style="background:var(--bg-input); padding:12px; margin-bottom:12px;">
+          <option value="pending">รอชำระเงิน ⏳</option>
+          <option value="completed">ชำระเงินแล้ว/สำเร็จ ✓</option>
+          <option value="shipping">กำลังจัดส่ง 🚚</option>
+        </select>
+        <button class="btn btn-accent btn-sm" onclick="Admin.updateOrderStatus()">
+          <i class="fa-solid fa-save"></i> บันทึกสถานะใหม่
+        </button>
+      </div>
+
+      <button class="btn btn-ghost mt-md" onclick="Admin.closeModals()">
+        <i class="fa-solid fa-xmark"></i> ปิดหน้าต่าง
+      </button>
+    </div>
+  </div>
+
+  <!-- ============ TOAST CONTAINER ============ -->
+  <div id="toast-container"></div>
+
+  <!-- ============ SCRIPTS ============ -->
+  <script src="js/stars.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/products.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/payment.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
