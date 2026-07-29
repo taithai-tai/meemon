@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meemon - วอลเปเปอร์มงคล</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        :root {
+            --gold: #d4af37;
+            --gold-light: #fceabb;
+            --gold-dark: #b8860b;
+            --dark-bg: #05020a;
+        }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: var(--dark-bg);
+            background-image: radial-gradient(circle at 50% 0%, #2e1065 0%, #000000 80%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .mystic-font {
+            font-family: 'Cinzel', serif;
+        }
+
+        /* Gold Gradient Text */
+        .text-gold-gradient {
+            background: linear-gradient(to bottom, #ffd700, #b8860b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Glass Card */
+        .glass-card {
+            background: rgba(20, 10, 30, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .glass-card:hover {
+            border-color: rgba(212, 175, 55, 0.6);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* Modal Animation */
+        .modal {
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            transform: scale(0.9);
+            transition: all 0.3s ease;
+        }
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        /* Badge Styles */
+        .badge-wealth { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+        .badge-love { background: rgba(236, 72, 153, 0.2); color: #f472b6; border: 1px solid rgba(236, 72, 153, 0.4); }
+        .badge-work { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); }
+        .badge-day { background: rgba(212, 175, 55, 0.1); color: #fcd34d; border: 1px solid rgba(212, 175, 55, 0.3); }
+
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="w-full py-4 px-6 flex justify-between items-center z-20 bg-black/40 backdrop-blur-md border-b border-white/5 sticky top-0">
+        <div class="flex items-center gap-3">
+            <img src="https://raw.githubusercontent.com/taithai-tai/meemon/refs/heads/main/Picture/logo.png" alt="Logo" class="w-8 h-8 object-contain">
+            <span class="text-xl font-bold tracking-widest text-gold-gradient">MEEMON</span>
+        </div>
+        <!-- Filter Button (Optional Future Use) -->
+        <button class="text-yellow-500 hover:text-white">
+            <i data-lucide="filter" class="w-5 h-5"></i>
+        </button>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="text-center py-10 px-4 relative">
+        <h1 class="text-3xl md:text-4xl font-bold text-white mb-2">Sacred Collection</h1>
+        <p class="text-sm text-gray-400 font-light">คลังภาพวอลเปเปอร์มงคล เสริมดวง พลิกชะตา</p>
+    </header>
+
+    <!-- Main Grid Content -->
+    <main class="flex-grow container mx-auto px-4 pb-20">
+        <!-- Grid Layout -->
+        <div id="wallpaper-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+            <!-- Items will be injected by JS -->
+        </div>
+    </main>
+
+    <!-- Product Detail Modal -->
+    <div id="product-modal" class="modal fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+        <div class="modal-content glass-card w-full max-w-2xl bg-[#0f0a1e] rounded-2xl overflow-hidden shadow-2xl flex flex-col md:flex-row relative max-h-[90vh]">
+            
+            <!-- Close Button -->
+            <button onclick="closeModal()" class="absolute top-4 right-4 z-10 bg-black/50 p-2 rounded-full text-white hover:bg-red-500/50 transition-colors">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <!-- Modal Image -->
+            <div class="w-full md:w-1/2 bg-black flex items-center justify-center p-4 relative">
+                <img id="modal-img" src="" alt="Wallpaper Preview" class="w-auto h-full max-h-[50vh] md:max-h-full object-contain rounded-lg shadow-lg border border-yellow-500/20">
+                <div class="absolute bottom-4 right-4 bg-black/70 px-2 py-1 rounded text-[10px] text-gray-300">Preview</div>
+            </div>
+
+            <!-- Modal Details -->
+            <div class="w-full md:w-1/2 p-6 flex flex-col overflow-y-auto">
+                <!-- Header -->
+                <div class="mb-4 border-b border-white/10 pb-4">
+                    <div class="flex flex-wrap gap-2 mb-2" id="modal-tags">
+                        <!-- Tags injected here -->
+                    </div>
+                    <h2 id="modal-title" class="text-2xl font-bold text-white mb-1">Title</h2>
+                    <p class="text-xs text-gray-400 uppercase tracking-widest">Meemon Exclusive</p>
+                </div>
+
+                <!-- Description -->
+                <div class="flex-grow mb-6">
+                    <h3 class="text-sm font-bold text-yellow-500 mb-2 flex items-center gap-2">
+                        <i data-lucide="sparkles" class="w-4 h-4"></i> ความหมายมงคล
+                    </h3>
+                    <p id="modal-desc" class="text-sm text-gray-300 leading-relaxed font-light mb-4">Description...</p>
+                    
+                    <h3 class="text-sm font-bold text-yellow-500 mb-2 flex items-center gap-2">
+                        <i data-lucide="user" class="w-4 h-4"></i> เหมาะสำหรับ
+                    </h3>
+                    <p id="modal-target" class="text-sm text-gray-300 font-light">Target User...</p>
+                </div>
+
+                <!-- Action Button -->
+                <div class="mt-auto">
+                    <p class="text-center text-xs text-gray-500 mb-2">กดดาวน์โหลดเพื่อบันทึกภาพขนาดเต็ม</p>
+                    <a id="modal-download-btn" href="#" download class="w-full bg-gradient-to-r from-yellow-700 to-yellow-500 hover:from-yellow-600 hover:to-yellow-400 text-black font-bold py-3 rounded-lg shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95">
+                        <i data-lucide="download" class="w-5 h-5"></i>
+                        ดาวน์โหลดวอลเปเปอร์
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center py-6 border-t border-white/5 bg-black/20">
+        <p class="text-[10px] text-white/20 uppercase tracking-[0.3em]">MEEMON Official Shop</p>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // ---------------------------------------------------------
+        // DATA: ข้อมูลวอลเปเปอร์ (เพิ่มข้อมูลของคุณที่นี่)
+        // ---------------------------------------------------------
+        const wallpaperData = [
+            {
+                id: 1,
+                title: "วันอาทิตย์ - พลังเทพกวนอิม",
+                // Convert Github Blob URL to Raw URL by adding ?raw=true
+                image: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B8%AD%E0%B8%B2%E0%B8%97%E0%B8%B4%E0%B8%95/S__14934024_0.jpg?raw=true",
+                fullImage: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B8%AD%E0%B8%B2%E0%B8%97%E0%B8%B4%E0%B8%95/S__14934024_0.jpg?raw=true",
+                category: "wealth",
+                categoryLabel: "โชคลาภ & บารมี",
+                target: "ผู้ที่ต้องการ ยกระดับชีวิต การเงิน และพลังบารมี",
+                birthday: "วันอาทิตย์",
+                description: "สัญลักษณ์ของ โชคลาภ เมตตา และทรัพย์ที่ยั่งยืน พลังจาก เทพแม่กวนอิม และพญานาค ช่วยคุ้มครอง หนุนดวง ให้ทางออกในเวลาติดขัด ผสานดวงตาพีระมิดและ Evil Eye ป้องกันพลังลบ เปิดการมองเห็นโอกาส"
+            },
+            {
+                id: 2,
+                title: "วันอาทิตย์ - แสงแห่งความสำเร็จ",
+                image: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B8%AD%E0%B8%B2%E0%B8%97%E0%B8%B4%E0%B8%95/S__14934025_0.jpg?raw=true",
+                fullImage: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B8%AD%E0%B8%B2%E0%B8%97%E0%B8%B4%E0%B8%95/S__14934025_0.jpg?raw=true",
+                category: "work",
+                categoryLabel: "อำนาจ & ความสำเร็จ",
+                target: "ผู้ที่ต้องการความมั่นคง อุ่นใจ และเปิดรับความมั่งคั่งแบบคนมีฐานะ",
+                birthday: "วันอาทิตย์",
+                description: "พระอาทิตย์ เปิดอำนาจ บารมี และความสำเร็จ พร้อมอัญมณี วงเวท ยันต์ และรูน ดึงดูดเงิน โชค และผู้สนับสนุน ให้ความรู้สึกมั่นคงและยั่งยืน"
+            },
+            {
+                id: 3,
+                title: "วันอาทิตย์ - ทรัพย์ที่ยั่งยืน",
+                image: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B8%AD%E0%B8%B2%E0%B8%97%E0%B8%B4%E0%B8%95/S__14934027.jpg?raw=true",
+                fullImage: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B8%AD%E0%B8%B2%E0%B8%97%E0%B8%B4%E0%B8%95/S__14934027.jpg?raw=true",
+                category: "wealth",
+                categoryLabel: "การเงิน & โชคลาภ",
+                target: "ผู้ที่ต้องการโชคดีที่เกิดซ้ำอย่างต่อเนื่อง",
+                birthday: "วันอาทิตย์",
+                description: "โดดเด่นด้วยดอกโคลเวอร์ สัญลักษณ์แห่งโชคดีที่เกิดซ้ำอย่างต่อเนื่อง ช่วยดึงดูดทรัพย์สินเงินทอง และความโชคดีในทุกด้านของชีวิต"
+            },
+            {
+                id: 4,
+                title: "วันอาทิตย์ - พลังจักรวาล",
+                image: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B8%AD%E0%B8%B2%E0%B8%97%E0%B8%B4%E0%B8%95/S__14934028.jpg?raw=true",
+                fullImage: "https://github.com/taithai-tai/meemon/blob/main/card/Picture/%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B8%AD%E0%B8%B2%E0%B8%97%E0%B8%B4%E0%B8%95/S__14934028.jpg?raw=true",
+                category: "wealth",
+                categoryLabel: "เมตตา & บารมี",
+                target: "ผู้ที่ต้องการการคุ้มครองและหนุนดวงชะตา",
+                birthday: "วันอาทิตย์",
+                description: "การรวมพลังของสิ่งศักดิ์สิทธิ์ ทั้งเทพแม่กวนอิมและพลังจักรวาลผ่านยันต์รูน เพื่อความเป็นสิริมงคลสูงสุด ปกป้องคุ้มครองและนำพาความเจริญรุ่งเรือง"
+            }
+        ];
+
+        // ---------------------------------------------------------
+        // LOGIC: Render Items
+        // ---------------------------------------------------------
+        function renderGrid() {
+            const grid = document.getElementById('wallpaper-grid');
+            let html = '';
+
+            wallpaperData.forEach(item => {
+                // Determine Badge Colors
+                let badgeClass = '';
+                if(item.category === 'wealth') badgeClass = 'badge-wealth';
+                else if(item.category === 'love') badgeClass = 'badge-love';
+                else if(item.category === 'work') badgeClass = 'badge-work';
+                else badgeClass = 'badge-day'; // default
+
+                html += `
+                <div class="glass-card rounded-xl overflow-hidden relative group cursor-pointer" onclick="openModal(${item.id})">
+                    <!-- Image Wrapper -->
+                    <div class="aspect-[9/16] w-full bg-black/50 overflow-hidden relative">
+                        <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-90 group-hover:opacity-100">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
+                        
+                        <!-- Overlay Text -->
+                        <div class="absolute bottom-0 left-0 p-3 w-full">
+                            <h3 class="text-white font-bold text-lg leading-tight mb-1 truncate">${item.title}</h3>
+                            <div class="flex flex-wrap gap-1">
+                                <span class="text-[10px] px-2 py-0.5 rounded-full ${badgeClass}">${item.categoryLabel}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
+            });
+
+            grid.innerHTML = html;
+        }
+
+        // ---------------------------------------------------------
+        // LOGIC: Modal
+        // ---------------------------------------------------------
+        function openModal(id) {
+            const item = wallpaperData.find(w => w.id === id);
+            if (!item) return;
+
+            // Update Content
+            document.getElementById('modal-img').src = item.image; // Use preview for modal image to load fast
+            document.getElementById('modal-title').innerText = item.title;
+            document.getElementById('modal-desc').innerText = item.description;
+            document.getElementById('modal-target').innerText = item.target;
+            
+            // Set Download Link
+            document.getElementById('modal-download-btn').href = item.fullImage;
+
+            // Badges
+            let badgeClass = '';
+            if(item.category === 'wealth') badgeClass = 'badge-wealth';
+            else if(item.category === 'love') badgeClass = 'badge-love';
+            else if(item.category === 'work') badgeClass = 'badge-work';
+            
+            const tagsHtml = `
+                <span class="text-[10px] px-2 py-1 rounded-md ${badgeClass}">${item.categoryLabel}</span>
+                <span class="text-[10px] px-2 py-1 rounded-md badge-day">เหมาะกับ: ${item.birthday}</span>
+            `;
+            document.getElementById('modal-tags').innerHTML = tagsHtml;
+
+            // Show Modal
+            document.getElementById('product-modal').classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling bg
+        }
+
+        function closeModal() {
+            document.getElementById('product-modal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close when clicking outside
+        document.getElementById('product-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'product-modal') closeModal();
+        });
+
+        // Init
+        renderGrid();
+
+    </script>
+</body>
+</html>

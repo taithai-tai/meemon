@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Meemon | เติมแต้มบุญ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen bg-slate-900 text-white flex items-center justify-center p-4">
+
+<div class="bg-white/10 p-6 rounded-2xl w-full max-w-sm space-y-4">
+
+  <h1 class="text-xl font-bold text-center">💰 เติมแต้มบุญ</h1>
+
+  <!-- STEP 1: AMOUNT -->
+  <div id="step1">
+    <label class="text-sm text-white/70">จำนวนเงินที่ต้องการเติม (บาท)</label>
+    <input
+      id="amount"
+      type="number"
+      min="1"
+      placeholder="เช่น 100"
+      class="w-full p-3 rounded-xl text-black text-center text-lg font-bold mt-2"
+    />
+
+    <button
+      onclick="generateQR()"
+      class="w-full bg-yellow-300 text-black p-3 rounded-xl font-bold mt-4">
+      สร้าง QR Code เพื่อโอนเงิน
+    </button>
+  </div>
+
+  <!-- STEP 2: QR -->
+  <div id="step2" class="hidden text-center space-y-3">
+    <img id="qrImg"
+         class="mx-auto rounded-xl border bg-white p-2"
+         alt="PromptPay QR" />
+
+    <div class="text-sm text-white/80">
+      ยอดเงิน: <span id="sumAmount" class="font-bold text-yellow-300"></span><br>
+      จะได้รับแต้ม: <span id="sumCredits" class="font-bold text-green-400"></span>
+    </div>
+
+    <button
+      onclick="goUpload()"
+      class="w-full bg-green-400 text-black p-3 rounded-xl font-bold">
+      โอนเงินแล้ว → อัปโหลดสลิป
+    </button>
+  </div>
+
+  <!-- STEP 3: UPLOAD -->
+  <div id="step3" class="hidden space-y-3">
+    <input
+      type="file"
+      id="slipFile"
+      accept="image/*"
+      class="w-full bg-white text-black p-2 rounded"
+    />
+
+    <button
+      onclick="uploadSlip()"
+      class="w-full bg-blue-400 text-black p-3 rounded-xl font-bold">
+      ตรวจสอบสลิป & เติมแต้ม
+    </button>
+  </div>
+
+  <!-- MESSAGE -->
+  <p id="msg" class="text-center text-sm min-h-[20px]"></p>
+
+</div>
+  
+<script src="config.js">
+/* ================= CONFIG ================= */
+
+const PROMPTPAY = "0661127624";
+const CREDIT_PER_BAHT = 10; // 1 บาท = 10 แต้ม
+const API_URL = window.MEEMON_API_URL; // 🔴 ใส่ของคุณ
+
+/* ================= STATE ================= */
+
+const amountEl = document.getElementById("amount");
+const qrImg = document.getElementById("qrImg");
+const sumAmountEl = document.getElementById("sumAmount");
+const sumCreditsEl = document.getElementById("sumCredits");
+const msgEl = document.getElementById("msg");
+
+let currentAmount = 0;
+
+/* ================= UI ================= */
+
+function msg(t, ok=false){
+  msgEl.className = "text-center text-sm " + (ok ? "text-green-400" : "text-red-300");
+  msgEl.innerText = t || "";
+}
+
+function show(step){
+  ["step1","step2","step3"].forEach(id=>{
+    document.getElementById(id).classList.add("hidden");
+  });
+  document.getElementById(step).classList.remove("hidden");
+}
+
+/* ================= LOGIC ================= */
+
+function generateQR(){
+  const amount = Number(amountEl.value || 0);
+  if (!amount || amount <= 0) return msg("กรุณากรอกจำนวนเงิน");
+
+  currentAmount = amount;
+
+  qrImg.src = `https://promptpay.io/${PROMPTPAY}/${amount}.png`;
+  sumAmountEl.innerText = `฿${amount.toLocaleString()}`;
+  sumCreditsEl.innerText = (amount * CREDIT_PER_BAHT).toLocaleString();
+
+  show("step2");
+  msg("สร้าง QR Code เรียบร้อย ✅", true);
+}
+
+function goUpload(){
+  show("step3");
+  msg("อัปโหลดสลิปหลังโอนเงิน", true);
+}
+
+async function uploadSlip(){
+  const file = document.getElementById("slipFile").files[0];
+  if (!file) return msg("กรุณาเลือกไฟล์สลิป");
+
+  msg("กำลังอัปโหลดและตรวจสอบสลิป…", true);
+
+  const reader = new FileReader();
+  reader.onload = async () => {
+    const base64 = reader.result.split(",")[1];
+
+    const form = new URLSearchParams();
+    form.append("action", "verifySlip");
+    form.append("amount", currentAmount);
+    form.append("slip", base64);
+
+    try{
+      const r = await fetch(API_URL, { method:"POST", body: form });
+      const data = await r.json();
+
+      if (!data.success){
+        msg(data.error || "สลิปไม่ถูกต้อง");
+        return;
+      }
+
+      msg("เติมแต้มบุญสำเร็จ 🎉", true);
+      show("step1");
+      amountEl.value = "";
+    }catch(e){
+      console.error(e);
+      msg("เชื่อมต่อระบบไม่ได้");
+    }
+  };
+  reader.readAsDataURL(file);
+}
+</script>
+
+</body>
+</html>

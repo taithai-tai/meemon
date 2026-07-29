@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ฤกษ์เปิดกระเป๋าเรียกทรัพย์</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: #02010a; /* Dark Purple Black */
+            color: #e9d5ff; /* Light Purple text */
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Background Stars Container */
+        .background-stars-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -2;
+            overflow: hidden;
+        }
+
+        /* Moon Container Styles */
+        .moon-container {
+            width: 280px;
+            height: 280px;
+            position: relative;
+            margin: 0 auto;
+            border-radius: 50%;
+        }
+
+        /* Stars Effect around the moon */
+        .stars-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 150%;
+            height: 150%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Shared Star Style */
+        .star {
+            position: absolute;
+            background-color: #e9d5ff;
+            border-radius: 50%;
+            opacity: 0;
+            animation: twinkle 3s infinite ease-in-out;
+            box-shadow: 0 0 4px rgba(216, 180, 254, 0.8);
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0.5); }
+        }
+
+        /* Glow effect behind the moon */
+        .moon-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            box-shadow: 0 0 70px rgba(168, 85, 247, 0.25);
+            z-index: 0;
+            transition: box-shadow 0.5s ease;
+        }
+
+        /* Animations */
+        .fade-in { animation: fadeIn 0.5s ease-out forwards; }
+        .slide-up { animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Glassmorphism Card Base */
+        .glass-card {
+            background: rgba(15, 7, 32, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Selection Card Hover */
+        .selection-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .selection-card:hover {
+            background: rgba(168, 85, 247, 0.15);
+            transform: translateY(-5px);
+            border-color: rgba(168, 85, 247, 0.5);
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.2);
+        }
+
+        /* Utility to hide elements */
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center py-6 px-4 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#2e1065] via-[#0b0314] to-[#000000]">
+
+    <!-- Background Stars -->
+    <div class="background-stars-container" id="backgroundStarsContainer"></div>
+
+    <!-- ================= LANDING PAGE (Select Career) ================= -->
+    <div id="landingPage" class="w-full max-w-md flex flex-col items-center justify-center space-y-8 z-10 slide-up">
+        
+        <div class="text-center space-y-2">
+            <div class="text-6xl mb-4 animate-pulse">🔮</div>
+            <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-200 to-pink-200 drop-shadow-md">
+                เลือกเส้นทางของคุณ
+            </h1>
+            <p class="text-purple-300/60">เพื่อคำนวณฤกษ์เปิดทรัพย์ที่แม่นยำที่สุด</p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4 w-full px-4">
+            <!-- Option 1: Normal -->
+            <div onclick="selectMode('normal')" class="glass-card selection-card rounded-2xl p-6 flex items-center space-x-4 group">
+                <div class="w-12 h-12 rounded-full bg-purple-500/10 flex items-center justify-center border border-purple-500/30 group-hover:bg-purple-500/30 transition">
+                    <i class="fa-solid fa-sun text-yellow-300 text-xl"></i>
+                </div>
+                <div class="text-left">
+                    <h3 class="text-xl font-bold text-purple-100">บุคคลทั่วไป</h3>
+                    <p class="text-xs text-purple-400 group-hover:text-purple-200">ค้าขาย, งานประจำ, ธุรกิจสุจริต</p>
+                </div>
+                <div class="ml-auto text-purple-500/50 group-hover:text-purple-300">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <!-- Option 2: Gray -->
+            <div onclick="selectMode('gray')" class="glass-card selection-card rounded-2xl p-6 flex items-center space-x-4 group">
+                <div class="w-12 h-12 rounded-full bg-purple-500/10 flex items-center justify-center border border-purple-500/30 group-hover:bg-purple-500/30 transition">
+                    <i class="fa-solid fa-moon text-purple-400 text-xl"></i>
+                </div>
+                <div class="text-left">
+                    <h3 class="text-xl font-bold text-purple-100">สายเทา / กลางคืน</h3>
+                    <p class="text-xs text-purple-400 group-hover:text-purple-200">งานกลางคืน, ธุรกิจสีเทา, เสี่ยงโชค</p>
+                </div>
+                <div class="ml-auto text-purple-500/50 group-hover:text-purple-300">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ================= MAIN APP (Moon Phase) ================= -->
+    <main id="mainApp" class="hidden w-full max-w-md glass-card rounded-3xl p-6 shadow-2xl relative overflow-hidden ring-1 ring-purple-500/10 fade-in">
+        
+        <!-- Decorative Elements -->
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+            <div class="absolute -top-20 -right-20 w-40 h-40 bg-purple-600/20 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-20 -left-20 w-40 h-40 bg-indigo-600/20 rounded-full blur-3xl"></div>
+        </div>
+
+        <!-- Navigation / Header -->
+        <header class="relative z-10 mb-6">
+            <!-- Back Button (Updated for better clickability) -->
+            <button onclick="goBack()" class="absolute left-0 top-0 p-3 -ml-3 text-purple-400/70 hover:text-purple-100 transition z-50 rounded-full hover:bg-purple-500/10 cursor-pointer">
+                <i class="fa-solid fa-arrow-left text-xl"></i>
+            </button>
+            
+            <div class="text-center">
+                <h1 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-200 to-pink-200 drop-shadow-md">
+                    🌙 ฤกษ์เปิดกระเป๋า
+                </h1>
+                <p id="displayModeText" class="text-xs font-semibold text-purple-400 mt-1 uppercase tracking-wider border border-purple-500/30 inline-block px-2 py-0.5 rounded-full bg-purple-900/30">
+                    -
+                </p>
+            </div>
+        </header>
+
+        <!-- Controls (Date Only) -->
+        <div class="mb-6 space-y-4 relative z-10">
+            <div class="flex flex-col">
+                <label class="text-xs text-purple-300/70 mb-1 ml-1">เลือกวันที่ต้องการเช็ค</label>
+                <input type="date" id="datePicker" class="w-full bg-[#1e1b4b]/60 border border-purple-500/30 rounded-xl px-4 py-3 text-purple-100 focus:outline-none focus:border-purple-400 text-center shadow-inner placeholder-purple-400/50">
+            </div>
+            <!-- Removed Toggle Switch -->
+        </div>
+
+        <!-- Moon Visualization -->
+        <div class="relative flex justify-center items-center py-2 mb-2 z-10">
+            <div class="moon-container">
+                <div class="stars-container" id="starsContainer"></div>
+                <div id="moonGlow" class="moon-glow"></div>
+                <div id="moonVisual" class="relative z-10 w-full h-full">
+                    <!-- SVG Injected Here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Info Text -->
+        <div class="text-center mb-6 relative z-10">
+            <h2 id="lunarPhaseText" class="text-2xl font-bold text-purple-50 drop-shadow-sm">กำลังคำนวณ...</h2>
+            <p id="moonAgeText" class="text-sm text-purple-300/80 mt-1 font-mono tracking-wide">Age: - | Phase: -%</p>
+        </div>
+
+        <!-- Result Card -->
+        <div id="resultCard" class="relative z-10 rounded-xl p-5 text-center opacity-0 transform scale-95 border-2 bg-[#0f0720]/60 backdrop-blur-sm transition-all duration-300">
+            <div id="resultIcon" class="text-5xl mb-3 drop-shadow-md"></div>
+            <h3 id="resultTitle" class="text-2xl font-bold mb-2"></h3>
+            <p id="resultDesc" class="text-sm opacity-90 leading-relaxed"></p>
+        </div>
+
+    </main>
+
+    <script>
+        // --- DOM Elements ---
+        const landingPage = document.getElementById('landingPage');
+        const mainApp = document.getElementById('mainApp');
+        const displayModeText = document.getElementById('displayModeText');
+        
+        const datePicker = document.getElementById('datePicker');
+        const moonVisual = document.getElementById('moonVisual');
+        const moonGlow = document.getElementById('moonGlow');
+        const starsContainer = document.getElementById('starsContainer');
+        const backgroundStarsContainer = document.getElementById('backgroundStarsContainer'); 
+        const lunarPhaseText = document.getElementById('lunarPhaseText');
+        const moonAgeText = document.getElementById('moonAgeText');
+        const resultCard = document.getElementById('resultCard');
+        const resultTitle = document.getElementById('resultTitle');
+        const resultDesc = document.getElementById('resultDesc');
+        const resultIcon = document.getElementById('resultIcon');
+
+        // Config
+        const MOON_IMAGE_URL = "https://as1.ftcdn.net/jpg/05/58/34/58/1000_F_558345818_bge4TJnE7KG7Lu1Gykh5HZOzRUDkXK3Q.jpg";
+
+        // State
+        let currentMode = 'normal'; // default
+        
+        // Initialize Date
+        const today = new Date();
+        datePicker.valueAsDate = today;
+
+        // --- View Navigation Logic ---
+        function selectMode(mode) {
+            currentMode = mode;
+            
+            // Update UI text based on mode
+            if (currentMode === 'normal') {
+                displayModeText.innerText = "อาชีพ: บุคคลทั่วไป (สายขาว)";
+                displayModeText.className = "text-xs font-semibold text-yellow-200 mt-1 uppercase tracking-wider border border-yellow-500/30 inline-block px-2 py-0.5 rounded-full bg-yellow-900/30";
+            } else {
+                displayModeText.innerText = "อาชีพ: สายเทา / กลางคืน";
+                displayModeText.className = "text-xs font-semibold text-purple-300 mt-1 uppercase tracking-wider border border-purple-500/30 inline-block px-2 py-0.5 rounded-full bg-purple-900/30";
+            }
+
+            // Transition
+            landingPage.classList.add('hidden');
+            landingPage.classList.remove('slide-up'); // Remove class to reset animation for next time
+            
+            mainApp.classList.remove('hidden');
+            void mainApp.offsetWidth; // Trigger reflow
+            mainApp.classList.add('slide-up');
+            
+            // Trigger calculation
+            updateApp();
+        }
+
+        function goBack() {
+            mainApp.classList.add('hidden');
+            mainApp.classList.remove('slide-up');
+            
+            landingPage.classList.remove('hidden');
+            void landingPage.offsetWidth; // Trigger reflow
+            landingPage.classList.add('slide-up'); // Re-trigger animation
+        }
+
+        // --- Visual Effects (Stars) ---
+        function createStars() {
+            starsContainer.innerHTML = '';
+            const numStars = 30;
+            for (let i = 0; i < numStars; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 140 + Math.random() * 100;
+                const x = Math.cos(angle) * distance;
+                const y = Math.sin(angle) * distance;
+                const size = 1 + Math.random() * 3;
+                const delay = Math.random() * 3;
+                const duration = 2 + Math.random() * 3;
+
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `calc(50% + ${x}px)`;
+                star.style.top = `calc(50% + ${y}px)`;
+                star.style.animationDelay = `${delay}s`;
+                star.style.animationDuration = `${duration}s`;
+                star.style.backgroundColor = Math.random() > 0.8 ? "#d8b4fe" : "#ffffff";
+
+                starsContainer.appendChild(star);
+            }
+        }
+        
+        function createBackgroundStars() {
+            const numStars = 80;
+            for (let i = 0; i < numStars; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                const size = 1 + Math.random() * 2; 
+                const delay = Math.random() * 5;
+                const duration = 3 + Math.random() * 4; 
+
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${x}%`;
+                star.style.top = `${y}%`;
+                star.style.animationDelay = `${delay}s`;
+                star.style.animationDuration = `${duration}s`;
+                star.style.opacity = Math.random() * 0.7 + 0.3; 
+                star.style.backgroundColor = Math.random() > 0.7 ? "#a855f7" : "#ffffff";
+                
+                backgroundStarsContainer.appendChild(star);
+            }
+        }
+
+        createStars();
+        createBackgroundStars();
+
+        // --- Core Logic ---
+        function getMoonPhase(date) {
+            // ใช้ UTC เพื่อป้องกันปัญหา Timezone ทำให้วันที่เพี้ยน
+            let year = date.getUTCFullYear();
+            let month = date.getUTCMonth() + 1;
+            let day = date.getUTCDate();
+
+            // สูตรคำนวณ Julian Day (ความแม่นยำสูง)
+            if (month < 3) {
+                year--;
+                month += 12;
+            }
+
+            let A = Math.floor(year / 100);
+            let B = 2 - A + Math.floor(A / 4);
+            let JD = Math.floor(365.25 * (year + 4716)) + Math.floor(30.6001 * (month + 1)) + day + B - 1524.5;
+
+            // คำนวณเฟสดวงจันทร์จากวันที่อ้างอิง (Known New Moon: 2000 Jan 6)
+            let daysSinceNew = JD - 2451550.1;
+            let cycles = daysSinceNew / 29.53058867;
+            let phase = cycles - Math.floor(cycles);
+
+            // ปรับ phase ให้อยู่ในช่วง 0-1 เสมอ
+            if (phase < 0) phase += 1;
+            
+            // คำนวณอายุจันทร์ (0 - 29.5)
+            let age = phase * 29.53058867;
+
+            return { 
+                phase: phase, 
+                age: Math.round(age) 
+            };
+        }
+
+        function getLunarPhaseName(age) {
+            if (age === 0 || age >= 29) return { name: "🌑 เดือนดับ (New Moon)", type: "new" };
+            if (age === 15) return { name: "🌕 จันทร์เพ็ญ (Full Moon)", type: "full" };
+            if (age < 15) return { name: `🌒 ข้างขึ้น ${age} ค่ำ`, type: "waxing" };
+            return { name: `🌘 ข้างแรม ${age - 15} ค่ำ`, type: "waning" };
+        }
+
+        function renderRealMoon(phase) {
+            const s = 250;
+            const r = s / 2;
+            let path = "";
+            let glowIntensity = 0.1;
+
+            if (phase <= 0.01 || phase >= 0.99) {
+                path = `M ${r},${r} m 0,0 z`;
+                glowIntensity = 0.05;
+            } else if (Math.abs(phase - 0.5) <= 0.01) {
+                path = `M ${r},0 A ${r},${r} 0 1,1 ${r},${s} A ${r},${r} 0 1,1 ${r},0`;
+                glowIntensity = 0.8;
+            } else {
+                const isWaxing = phase < 0.5;
+                let p = isWaxing ? phase * 2 : (phase - 0.5) * 2;
+                let rx = r * Math.cos(p * Math.PI); 
+                let sweepInner = 0;
+                
+                if (isWaxing) {
+                    sweepInner = phase < 0.25 ? 0 : 1;
+                    path = `M ${r},0 A ${r},${r} 0 0,1 ${r},${s} A ${Math.abs(rx)},${r} 0 0,${sweepInner} ${r},0`;
+                } else {
+                    sweepInner = phase < 0.75 ? 0 : 1;
+                    path = `M ${r},0 A ${r},${r} 0 0,0 ${r},${s} A ${Math.abs(rx)},${r} 0 0,${sweepInner} ${r},0`;
+                }
+                glowIntensity = 0.1 + ((1 - (Math.abs(phase - 0.5) * 2)) * 0.5);
+            }
+
+            moonGlow.style.boxShadow = `0 0 ${40 + (glowIntensity * 50)}px rgba(192, 132, 252, ${glowIntensity * 0.5})`;
+
+            const size = s * 1.25;
+            const offset = (size - s) / 2;
+
+            moonVisual.innerHTML = `
+                <svg width="100%" height="100%" viewBox="0 0 ${s} ${s}">
+                    <defs>
+                        <filter id="softEdge">
+                            <feGaussianBlur stdDeviation="4" />
+                        </filter>
+                        <mask id="moonMask">
+                            <rect x="0" y="0" width="${s}" height="${s}" fill="black" />
+                            <path d="${path}" fill="white" filter="url(#softEdge)" />
+                        </mask>
+                    </defs>
+                    <circle cx="${r}" cy="${r}" r="${r - 1}" fill="#0a0510" />
+                    <image href="${MOON_IMAGE_URL}" x="${-offset}" y="${-offset}" width="${size}" height="${size}" mask="url(#moonMask)" preserveAspectRatio="xMidYMid slice" />
+                    <circle cx="${r}" cy="${r}" r="${r}" fill="none" stroke="#2e1065" stroke-opacity="0.5" stroke-width="2" />
+                </svg>
+            `;
+        }
+
+        function updateApp() {
+            const date = datePicker.valueAsDate;
+            if(!date) return;
+
+            const moonData = getMoonPhase(date);
+            const lunarInfo = getLunarPhaseName(moonData.age);
+            renderRealMoon(moonData.phase);
+            
+            lunarPhaseText.innerText = lunarInfo.name;
+            moonAgeText.innerText = `อายุจันทร์: ${moonData.age} วัน (${Math.floor(moonData.phase*100)}%)`;
+
+            const age = moonData.age;
+            const isBrightPhase = (age >= 1 && age <= 15);
+            let isGood = false;
+
+            if (currentMode === 'normal') {
+                isGood = isBrightPhase;
+            } else {
+                isGood = !isBrightPhase;
+            }
+
+            resultCard.classList.remove('fade-in');
+            void resultCard.offsetWidth;
+            
+            if (isGood) {
+                resultCard.className = `relative z-10 rounded-xl p-5 text-center border-2 fade-in bg-gradient-to-br from-[#103020]/90 to-[#1e1b4b]/90 border-green-500/40 text-green-200 shadow-[0_0_25px_rgba(34,197,94,0.15)]`;
+                resultIcon.innerText = "💰";
+                resultTitle.innerText = "ฤกษ์มงคล (เปิดรับทรัพย์)";
+                resultTitle.className = "text-2xl font-bold mb-2 text-green-300 drop-shadow-sm";
+                resultDesc.innerText = currentMode === 'normal' 
+                    ? "ข้างขึ้น/จันทร์เพ็ญ: แสงสว่างนำทางความสำเร็จ เหมาะแก่การเปิดเผยและเริ่มต้น"
+                    : "ข้างแรม/เดือนดับ: ความมืดอำพราง เหมาะแก่การทำงานลับ การเจรจาที่ไม่เปิดเผย";
+            } else {
+                resultCard.className = `relative z-10 rounded-xl p-5 text-center border-2 fade-in bg-gradient-to-br from-[#450a0a]/90 to-[#1e1b4b]/90 border-red-500/40 text-red-200 shadow-[0_0_25px_rgba(239,68,68,0.15)]`;
+                resultIcon.innerText = "🔒";
+                resultTitle.innerText = "ควรงดเว้น (เก็บทรัพย์)";
+                resultTitle.className = "text-2xl font-bold mb-2 text-red-300 drop-shadow-sm";
+                resultDesc.innerText = currentMode === 'normal'
+                    ? "ข้างแรม/เดือนดับ: พลังจันทราอับแสง ไม่เหมาะแก่การเริ่มงานมงคลทั่วไป"
+                    : "ข้างขึ้น/จันทร์เพ็ญ: แสงสว่างจ้าเกินไป อาจเปิดเผยสิ่งที่ควรซ่อนเร้น";
+            }
+        }
+
+        datePicker.addEventListener('change', updateApp);
+    </script>
+</body>
+</html>

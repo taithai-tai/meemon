@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <title>Meemon | Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&family=Pattaya&display=swap" rel="stylesheet">
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+  <style>
+    body {
+      background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+      font-family: 'Sarabun', sans-serif;
+      color: white;
+      min-height: 100vh;
+    }
+    .glass {
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 20px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.45);
+    }
+    .btn-gold {
+      background: linear-gradient(45deg, #FFD700, #DAA520);
+      color: #3e2723;
+      font-weight: bold;
+      border-radius: 14px;
+      padding: 14px;
+      width: 100%;
+      transition: transform .15s ease;
+    }
+    .btn-gold:hover { transform: scale(1.03); }
+    .tile-btn {
+      width: 100%;
+      text-align: left;
+      transition: transform .12s ease, background .12s ease;
+    }
+    .tile-btn:hover { transform: scale(1.01); background: rgba(255,255,255,0.04); }
+    .muted { color: rgba(255,255,255,0.7); }
+  </style>
+</head>
+
+<body class="px-4 py-6">
+
+<!-- ===== Header ===== -->
+<div class="glass p-4 flex items-center justify-between mb-6">
+  <div class="flex items-center gap-3">
+    <div class="w-12 h-12 rounded-full bg-purple-700 flex items-center justify-center text-xl font-bold">
+      <span id="avatar">U</span>
+    </div>
+    <div class="min-w-0">
+      <div id="username" class="font-bold text-yellow-300 truncate">User</div>
+      <div id="uidText" class="text-xs muted truncate w-56">uid</div>
+    </div>
+  </div>
+
+  <button onclick="logout()" class="text-sm text-red-300">
+    <i class="fa-solid fa-right-from-bracket"></i> ออก
+  </button>
+</div>
+
+<!-- ===== Wallet ===== -->
+<div class="grid grid-cols-2 gap-4 mb-6">
+  <div class="glass p-4 text-center">
+    <div class="text-3xl mb-1">💰</div>
+    <div class="text-xs muted">แต้มบุญ</div>
+    <div id="points" class="text-2xl font-bold text-yellow-300">0</div>
+  </div>
+
+  <div class="glass p-4 text-center">
+    <div class="text-3xl mb-1">🕯️</div>
+    <div class="text-xs muted">ธูปคงเหลือ</div>
+    <div id="incense" class="text-2xl font-bold">0</div>
+  </div>
+</div>
+
+<!-- ===== Main Actions ===== -->
+<div class="space-y-4">
+
+  <!-- 🔥 Ritual -->
+  <button class="btn-gold" onclick="goRitual()">
+    🔥 จุดธูปขอเลข
+  </button>
+
+  <!-- 💰 Topup -->
+  <button class="btn-gold" onclick="goTopup()">
+    💰 เติมแต้มบุญ
+  </button>
+
+  <!-- 🛒 Shop -->
+  <button class="glass p-4 flex items-center justify-between tile-btn" onclick="goShop()">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-full bg-yellow-500/20 flex items-center justify-center text-yellow-300">
+        <i class="fa-solid fa-shop"></i>
+      </div>
+      <div>
+        <div class="font-bold">ร้านค้าธูป</div>
+        <div class="text-xs muted">ซื้อธูปด้วยแต้มบุญ</div>
+      </div>
+    </div>
+    <i class="fa-solid fa-chevron-right text-white/50"></i>
+  </button>
+
+  <!-- 🕘 History -->
+  <button class="glass p-4 flex items-center justify-between tile-btn" onclick="goHistory()">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-300">
+        <i class="fa-solid fa-clock-rotate-left"></i>
+      </div>
+      <div>
+        <div class="font-bold">ประวัติการจุด</div>
+        <div class="text-xs muted">ดูผลย้อนหลัง</div>
+      </div>
+    </div>
+    <i class="fa-solid fa-chevron-right text-white/50"></i>
+  </button>
+
+</div>
+
+<!-- ===== Footer ===== -->
+<div class="text-center text-xs text-white/40 mt-10">
+  Meemon © 2025
+</div>
+
+<script src="config.js">
+/* ================= CONFIG ================= */
+// (ยังเก็บไว้ตามไฟล์เดิมของคุณ — ต่อไปค่อยใช้เรียก getWallet จริง)
+const API_URL = window.MEEMON_API_URL;
+
+/* ================= AUTH CHECK ================= */
+const uid = localStorage.getItem("MEEMON_UID");
+if (!uid) {
+  // ✅ ใช้ path แบบ absolute กันเพี้ยนโฟลเดอร์
+  location.replace("/app/login.html");
+}
+
+/* ================= UI ================= */
+document.getElementById("uidText").innerText = uid;
+document.getElementById("avatar").innerText = uid.charAt(0).toUpperCase();
+document.getElementById("username").innerText =
+  uid.startsWith("email:") ? uid.replace("email:", "") : "Meemon User";
+
+/* ================= NAV ================= */
+function goTopup(){
+  // ✅ ไปหน้าเติมแต้มบุญ (อยู่ /app/)
+  location.href = "/app/topup.html";
+}
+function goRitual(){
+  // ถ้าคุณมี ritual อยู่ไฟล์ไหน ให้แก้เป็นของจริงได้
+  // location.href = "/app/ritual.html";
+  alert("ยังไม่ได้ผูกหน้า 'จุดธูปขอเลข' (ตั้งค่าไฟล์ปลายทางได้ใน goRitual())");
+}
+function goShop(){
+  // ถ้าคุณมี shop อยู่ไฟล์ไหน ให้แก้เป็นของจริงได้
+  // location.href = "/app/shop.html";
+  alert("ยังไม่ได้ผูกหน้า 'ร้านค้าธูป' (ตั้งค่าไฟล์ปลายทางได้ใน goShop())");
+}
+function goHistory(){
+  // ถ้าคุณมี history อยู่ไฟล์ไหน ให้แก้เป็นของจริงได้
+  // location.href = "/app/history.html";
+  alert("ยังไม่ได้ผูกหน้า 'ประวัติการจุด' (ตั้งค่าไฟล์ปลายทางได้ใน goHistory())");
+}
+
+/* ================= LOAD WALLET ================= */
+async function loadWallet() {
+  // ตอนนี้ยังไม่ได้ทำ action:getWallet ใน Apps Script ในไฟล์นี้
+  // เลยแสดงเป็น 0 ไปก่อนเหมือนเดิม
+  document.getElementById("points").innerText = "0";
+  document.getElementById("incense").innerText = "0";
+}
+
+/* ================= LOGOUT ================= */
+function logout() {
+  localStorage.removeItem("MEEMON_UID");
+  location.replace("/app/login.html");
+}
+
+loadWallet();
+</script>
+
+</body>
+</html>
