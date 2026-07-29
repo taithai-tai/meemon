@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>Meemon | Register</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen flex items-center justify-center bg-slate-900 text-white p-4">
+
+<div class="bg-white/10 p-8 rounded-xl w-full max-w-sm">
+  <h1 class="text-xl font-bold mb-4">สมัครสมาชิก</h1>
+
+  <input id="email" class="w-full p-2 mb-3 rounded text-black" placeholder="Email">
+  <input id="password" type="password" class="w-full p-2 mb-3 rounded text-black" placeholder="Password">
+
+  <!-- ✅ type=button กัน submit -->
+  <button id="btn" type="button" onclick="register(event)"
+          class="w-full bg-green-400 text-black p-2 rounded font-bold">
+    สมัครสมาชิก & ส่ง OTP
+  </button>
+
+  <p id="msg" class="text-sm mt-3 text-red-300 min-h-[20px]"></p>
+</div>
+  
+<script src="config.js">
+  const API_URL = window.MEEMON_API_URL;
+
+  function setMsg(text, ok=false){
+    const el = document.getElementById("msg");
+    el.className = "text-sm mt-3 min-h-[20px] " + (ok ? "text-green-400" : "text-red-300");
+    el.innerText = text || "";
+  }
+
+  async function postForm(obj){
+    const form = new URLSearchParams();
+    Object.keys(obj).forEach(k => form.append(k, obj[k]));
+
+    const r = await fetch(API_URL, { method: "POST", body: form });
+    const text = await r.text();
+    try { return JSON.parse(text); }
+    catch { return { error: "Server ไม่ตอบกลับเป็น JSON", raw: text.slice(0,200) }; }
+  }
+
+  async function register(e){
+    if (e) e.preventDefault(); // ✅ กัน submit/refresh
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const btn = document.getElementById("btn");
+
+    if (!email || !password) return setMsg("กรอกข้อมูลให้ครบ");
+
+    btn.disabled = true;
+    btn.innerText = "กำลังสมัคร...";
+    setMsg("กำลังสมัครและส่ง OTP…", true);
+
+    try{
+      const data = await postForm({ action: "register", email, password });
+
+      if (!data.success){
+        setMsg(data.error || "สมัครไม่สำเร็จ");
+        return;
+      }
+
+      // ✅ เก็บค่าให้ verify-otp.html
+      sessionStorage.setItem("MEEMON_EMAIL", email);
+      sessionStorage.setItem("MEEMON_OTP_FLOW", "1");
+      location.href = "/v2/apps/app/verify-otp.html";
+
+
+      setMsg("สมัครสำเร็จ ✅ กำลังไปหน้ากรอก OTP…", true);
+
+      // ✅ เด้งแบบชัวร์
+      const nextUrl = new URL("/v2/apps/app/verify-otp.html", location.href).toString();
+      location.assign(nextUrl);
+
+    }catch(err){
+      console.error(err);
+      setMsg("เชื่อมต่อหลังบ้านไม่ได้");
+    }finally{
+      btn.disabled = false;
+      btn.innerText = "สมัครสมาชิก & ส่ง OTP";
+    }
+  }
+</script>
+
+</body>
+</html>

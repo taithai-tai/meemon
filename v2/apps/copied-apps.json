@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "description": "Copies of the original Meemon apps used by V2 Home. Original routes remain untouched.",
+  "copiedFolders": [
+    "home",
+    "NFCV.2",
+    "app",
+    "openday",
+    "How to",
+    "pony",
+    "card",
+    "Color2026",
+    "Contact",
+    "Picture"
+  ],
+  "copiedFiles": [
+    "พุททังนำมาเงิน.mp3"
+  ],
+  "copiedDependencies": [
+    {
+      "source": "v2/_source/copied-dependencies/token.js",
+      "destination": "shared/token.js"
+    }
+  ],
+  "localizedFileCount": 50,
+  "copiedFileCount": 275,
+  "routeMap": {
+    "shop": "/v2/apps/home/",
+    "fortune": "/v2/apps/NFCV.2/home/token.html",
+    "tarot1": "/v2/apps/NFCV.2/taro/1/token.html",
+    "tarot3": "/v2/apps/NFCV.2/taro/3/token.html",
+    "tarot10": "/v2/apps/NFCV.2/taro/10/token.html",
+    "seimsee": "/v2/apps/NFCV.2/Seimsee/token.html",
+    "jiaobei": "/v2/apps/NFCV.2/Wood/token.html",
+    "luckyNumber": "/v2/apps/NFCV.2/number/token.html",
+    "daily": "/v2/apps/NFCV.2/Lucky%20day/",
+    "incense": "/v2/apps/app/test1.html",
+    "walletOpening": "/v2/apps/openday/",
+    "walletGuide": "/v2/apps/How%20to/",
+    "horseChant": "/v2/apps/pony/",
+    "wallpapers": "/v2/apps/card/Wallpaper/",
+    "colors2026": "/v2/apps/Color2026/Index.html",
+    "contact": "/v2/apps/Contact/"
+  }
+}

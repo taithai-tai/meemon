@@ -1,10 +1,6 @@
-const CACHE_NAME = "meemon-v2-shell-v1";
+const CACHE_NAME = "meemon-v2-home-shell-v2";
 const SHELL = [
   "/v2/",
-  "/v2/shop",
-  "/v2/fortune",
-  "/v2/rituals",
-  "/v2/wallpapers",
   "/v2/assets/brand/logo.png",
   "/v2/assets/brand/icon-192.png"
 ];
@@ -25,7 +21,12 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
-  if (url.origin !== self.location.origin || !url.pathname.startsWith("/v2/")) return;
+  const isHomeResource =
+    url.pathname === "/v2/" ||
+    url.pathname.startsWith("/v2/_next/") ||
+    url.pathname.startsWith("/v2/assets/") ||
+    url.pathname === "/v2/manifest.webmanifest";
+  if (url.origin !== self.location.origin || !isHomeResource) return;
   if (event.request.method !== "GET") return;
   event.respondWith(
     fetch(event.request)

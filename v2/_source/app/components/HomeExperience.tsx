@@ -46,12 +46,12 @@ export function HomeExperience() {
             และพิธีประจำวันไว้ในประสบการณ์เดียวที่สงบและค้นพบได้ง่าย
           </p>
           <div className="hero-actions">
-            <a href="/home/" className="button button-gold">
+            <a href="/v2/apps/home/" className="button button-gold">
               <Icon name="shop" />
               สำรวจร้านค้า
               <Icon name="arrow-right" />
             </a>
-            <a href="/NFCV.2/home/" className="button button-ghost">
+            <a href="/v2/apps/NFCV.2/home/token.html" className="button button-ghost">
               <Icon name="fortune" />
               เปิดคำทำนายวันนี้
             </a>
@@ -79,7 +79,7 @@ export function HomeExperience() {
             <div className="eyebrow">DAILY MOMENTS</div>
             <h2>วันนี้ ให้ Meemon ช่วยเรื่องอะไร</h2>
           </div>
-          <SectionLink href="/NFCV.2/home/" legacy>ดูเครื่องมือทั้งหมด</SectionLink>
+          <SectionLink href="/v2/apps/NFCV.2/home/token.html" legacy>ดูเครื่องมือทั้งหมด</SectionLink>
         </div>
         <div className="quick-grid">
           {legacyQuickModules.map((item) => (
@@ -98,11 +98,11 @@ export function HomeExperience() {
             <div className="eyebrow">MEEMON SELECTION</div>
             <h2>สิ่งมงคลที่คัดสรรมาเพื่อคุณ</h2>
           </div>
-          <SectionLink href="/home/" legacy>เปิดร้านค้าเวอร์ชันเดิม</SectionLink>
+          <SectionLink href="/v2/apps/home/" legacy>เปิดร้านค้าฉบับที่คัดลอกมา</SectionLink>
         </div>
         <div className="product-grid featured-products">
           {products.slice(0, 4).map((product) => (
-            <ProductCard product={product} legacyHref="/home/" key={product.id} />
+            <ProductCard product={product} legacyHref="/v2/apps/home/" key={product.id} />
           ))}
         </div>
       </section>
@@ -113,7 +113,7 @@ export function HomeExperience() {
             <div className="eyebrow">EXPLORE YOUR PATH</div>
             <h2>ศาสตร์ความเชื่อ ในภาษาของวันนี้</h2>
           </div>
-          <SectionLink href="/NFCV.2/home/" legacy>เปิดศูนย์รวมดูดวงเดิม</SectionLink>
+          <SectionLink href="/v2/apps/NFCV.2/home/token.html" legacy>เปิดศูนย์รวมดูดวงฉบับที่คัดลอกมา</SectionLink>
         </div>
         <ModuleGrid modules={legacyHomeModules} />
       </section>
@@ -123,7 +123,7 @@ export function HomeExperience() {
           <div className="eyebrow">WALLPAPER COLLECTION</div>
           <h2>พกพลังดี ๆ ไปกับคุณทุกวัน</h2>
           <p>รวมวอลเปเปอร์มงคลตามวันเกิดและความปรารถนาในคลังเดียว</p>
-          <a href="/card/Wallpaper/" className="button button-gold">
+          <a href="/v2/apps/card/Wallpaper/" className="button button-gold">
             <Icon name="wallpaper" />
             เลือกวอลเปเปอร์
             <Icon name="arrow-right" />

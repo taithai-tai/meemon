@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>หน้าโฮม ดูดวงออนไลน์</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    :root {
+      --bg-main: radial-gradient(circle at top, #1a1a1a, #050509);
+      --gold: #f5c056;
+      --gold-soft: #ffe6a3;
+      --card-bg: rgba(20, 20, 24, 0.92);
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --border-gold: rgba(245, 192, 86, 0.6);
+      --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.7);
+      --radius-xl: 26px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Sukhumvit Set",
+        "Prompt", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg-main);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 480px;
+      padding: 16px 16px 24px;
+    }
+
+    /* HEADER */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* โลโก้ใหม่ */
+    .brand-logo-img {
+      width: 46px;
+      height: 46px;
+      object-fit: contain;
+      border-radius: 12px;
+      background: #000;
+      padding: 4px;
+      box-shadow:
+        0 0 0 2px rgba(255, 215, 0, 0.2),
+        0 10px 22px rgba(0, 0, 0, 0.75),
+        0 0 25px rgba(245, 192, 86, 0.25);
+    }
+
+    .brand-text-main {
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-size: 13px;
+    }
+
+    .brand-text-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .user-pill {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .dot-online {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.18);
+    }
+
+    /* HERO CARD */
+    .hero-card {
+      margin-top: 6px;
+      padding: 16px 16px 14px;
+      border-radius: 26px;
+      background: radial-gradient(circle at top left, #2f1b00, #050509);
+      border: 1px solid rgba(248, 250, 252, 0.06);
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-glow {
+      position: absolute;
+      right: -40px;
+      top: -40px;
+      width: 180px;
+      height: 180px;
+      background: radial-gradient(circle, rgba(255, 237, 213, 0.2), transparent);
+      pointer-events: none;
+    }
+
+    .hero-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(250, 204, 21, 0.4);
+      font-size: 11px;
+      color: var(--gold-soft);
+      margin-bottom: 10px;
+    }
+
+    .hero-title {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      margin-bottom: 4px;
+    }
+
+    .hero-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .hero-cta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hero-main-btn {
+      flex: 1;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(90deg, #fbbf24, #f59e0b);
+      color: #1a1305;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      text-decoration: none;
+    }
+
+    .hero-main-btn span.icon {
+      font-size: 15px;
+    }
+
+    .hero-text-right {
+      font-size: 11px;
+      color: var(--gold-soft);
+      text-align: right;
+    }
+
+    /* GRID OF FEATURES */
+    .section-title {
+      margin-top: 18px;
+      margin-bottom: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .section-title span.main {
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 11px;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .feature-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-xl);
+      padding: 12px 12px 11px;
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: transform 0.14s ease, box-shadow 0.14s ease,
+        border-color 0.14s ease, background 0.14s ease;
+      text-decoration: none;
+      color: inherit;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top, rgba(248, 250, 252, 0.09), transparent);
+      opacity: 0;
+      transition: opacity 0.15s ease;
+      pointer-events: none;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.8);
+      border-color: var(--border-gold);
+    }
+
+    .feature-card:hover::before {
+      opacity: 1;
+    }
+
+    .feature-icon-wrap {
+      width: 34px;
+      height: 34px;
+      border-radius: 14px;
+      background: radial-gradient(circle at 25% 0, #fff7cc, #b8860b);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      color: #1a1305;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.7);
+    }
+
+    .feature-text-title {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .feature-text-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .feature-tag {
+      margin-top: 4px;
+      align-self: flex-start;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      font-size: 10px;
+      color: var(--gold-soft);
+      background: rgba(15, 23, 42, 0.8);
+    }
+
+    /* BOTTOM AREA */
+    .bottom-area {
+      margin-top: 18px;
+      padding: 10px 13px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: rgba(15, 23, 42, 0.94);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .bottom-area strong {
+      color: var(--gold-soft);
+      font-weight: 600;
+    }
+
+    .bottom-chip {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: rgba(15, 23, 42, 0.9);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: rgba(148, 163, 184, 0.9);
+    }
+  </style>
+</head>
+
+<body>
+   <script src="/v2/apps/shared/token.js"></script>
+    <script>
+      window.onload = () => {
+        Token.useOnce({
+          cleanUrl: false,
+
+          // ครั้งแรก → เงียบ ๆ แค่เปิดหน้าให้ดู
+          onFirstUse() {
+            document.body.style.display = "block";
+          },
+
+          // ถ้าใช้โทเคนเดิมเข้าใหม่ (เช่น refresh / ส่งลิงก์ให้เพื่อนในเครื่องเดียวกัน)
+          onAlreadyUsed() {
+            window.location.href = "/v2/apps/NFCV.2/sorry.jpg";
+          },
+
+          // ถ้าไม่มีโทเคน หรือโทเคนไม่ถูกต้อง
+          onInvalid() {
+            window.location.href = "/v2/apps/NFCV.2/sorry.jpg";
+          },
+        });
+      };
+    </script>
+  
+  <div class="app-shell">
+    <!-- HEADER -->
+    <header class="top-bar">
+      <div class="brand">
+        <img class="brand-logo-img"
+             src="/v2/apps/NFCV.2/home/logo.png"
+             alt="MEEMON Logo">
+        <div>
+          <div class="brand-text-main">MEEMON</div>
+          <div class="brand-text-sub">เว็บรวมดูดวง & เสี่ยงทายออนไลน์</div>
+        </div>
+      </div>
+
+      <div class="user-pill">
+        <div class="dot-online"></div>
+        <span>พร้อมดูดวงวันนี้ ✨</span>
+      </div>
+    </header>
+
+    <!-- HERO CARD -->
+    <section class="hero-card">
+      <div class="hero-glow"></div>
+      <div class="hero-label">
+        🔮 วันนี้ดวงคุณจะเป็นอย่างไร?
+      </div>
+      <div class="hero-title">เริ่มดูดวง เสี่ยงเซียมซี 24 ใบ</div>
+      <div class="hero-sub">
+        เลือกวิธีเสี่ยงทายที่ชอบได้เลย ทั้งไพ่ เสี่ยงเซียมซี โยนไม้ และสุ่มเลขมงคลในที่เดียว
+      </div>
+      <div class="hero-cta-row">
+        <a href="/v2/apps/NFCV.2/Seimsee/token.html" class="hero-main-btn">
+          <span class="icon">✨</span>
+          <span>เริ่มดูดวง เซียมซี 24 ใบ</span>
+        </a>
+        <div class="hero-text-right">
+          แตะปุ่มด้านล่าง<br>เพื่อไปยังหน้าอื่น ๆ
+        </div>
+      </div>
+    </section>
+
+    <!-- MAIN FEATURE GRID -->
+    <div class="section-title">
+      <span class="main">เมนูดูดวงหลัก</span>
+      <span style="font-size:11px;color:var(--gold-soft);">เลือกหนึ่งอย่างเพื่อต่อไปยังหน้าใหม่</span>
+    </div>
+
+    <section class="card-grid">
+      <!-- ดูดวงไพ่ทาโรต์ 10-->
+      <a href="/v2/apps/NFCV.2/taro/10/token.html" class="feature-card">
+        <div class="feature-icon-wrap">🃏</div>
+        <div class="feature-text-title">ดูดวงไพ่ทาโรต์ 10 ใบ</div>
+        <div class="feature-text-sub">
+          ดูดวงไพ่ทาโรต์ 10 ใบ เพื่อดูภาพรวมชีวิต สถานการณ์ปัจจุบัน การงาน อุปสรรค แบบละเอียด
+        </div>
+        <div class="feature-tag">โหมดไพ่ทาโรต์</div>
+      </a>
+
+      <!-- ดูดวงไพ่ทาโรต์ 3-->
+      <a href="/v2/apps/NFCV.2/taro/3/token.html" class="feature-card">
+        <div class="feature-icon-wrap">🃏</div>
+        <div class="feature-text-title">ดูดวงไพ่ทาโรต์ 3 ใบ</div>
+        <div class="feature-text-sub">
+          ดูดวงไพ่ทาโรต์ 3 ใบ อดีต ปัจจุบัน อนาคต
+        </div>
+        <div class="feature-tag">โหมดไพ่ทาโรต์</div>
+      </a>
+
+      <!-- ดูดวงไพ่ทาโรต์ 1-->
+      <a href="/v2/apps/NFCV.2/taro/1/token.html" class="feature-card">
+        <div class="feature-icon-wrap">🃏</div>
+        <div class="feature-text-title">ดูดวงไพ่ทาโรต์ 1 ใบ</div>
+        <div class="feature-text-sub">
+          ดูดวงไพ่ทาโรต์ 1 ใบ
+        </div>
+        <div class="feature-tag">โหมดไพ่ทาโรต์</div>
+      </a>
+
+      <!-- ปุ่มสุ่มเลข -->
+      <a href="/v2/apps/NFCV.2/number/token.html" class="feature-card">
+        <div class="feature-icon-wrap">🎲</div>
+        <div class="feature-text-title">สุ่มเลขมงคล</div>
+        <div class="feature-text-sub">
+          สุ่มเลขมงคล เลขเสี่ยงโชคประจำวันนี้
+        </div>
+        <div class="feature-tag">Lucky Number</div>
+      </a>
+
+      <!-- ปุ่มเสี่ยงเซียมซี -->
+      <a href="/v2/apps/NFCV.2/Seimsee/token.html" class="feature-card">
+        <div class="feature-icon-wrap">📜</div>
+        <div class="feature-text-title">เสี่ยงเซียมซี</div>
+        <div class="feature-text-sub">
+          เขย่ากระบอกเซียมซี (เวอร์ชันออนไลน์) เพื่อรับคำทำนายเป็นบทกลอน
+        </div>
+        <div class="feature-tag">เซียมซี 1–24 ใบ</div>
+      </a>
+
+      <!-- ปุ่มเสี่ยงทายโยนไม้เซ้งปวย -->
+      <a href="/v2/apps/NFCV.2/Wood/token.html" class="feature-card">
+        <div class="feature-icon-wrap">🪵</div>
+        <div class="feature-text-title">เสี่ยงทายโยนไม้เซ้งปวย</div>
+        <div class="feature-text-sub">
+          ลากไม้ขึ้นด้านบนเพื่อ “โยน” แล้วดูผล: หงาย–คว่ำ–คนละด้าน พร้อมคำทำนาย
+        </div>
+        <div class="feature-tag">ไม้เซ้งปวย</div>
+      </a>
+
+      <!-- ปุ่มดูดวงรายวัน -->
+      <a href="/v2/apps/NFCV.2/sorry%20not%20fin.jpg" class="feature-card">
+        <div class="feature-icon-wrap">📆</div>
+        <div class="feature-text-title">ดวงประจำวัน</div>
+        <div class="feature-text-sub">
+          สรุปดวงวันนี้แบบสั้น ๆ ทั้งการงาน การเงิน ความรัก และสุขภาพ
+        </div>
+        <div class="feature-tag">Today Summary</div>
+      </a>
+
+      <!-- ปุ่มช่องทางติดต่อ -->
+      <a href="/v2/apps/NFCV.2/sorry%20not%20fin.jpg" class="feature-card">
+        <div class="feature-icon-wrap">📲</div>
+        <div class="feature-text-title">ช่องทางติดต่อ</div>
+        <div class="feature-text-sub">
+          ติดต่อผู้ดูแลเว็บ / จองคิวดูดวงส่วนตัว ผ่าน Line, Facebook, Instagram หรืออีเมล
+        </div>
+        <div class="feature-tag">Contact & Social</div>
+      </a>
+    </section>
+
+    <!-- BOTTOM INFO -->
+    <footer class="bottom-area">
+      <div>
+        <strong>คำเตือน:</strong> การดูดวงเป็นความเชื่อส่วนบุคคล
+        ใช้วิจารณญาณในการตัดสินใจ
+      </div>
+      <div class="bottom-chip">Dark Gold Theme</div>
+    </footer>
+  </div>
+</body>
+</html>

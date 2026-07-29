@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Meemon | Login</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&family=Pattaya&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+
+  <style>
+    body {
+      background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+      color: white;
+      font-family: 'Sarabun', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding: 16px;
+    }
+    .glass {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 22px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+    .btn-gold {
+      background: linear-gradient(45deg, #FFD700, #DAA520);
+      color: #3e2723;
+      font-weight: bold;
+      border: 2px solid rgba(255,255,255,0.8);
+      border-radius: 14px;
+      padding: 12px 14px;
+      width: 100%;
+      cursor: pointer;
+      transition: transform .15s ease;
+      text-align: center;
+    }
+    .btn-gold:hover { transform: scale(1.02); }
+
+    .btn-outline {
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 14px;
+      padding: 12px 14px;
+      width: 100%;
+      background: rgba(0,0,0,0.18);
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .15s ease;
+      text-align: center;
+    }
+    .btn-outline:hover { transform: scale(1.02); }
+
+    .muted { color: rgba(255,255,255,0.75); }
+  </style>
+</head>
+
+<body>
+  <div class="glass p-8 w-full max-w-sm text-center">
+    <img
+      src="/v2/apps/Picture/logo.png"
+      class="w-28 mx-auto mb-4"
+      alt="logo"
+    />
+
+    <h1 class="text-2xl font-bold text-yellow-300 mb-1 font-['Pattaya']">มีมนต์ มหาเฮง</h1>
+    <p class="muted text-sm mb-6">ล็อกอินด้วย LINE เพื่อใช้งานระบบแต้ม/ธูป</p>
+
+    <!-- ปุ่มล็อกอิน (ใช้ตอนอยู่ใน LINE หรือบนเดสก์ท็อป) -->
+    <button id="btnLogin" class="btn-gold">
+      <i class="fa-brands fa-line mr-2"></i> เข้าสู่ระบบด้วย LINE
+    </button>
+
+    <!-- ปุ่มเปิดในแอป LINE (โชว์เฉพาะกรณีเปิดจาก browser มือถือ) -->
+    <button id="btnOpenInLine" class="btn-outline mt-3" style="display:none;">
+      📲 เปิดในแอป LINE
+    </button>
+
+    <p id="msg" class="text-xs mt-4 min-h-[18px] muted"></p>
+
+    <div class="mt-6 text-[11px] muted">
+      * ระบบจะผูกข้อมูลกับบัญชี LINE ของคุณแบบอัตโนมัติ
+    </div>
+  </div>
+
+  <script>
+    // === ของคุณ ===
+    const LIFF_ID = "2008685502-NdidvjVm";
+    const REDIRECT_LOGIN = "/v2/apps/app/index.html"; // ต้องตรง endpoint ที่ตั้งใน LIFF
+    const HOME_URL = "/v2/apps/app/home.html";
+    const LIFF_DEEP_LINK = "https://liff.line.me/2008685502-NdidvjVm";
+    // ===============
+
+    const msg = (t) => document.getElementById("msg").innerText = t;
+
+    function isMobile() {
+      return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    }
+
+    async function boot() {
+      msg("กำลังเตรียมระบบ…");
+      await liff.init({ liffId: LIFF_ID });
+
+      // ถ้าเปิดบนมือถือ "นอก LINE" ให้แนะนำเปิดในแอป LINE
+      if (isMobile() && !liff.isInClient()) {
+        document.getElementById("btnOpenInLine").style.display = "block";
+        msg("แนะนำ: กด 'เปิดในแอป LINE' เพื่อใช้งานได้สมบูรณ์ ✅");
+      } else {
+        msg("พร้อมให้ล็อกอิน ✅");
+      }
+
+      // ถ้าล็อกอินแล้วก็ไปต่อเลย
+      if (liff.isLoggedIn()) {
+        const idToken = liff.getIDToken();
+        sessionStorage.setItem("MEEMON_IDTOKEN", idToken || "");
+        msg("เข้าสู่ระบบแล้ว กำลังไปหน้าหลัก…");
+        location.href = HOME_URL;
+      }
+    }
+
+    async function doLogin() {
+      msg("กำลังพาไปล็อกอิน LINE…");
+      // (ไม่ต้อง init ซ้ำก็ได้ แต่เผื่อบางเครื่อง)
+      await liff.init({ liffId: LIFF_ID });
+
+      if (!liff.isLoggedIn()) {
+        liff.login({ redirectUri: REDIRECT_LOGIN });
+        return;
+      }
+
+      // เผื่อผู้ใช้ล็อกอินอยู่แล้ว
+      const idToken = liff.getIDToken();
+      sessionStorage.setItem("MEEMON_IDTOKEN", idToken || "");
+      location.href = HOME_URL;
+    }
+
+    function openInLine() {
+      location.href = LIFF_DEEP_LINK;
+    }
+
+    document.getElementById("btnLogin").addEventListener("click", doLogin);
+    document.getElementById("btnOpenInLine").addEventListener("click", openInLine);
+
+    window.addEventListener("load", () => {
+      boot().catch(err => {
+        console.error(err);
+        alert("LIFF ERROR: " + (err?.message || err));
+      });
+    });
+  </script>
+</body>
+</html>

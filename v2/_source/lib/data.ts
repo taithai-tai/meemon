@@ -183,7 +183,7 @@ export const ritualModules: ContentModule[] = [
 
 export const legacyHomeModules: ContentModule[] = [
   {
-    href: "/NFCV.2/home/",
+    href: "/v2/apps/NFCV.2/home/token.html",
     eyebrow: "แอปเวอร์ชันเดิม",
     title: "ไพ่ทาโรต์",
     description: "เลือกเปิดไพ่แบบ 1, 3 หรือ 10 ใบจากศูนย์รวมดูดวงเดิม",
@@ -191,7 +191,7 @@ export const legacyHomeModules: ContentModule[] = [
     legacy: true,
   },
   {
-    href: "/NFCV.2/Seimsee/",
+    href: "/v2/apps/NFCV.2/Seimsee/token.html",
     eyebrow: "24 คำทำนาย",
     title: "เซียมซี",
     description: "ตั้งจิตให้สงบแล้วเสี่ยงเซียมซีด้วยระบบเดิมของ Meemon",
@@ -199,7 +199,7 @@ export const legacyHomeModules: ContentModule[] = [
     legacy: true,
   },
   {
-    href: "/NFCV.2/Wood/",
+    href: "/v2/apps/NFCV.2/Wood/token.html",
     eyebrow: "ถามสิ่งศักดิ์สิทธิ์",
     title: "เซ้งปวย",
     description: "โยนไม้เสี่ยงทายและอ่านคำตอบจากแอปเวอร์ชันเดิม",
@@ -210,7 +210,7 @@ export const legacyHomeModules: ContentModule[] = [
 
 export const legacyQuickModules: ContentModule[] = [
   {
-    href: "/NFCV.2/Seimsee/",
+    href: "/v2/apps/NFCV.2/Seimsee/token.html",
     eyebrow: "24 คำทำนาย",
     title: "เซียมซี",
     description: "เสี่ยงเซียมซีเวอร์ชันเดิม",
@@ -218,7 +218,7 @@ export const legacyQuickModules: ContentModule[] = [
     legacy: true,
   },
   {
-    href: "/NFCV.2/number/",
+    href: "/v2/apps/NFCV.2/number/token.html",
     eyebrow: "ตัวเลขประจำจังหวะ",
     title: "เลขมงคล",
     description: "สุ่มเลขด้วยระบบเดิม",
@@ -226,7 +226,7 @@ export const legacyQuickModules: ContentModule[] = [
     legacy: true,
   },
   {
-    href: "/app/test1.html",
+    href: "/v2/apps/app/test1.html",
     eyebrow: "ระบบเดิม",
     title: "จุดธูปขอเลข",
     description: "เปิดแอปจุดธูปเวอร์ชันเดิม",
@@ -234,7 +234,7 @@ export const legacyQuickModules: ContentModule[] = [
     legacy: true,
   },
   {
-    href: "/openday/",
+    href: "/v2/apps/openday/",
     eyebrow: "จังหวะจันทรา",
     title: "ฤกษ์เปิดกระเป๋า",
     description: "ตรวจฤกษ์จากแอปเดิม",

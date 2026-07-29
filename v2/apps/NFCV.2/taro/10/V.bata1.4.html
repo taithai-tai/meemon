@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>Taithai Tarot | เลือกไพ่ 10 ใบ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    :root {
+      --bg-main: radial-gradient(circle at top, #05081f, #02010b);
+      --accent: #fbbf24;
+      --accent-soft: #ffd93d;
+      --text-main: #f9fafb;
+      --text-soft: #9ca3af;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: var(--bg-main);
+      color: var(--text-main);
+      text-align: center;
+      margin: 0;
+      padding: 16px 10px 24px;
+    }
+
+    .page {
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin: 6px 0 4px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 1rem;
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+      opacity: 0.85;
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+    
+    #count {
+      margin: 6px 0 14px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    
+    .circle-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 10px;
+      margin-bottom: 18px;
+    }
+
+    .circle {
+      width: 90vw;
+      height: 90vw;
+      max-width: 420px;
+      max-height: 420px;
+      position: relative;
+      margin: 0 auto;
+    }
+
+    /* ตอนกำลังเล่น animation ห้ามกดซ้ำ */
+    .circle.animating {
+      pointer-events: none;
+    }
+
+    .card {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 16vw;
+      max-width: 70px;
+      min-width: 45px;
+      aspect-ratio: 7 / 12;
+      background-size: cover;
+      background-position: center;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+      cursor: pointer;
+      filter: brightness(0.75);
+      transition:
+        transform 0.16s ease,
+        filter 0.16s ease,
+        box-shadow 0.16s ease,
+        outline-width 0.1s ease;
+    }
+
+    .card:hover {
+      filter: brightness(1);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.8);
+    }
+
+    .card.selected {
+      outline: 3px solid var(--accent-soft);
+      filter: brightness(1.15);
+      transform: translate(-50%, -50%) scale(1.12) !important;
+      z-index: 5;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      margin-top: 8px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      flex: 1 1 30%;
+      min-width: 90px;
+      padding: 9px 10px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    #shuffleBtn,
+    #cutBtn {
+      background: #020617;
+      color: #e5e7eb;
+      border: 1px solid rgba(148,163,184,0.7);
+    }
+
+    #submitBtn {
+      background: var(--accent);
+      color: #111827;
+    }
+
+    #submitBtn:disabled {
+      background: #4b5563;
+      color: var(--text-soft);
+      cursor: not-allowed;
+    }
+
+    #resultSection {
+      margin-top: 14px;
+      padding: 10px 10px 14px;
+      border-radius: 16px;
+      background: rgba(15,23,42,0.88);
+      border: 1px solid rgba(148,163,184,0.35);
+      display: none;
+    }
+
+    #resultSection h2 {
+      margin: 0 0 6px;
+      font-size: 0.95rem;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .result-card {
+      background: radial-gradient(circle at top, #111827, #020617);
+      padding: 8px;
+      border-radius: 12px;
+      border: 1px solid rgba(55,65,81,0.9);
+      font-size: 0.78rem;
+    }
+
+    .result-card img {
+      width: 100%;
+      border-radius: 8px;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .result-name {
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .result-meaning {
+      opacity: 0.92;
+      line-height: 1.3;
+    }
+
+    .disclaimer {
+      margin-top: 8px;
+      font-size: 0.7rem;
+      opacity: 0.65;
+      line-height: 1.4;
+    }
+
+    @media (min-width: 768px) {
+      body {
+        padding-top: 24px;
+      }
+      h1 {
+        font-size: 1.2rem;
+      }
+      .subtitle {
+        font-size: 0.9rem;
+      }
+      .circle {
+        width: 420px;
+        height: 420px;
+      }
+      .card {
+        width: 70px;
+      }
+      .result-grid {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+      #resultSection h2 {
+        font-size: 1.05rem;
+      }
+      .result-card {
+        font-size: 0.8rem;
+      }
+    }
+
+    /* ========== Animation สำหรับสับไพ่ (หมุนวงไพ่) ========== */
+    .circle.spin {
+      animation: spin 2s linear 3;
+    }
+
+    @keyframes shuffleRotate {
+      0%   { transform: rotate(0deg); }
+      25%  { transform: rotate(-15deg); }
+      75%  { transform: rotate(15deg); }
+      100% { transform: rotate(0deg); }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <h1>TAITHAI TAROT 🔮</h1>
+    <div class="subtitle">
+      แตะเลือกไพ่ <b>10 ใบ</b> จากวงไพ่ด้านล่าง แล้วกดปุ่ม “ทำนาย”
+    </div>
+    <div id="count">เลือกแล้ว: 0 / 10</div>
+
+    <div class="circle-wrapper">
+      <div class="circle" id="deck"></div>
+    </div>
+
+    <div class="btn-row">
+      <button id="shuffleBtn">สับไพ่</button>
+      <button id="cutBtn">ตัดไพ่</button>
+      <button id="submitBtn" disabled>ทำนาย</button>
+    </div>
+
+    <div id="resultSection">
+      <h2>ผลการทำนาย 10 ใบของคุณ</h2>
+      <div class="result-grid" id="resultGrid"></div>
+      <div class="disclaimer">
+        *ความหมายใช้เป็นแนวทางเท่านั้น การตัดสินใจทุกอย่างขึ้นอยู่กับตัวคุณเอง 🌙
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const IMAGE_BASE = "/v2/apps/NFCV.2/taro/Picture/PrintaciousCo/";
+    const CARD_BACK = "Back of the cards.png";
+
+    const cardFaces = [
+      // ----- Major Arcana (22) -----
+      { name: "0 The Fool", file: "the fool.png", meaning: "การเริ่มต้นใหม่ ความกล้าเสี่ยง เปิดใจรับประสบการณ์ใหม่ ๆ" },
+      { name: "I The Magician", file: "THE MAGICIAN.png", meaning: "มีศักยภาพและทรัพยากรพร้อม ลงมือทำให้ไอเดียกลายเป็นจริง" },
+      { name: "II The High Priestess", file: "The High Priestess.png", meaning: "ใช้สัญชาตญาณ ฟังเสียงข้างใน มากกว่าความวุ่นวายภายนอก" },
+      { name: "III The Empress", file: "The Empress.png", meaning: "ความอุดมสมบูรณ์ ความรัก การดูแลตัวเองและคนรอบข้าง" },
+      { name: "IV The Emperor", file: "The Emperor.png", meaning: "โครงสร้าง วินัย ความเด็ดขาด การวางแผนระยะยาว" },
+      { name: "V The Hierophant", file: "The Hierophant.png", meaning: "การเรียนรู้จากครู ระบบ ระเบียบ ประเพณี หรือองค์กร" },
+      { name: "VI The Lovers", file: "The Lovers.png", meaning: "การเลือก ความรัก พาร์ทเนอร์ การตัดสินใจสำคัญจากหัวใจ" },
+      { name: "VII The Chariot", file: "The Chariot.png", meaning: "มุ่งไปข้างหน้าอย่างมีเป้าหมาย ควบคุมทิศทางชีวิตของตัวเอง" },
+      { name: "VIII Strength", file: "Strength.png", meaning: "พลังใจ ความกล้าหาญ การควบคุมอารมณ์ด้วยความอ่อนโยน" },
+      { name: "IX The Hermit", file: "The Hermit.png", meaning: "เก็บตัวคิดทบทวน หาคำตอบภายในใจ ใช้เวลาอยู่กับตัวเอง" },
+      { name: "X Wheel of Fortune", file: "Wheel of Fortune.png", meaning: "จังหวะโชคชะตากำลังเปลี่ยน มีเหตุการณ์ไม่คาดคิดเกิดขึ้น" },
+      { name: "XI Justice", file: "Justice.png", meaning: "ความยุติธรรม การตัดสินจากเหตุผล เอกสารสัญญาต่าง ๆ" },
+      { name: "XII The Hanged Man", file: "The Hanged Man.png", meaning: "หยุดนิ่งชั่วคราว มองจากมุมใหม่ ยอมเสียบางอย่างเพื่อสิ่งที่ดีกว่า" },
+      { name: "XIII Death", file: "Death.png", meaning: "การจบลงของสิ่งเก่า เพื่อเริ่มต้นรอบใหม่ของชีวิต" },
+      { name: "XIV Temperance", file: "Temperance.png", meaning: "ความพอดี การปรับสมดุล ทดลองผสมสิ่งต่าง ๆ เข้าด้วยกัน" },
+      { name: "XV The Devil", file: "The Devil.png", meaning: "ความยึดติด ความกลัว สิ่งที่ผูกมัดเราอยู่ ควรสังเกตตัวเองให้ดี" },
+      { name: "XVI The Tower", file: "The Tower.png", meaning: "การเปลี่ยนแปลงแบบสายฟ้าแลบ ทลายของที่ไม่มั่นคงออกไป" },
+      { name: "XVII The Star", file: "The Star.png", meaning: "ความหวัง การเยียวยา โปรเจกต์หรือความฝันที่ค่อย ๆ เติบโต" },
+      { name: "XVIII The Moon", file: "The Moon.png", meaning: "ความสับสน ความกลัวในใจ สิ่งที่ยังไม่ชัดเจน ต้องใช้เวลา" },
+      { name: "XIX The Sun", file: "The Sun.png", meaning: "ความสุขสดใส ความสำเร็จ ความมั่นใจในตัวเอง" },
+      { name: "XX Judgement", file: "Judgement.png", meaning: "การตื่นรู้ครั้งใหญ่ การประเมินตนเอง การตัดสินครั้งสำคัญ" },
+      { name: "XXI The World", file: "The WORLD.png", meaning: "จบวงจรหนึ่งอย่างสมบูรณ์ พร้อมเริ่มต้นบทใหม่ของชีวิต" },
+
+      // ----- Wands (14) -----
+      { name: "Ace of Wands", file: "Ace of Wands.png", meaning: "แรงบันดาลใจใหม่ โปรเจกต์ใหม่ พลังไฟกำลังลุก" },
+      { name: "Two of Wands", file: "Two of Wands.png", meaning: "การวางแผน มองไกล เลือกทิศทางชีวิต" },
+      { name: "Three of Wands", file: "Three of Wands.png", meaning: "โอกาสจากต่างที่/ต่างประเทศ การรอผลจากสิ่งที่เริ่มไปแล้ว" },
+      { name: "Four of Wands", file: "Four of Wands.png", meaning: "การเฉลิมฉลอง ความมั่นคงขั้นต้น บ้าน ครอบครัว" },
+      { name: "Five of Wands", file: "Five of Wands.png", meaning: "ความขัดแย้ง การแข่งขัน การทดลองไอเดียหลายแบบ" },
+      { name: "Six of Wands", file: "Six of Wands.png", meaning: "ชัยชนะ การได้รับการยอมรับจากคนรอบข้าง" },
+      { name: "Seven of Wands", file: "Seven of Wands.png", meaning: "ยืนหยัดในจุดยืนของตัวเอง สู้เพราะเชื่อว่าสิ่งที่ทำถูกต้อง" },
+      { name: "Eight of Wands", file: "Eight of Wands.png", meaning: "ข่าวสารเร็ว ๆ การเดินทางด่วน โปรเจกต์เดินหน้าเร็วมาก" },
+      { name: "Nine of Wands", file: "Nine of Wands.png", meaning: "เหนื่อยแต่ยังไม่ยอมแพ้ ตั้งการ์ดเผื่อเรื่องเดิม ๆ จะกลับมา" },
+      { name: "Ten of Wands", file: "Ten of Wands.png", meaning: "แบกภาระเยอะเกินไป ต้องเรียนรู้การแบ่งงาน หรือขอความช่วยเหลือ" },
+      { name: "Page of Wands", file: "Page Of Wands.png", meaning: "ไอเดียใหม่ ๆ ความอยากลองทำอะไรสนุก ๆ" },
+      { name: "Knight of Wands", file: "Knight of Wands.png", meaning: "พลังไฟจัด อยากลงมือทันที การเดินทางที่เร้าใจ" },
+      { name: "Queen of Wands", file: "Queen of Wands.png", meaning: "มั่นใจ มีเสน่ห์ กล้าแสดงออก เป็นผู้นำสายครีเอทีฟ" },
+      { name: "King of Wands", file: "King of Wands.png", meaning: "ผู้นำที่กล้าตัดสินใจ วิชั่นชัด เจ้านาย/ตัวเราในโหมดบอส" },
+
+      // ----- Cups (14) -----
+      { name: "Ace of Cups", file: "Ace of Cups.png", meaning: "ความรู้สึกใหม่ ความรักใหม่ การเปิดใจรับคน/สิ่งใหม่" },
+      { name: "Two of Cups", file: "2 of cups.png", meaning: "การพบกันครึ่งทาง ความสัมพันธ์ที่สมดุล คู่หูที่เข้ากันได้ดี" },
+      { name: "Three of Cups", file: "3 of cups.png", meaning: "สังคม เพื่อนฝูง ปาร์ตี้ การเฉลิมฉลองเล็ก ๆ" },
+      { name: "Four of Cups", file: "4 of cups.png", meaning: "รู้สึกเบื่อ เฉย ๆ ไม่อินกับสิ่งที่เข้ามา ควรทบทวนตัวเอง" },
+      { name: "Five of Cups", file: "5 of cups.png", meaning: "โฟกัสกับสิ่งที่เสียไปจนลืมมองสิ่งที่ยังเหลืออยู่" },
+      { name: "Six of Cups", file: "6 of cups.png", meaning: "ความทรงจำเก่า ๆ คนเก่า บ้านเกิด เรื่องจากอดีต" },
+      { name: "Seven of Cups", file: "7 of cups.png", meaning: "ตัวเลือกเยอะ ฝันเยอะ ต้องแยกแยะว่าอะไรจริงอะไรมโน" },
+      { name: "Eight of Cups", file: "8 of cups.png", meaning: "เดินออกจากสิ่งที่ไม่เติมเต็ม แม้จะผูกพันแต่ต้องไปต่อ" },
+      { name: "Nine of Cups", file: "9 of cups.png", meaning: "ความพึงพอใจในตัวเอง สมหวังหลายอย่าง ระวังความขี้เกียจ" },
+      { name: "Ten of Cups", file: "10 of cups.png", meaning: "ความสุขครอบครัว ความสัมพันธ์กลมกลืน อารมณ์อิ่มเอม" },
+      { name: "Page of Cups", file: "Page Of Cups.png", meaning: "ความรู้สึกอ่อนโยน ข้อความหวาน ๆ ไอเดียสร้างสรรค์สายศิลป์" },
+      { name: "Knight of Cups", file: "Knight of Cups.png", meaning: "ข้อเสนอหรือคนโรแมนติก ความฝันที่อยากตามหา" },
+      { name: "Queen of Cups", file: "Queen of Cups.png", meaning: "เข้าใจอารมณ์ลึกซึ้ง ใจดี ใส่ใจคนอื่นสูง" },
+      { name: "King of Cups", file: "King of Cups.png", meaning: "คุมอารมณ์เก่ง เข้าใจคน รอบคอบด้านความรู้สึก" },
+
+      // ----- Swords (14) -----
+      { name: "Ace of Swords", file: "Ace of Swords.png", meaning: "ความคิดชัดเจน ไอเดียใหม่ การสื่อสารตรงไปตรงมา" },
+      { name: "Two of Swords", file: "2 of Swords.png", meaning: "ลังเล ตัดสินใจไม่ได้ ปิดใจไม่อยากรับข้อมูลเพิ่ม" },
+      { name: "Three of Swords", file: "3 of Swords.png", meaning: "ความเสียใจ การผิดหวัง คำพูดที่บาดใจ" },
+      { name: "Four of Swords", file: "4 of Swords.png", meaning: "พักสมอง พักใจ พักจากดราม่า เพื่อชาร์จพลัง" },
+      { name: "Five of Swords", file: "5 of Swords.png", meaning: "ชนะก็จริงแต่ไม่ได้มีความสุข นักเลงคีย์บอร์ด ดราม่าที่ไม่มีคนยอมกัน" },
+      { name: "Six of Swords", file: "6 of Swords.png", meaning: "ค่อย ๆ เคลื่อนออกจากสถานการณ์ตึงเครียด เดินทางเพื่อพักใจ" },
+      { name: "Seven of Swords", file: "7 of Swords.png", meaning: "การแอบทำอะไรลับ ๆ กลยุทธ์ ความไม่ตรงไปตรงมา" },
+      { name: "Eight of Swords", file: "8 of Swords.png", meaning: "รู้สึกติดแหง็กแต่จริง ๆ ยังมีทางออก เพียงแต่ความกลัวบังอยู่" },
+      { name: "Nine of Swords", file: "9 of Swords.png", meaning: "กังวลมากเกินจริง คิดวนไปมา นอนไม่หลับ" },
+      { name: "Ten of Swords", file: "10 of Swords.png", meaning: "จบแบบเจ็บ ๆ แต่จบแล้ว เริ่มต้นใหม่ได้จากจุดนี้" },
+      { name: "Page of Swords", file: "Page Of Swords.png", meaning: "อยากรู้อยากเห็น อยากหาข้อมูล เพิ่มทักษะการคิดวิเคราะห์" },
+      { name: "Knight of Swords", file: "Knight of Swords.png", meaning: "พุ่งไปอย่างเร็วด้วยไอเดีย/คำพูด ระวังใจร้อนหรือพูดแรงไป" },
+      { name: "Queen of Swords", file: "Queen of Swords.png", meaning: "ใช้เหตุผลเหนืออารมณ์ พูดตรง ซื่อสัตย์กับความจริง" },
+      { name: "King of Swords", file: "King of Swords.png", meaning: "ผู้นำที่คิดเป็นระบบ กฎหมาย กฎระเบียบ การวิเคราะห์คมกริบ" },
+
+      // ----- Pentacles (14) -----
+      { name: "Ace of Pentacles", file: "ACES OF PENTACLES.png", meaning: "โอกาสใหม่ด้านการเงิน งาน หรือของที่จับต้องได้" },
+      { name: "Two of Pentacles", file: "2 OF PENTACLES.png", meaning: "การหมุนเงิน ทำหลายอย่างพร้อมกัน จัดสมดุลชีวิต–งาน" },
+      { name: "Three of Pentacles", file: "3 OF PENTACLES.png", meaning: "การทำงานเป็นทีม การสร้างผลงานให้คนอื่นเห็นคุณค่า" },
+      { name: "Four of Pentacles", file: "4 OF PENTACLES.png", meaning: "ยึดติดกับเงินหรือความปลอดภัยเกินไป กลัวเสียสิ่งที่มี" },
+      { name: "Five of Pentacles", file: "5 OF PENTACLES.png", meaning: "รู้สึกขาด รายได้ฝืด ความกังวลด้านการเงิน ต้องมองหาความช่วยเหลือ" },
+      { name: "Six of Pentacles", file: "6 OF PENTACLES.png", meaning: "การแบ่งปัน การให้–การรับ ความสมดุลด้านทรัพยากร" },
+      { name: "Seven of Pentacles", file: "7 OF PENTACLES.png", meaning: "รอผลจากสิ่งที่ลงทุนไปแล้ว ต้องใช้เวลาและความอดทน" },
+      { name: "Eight of Pentacles", file: "8 OF PENTACLES.png", meaning: "ฝึกฝนทักษะ ทำงานละเอียด ซ้ำ ๆ เพื่อเก่งขึ้น" },
+      { name: "Nine of Pentacles", file: "9 OF PENTACLES.png", meaning: "ความมั่งคั่งจากน้ำพักน้ำแรงของตัวเอง ใช้ชีวิตแบบมีระดับ" },
+      { name: "Ten of Pentacles", file: "10 OF PENTACLES.png", meaning: "ความมั่นคงระยะยาว ครอบครัว ทรัพย์สิน มรดก" },
+      { name: "Page of Pentacles", file: "page OF PENTACLES.png", meaning: "เริ่มเรียนรู้เรื่องเงิน/งานใหม่ ๆ ข้อเสนอเล็ก ๆ แต่มีอนาคต" },
+      { name: "Knight of Pentacles", file: "knights OF PENTACLES.png", meaning: "ทำงานอย่างสม่ำเสมอ ช้าแต่ชัวร์ ระยะยาวมั่นคง" },
+      { name: "Queen of Pentacles", file: "queen OF PENTACLES.png", meaning: "ดูแลบ้าน การเงิน และคนรอบข้างได้ดี มีความเป็นแม่สูง" },
+      { name: "King of Pentacles", file: "king OF PENTACLES.png", meaning: "เจ้าของกิจการ/ผู้บริหารที่มั่งคั่ง คิดเรื่องความมั่นคงการเงินระยะยาว" }
+    ];
+
+    const deckEl = document.getElementById("deck");
+    const countEl = document.getElementById("count");
+    const shuffleBtn = document.getElementById("shuffleBtn");
+    const cutBtn = document.getElementById("cutBtn");
+    const submitBtn = document.getElementById("submitBtn");
+    const resultSection = document.getElementById("resultSection");
+    const resultGrid = document.getElementById("resultGrid");
+    const MAX_PICK = 10;
+
+    let deckOrder = [];
+    let selected = [];
+
+    function initDeck() {
+      deckOrder = cardFaces.map((_, i) => i);
+      shuffleArray(deckOrder);
+      selected = [];
+      countEl.textContent = `เลือกแล้ว: 0 / ${MAX_PICK}`;
+      submitBtn.disabled = true;
+      resultSection.style.display = "none";
+      placeCards();
+    }
+
+    function shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+    }
+
+    function computeRadius() {
+      return Math.max(
+        60,
+        Math.min(deckEl.offsetWidth, deckEl.offsetHeight) / 2 - 40
+      );
+    }
+
+    function placeCards() {
+      deckEl.innerHTML = "";
+      const n = deckOrder.length;
+      const radius = computeRadius();
+
+      for (let i = 0; i < n; i++) {
+        const angle = (360 / n) * i;
+        const rad = angle * (Math.PI / 180);
+
+        const card = document.createElement("div");
+        card.className = "card";
+        card.style.backgroundImage = `url("${IMAGE_BASE + CARD_BACK}")`;
+
+        const x = Math.cos(rad) * radius;
+        const y = Math.sin(rad) * radius;
+        card.style.transform =
+          `translate(-50%, -50%) translate(${x}px, ${y}px) rotate(${angle + 90}deg)`;
+
+        const cardIndex = deckOrder[i];
+        card.dataset.cardIndex = cardIndex;
+        card.addEventListener("click", () => toggleSelect(card));
+        deckEl.appendChild(card);
+      }
+    }
+
+    function toggleSelect(cardEl) {
+      const cardIndex = Number(cardEl.dataset.cardIndex);
+
+      if (!cardEl.classList.contains("selected")) {
+        if (selected.length >= MAX_PICK) return;
+        cardEl.classList.add("selected");
+        selected.push(cardIndex);
+      } else {
+        cardEl.classList.remove("selected");
+        selected = selected.filter(i => i !== cardIndex);
+      }
+
+      countEl.textContent = `เลือกแล้ว: ${selected.length} / ${MAX_PICK}`;
+      submitBtn.disabled = (selected.length !== MAX_PICK);
+    }
+
+    function resetSelectionUI() {
+      selected = [];
+      countEl.textContent = `เลือกแล้ว: 0 / ${MAX_PICK}`;
+      submitBtn.disabled = true;
+      resultSection.style.display = "none";
+
+      deckEl.querySelectorAll(".card.selected")
+        .forEach(c => c.classList.remove("selected"));
+    }
+
+    // ⭐ สับไพ่: หมุนวงไพ่ → สุ่มสำรับ → วางใหม่
+    shuffleBtn.addEventListener("click", () => {
+      if (deckEl.classList.contains("animating")) return;
+
+      deckEl.classList.add("animating", "shuffle-anim");
+      resetSelectionUI();
+
+      setTimeout(() => {
+        shuffleArray(deckOrder);
+        placeCards();
+        deckEl.classList.remove("shuffle-anim", "animating");
+      }, 800); // ต้องตรงกับเวลา animation 0.8s
+    });
+
+    // ฟังก์ชันตัดไพ่แบบ "บนสุดซ้อนล่างสุด" 3 รอบ
+    function fancyCut(times = 3) {
+      for (let t = 0; t < times; t++) {
+        const tmp = [];
+        let left = 0;
+        let right = deckOrder.length - 1;
+        while (left <= right) {
+          if (left === right) {
+            tmp.push(deckOrder[left]);
+          } else {
+            tmp.push(deckOrder[left], deckOrder[right]);
+          }
+          left++;
+          right--;
+        }
+        deckOrder = tmp;
+      }
+    }
+
+    // 🐢 ตัดไพ่: รวบกอง → fancyCut → กระจายใหม่ (แบบช้าลง)
+    cutBtn.addEventListener("click", () => {
+      if (deckEl.classList.contains("animating")) return;
+      const cards = Array.from(deckEl.querySelectorAll(".card"));
+      if (!cards.length) return;
+
+      deckEl.classList.add("animating");
+      resetSelectionUI();
+
+      // 1) ไพ่ทุกใบวิ่งเข้ากลาง (ช้าลง)
+      cards.forEach(card => {
+        card.style.transition = "transform 0.6s ease";
+        card.style.transform = "translate(-50%, -50%) scale(1)";
+      });
+
+      // 2) ทำ fancyCut + กระจายออกใหม่ (ช้าลง)
+      setTimeout(() => {
+        fancyCut(3);
+        const n = deckOrder.length;
+        const radius = computeRadius();
+
+        cards.forEach((card, i) => {
+          const angle = (360 / n) * i;
+          const rad = angle * (Math.PI / 180);
+          const x = Math.cos(rad) * radius;
+          const y = Math.sin(rad) * radius;
+          const cardIndex = deckOrder[i];
+          card.dataset.cardIndex = cardIndex;
+          card.style.transform =
+            `translate(-50%, -50%) translate(${x}px, ${y}px) rotate(${angle + 90}deg)`;
+        });
+
+        setTimeout(() => {
+          cards.forEach(card => {
+            card.style.transition = "";
+          });
+          deckEl.classList.remove("animating");
+        }, 600);
+      }, 600);
+    });
+
+    submitBtn.addEventListener("click", () => {
+      resultGrid.innerHTML = "";
+      selected.forEach((idx, i) => {
+        const data = cardFaces[idx];
+        const cardDiv = document.createElement("div");
+        cardDiv.className = "result-card";
+
+        const img = document.createElement("img");
+        img.src = IMAGE_BASE + data.file;
+        img.alt = data.name;
+
+        const nameEl = document.createElement("div");
+        nameEl.className = "result-name";
+        nameEl.textContent = `ใบที่ ${i + 1}: ${data.name}`;
+
+        const meaningEl = document.createElement("div");
+        meaningEl.className = "result-meaning";
+        meaningEl.textContent = data.meaning || "";
+
+        cardDiv.appendChild(img);
+        cardDiv.appendChild(nameEl);
+        cardDiv.appendChild(meaningEl);
+        resultGrid.appendChild(cardDiv);
+      });
+
+      resultSection.style.display = "block";
+      resultSection.scrollIntoView({ behavior: "smooth" });
+    });
+
+    window.addEventListener("resize", () => {
+      placeCards();
+    });
+
+    initDeck();
+  </script>
+</body>
+</html>

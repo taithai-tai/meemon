@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <title>Taithai Seimsee | เสี่ยงเซียมซีออนไลน์</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- ฟอนต์ -->
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: radial-gradient(circle at top, #020617, #000000);
+      --card-bg: rgba(15, 23, 42, 0.9);
+      --accent: #fbbf24;
+      --accent-soft: #facc15;
+      --text-main: #f9fafb;
+      --text-soft: #9ca3af;
+      --danger: #f87171;
+      --success: #4ade80;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Kanit", system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 520px; /* กว้างขึ้นนิดนึง */
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 28px;
+      padding: 24px 22px 26px;
+      box-shadow:
+        0 24px 50px rgba(0, 0, 0, 0.7),
+        0 0 0 1px rgba(148, 163, 184, 0.25);
+      backdrop-filter: blur(18px);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .logo-circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin: 0 auto 14px;
+      background: radial-gradient(circle at 30% 0%, #fef9c3, #f59e0b);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 12px 26px rgba(248, 250, 252, 0.35);
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .logo-circle span {
+      font-size: 40px;
+    }
+
+    .title {
+      font-size: 1.9rem; /* ใหญ่ขึ้น */
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: var(--text-soft);
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+
+    .shake-box {
+      margin: 22px 0 10px;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* ตัดกรอบ/กล่องออก ให้เหลือแค่พื้นที่วางรูปโล่ง ๆ */
+    .box-visual {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .lamp {
+      position: absolute;
+      width: 230px;
+      height: 230px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(254, 249, 195, 0.65), transparent 60%);
+      opacity: 0.9;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      filter: blur(1px);
+    }
+
+    /* รูปเซียมซี — ตัวเอกของงาน */
+    .seimsee-img {
+      position: relative;
+      height: 210px;          /* ขยายรูปให้ใหญ่ขึ้น */
+      max-width: 80%;
+      object-fit: contain;
+      user-select: none;
+      cursor: pointer;
+      z-index: 1;
+      transition: transform 0.12s ease, filter 0.12s ease;
+    }
+
+    /* รูปสั่นตอนแตะ */
+    .seimsee-img.tap-shake {
+      animation: tapShake 0.35s ease;
+    }
+
+    /* กล่องสั่นตอนสุ่มใบ (สั่นทั้งโซนรูป) */
+    .box-visual.box-shake {
+      animation: shakeBox 0.7s ease-in-out;
+    }
+
+    .hint {
+      text-align: center;
+      font-size: 0.92rem;
+      color: var(--text-soft);
+      margin-bottom: 4px;
+    }
+
+    .tap-status {
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--accent-soft);
+      margin-bottom: 14px;
+    }
+
+    .result-card {
+      margin-top: 8px;
+      padding: 14px 16px;
+      border-radius: 20px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      min-height: 110px;
+      display: none;
+      opacity: 0;
+    }
+
+    .result-card.show {
+      display: block;
+      animation: fadeInUp 0.35s ease-out forwards;
+    }
+
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .result-number {
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: var(--accent-soft);
+    }
+
+    .result-level {
+      font-size: 0.9rem;
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      color: var(--text-main);
+    }
+
+    .result-level.good {
+      border-color: var(--success);
+      color: var(--success);
+    }
+
+    .result-level.bad {
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+
+    .result-title {
+      font-size: 1rem;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .result-main {
+      font-size: 0.95rem;
+      color: var(--text-soft);
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+
+    .result-advice-label {
+      font-size: 0.85rem;
+      color: var(--accent-soft);
+      margin-bottom: 3px;
+    }
+
+    .result-advice {
+      font-size: 0.93rem;
+      color: var(--text-main);
+      line-height: 1.5;
+    }
+
+    .footer {
+      margin-top: 10px;
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--text-soft);
+      opacity: 0.7;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    @keyframes shakeBox {
+      0% { transform: translateX(0) rotate(0deg); }
+      20% { transform: translateX(-4px) rotate(-2deg); }
+      40% { transform: translateX(4px) rotate(2deg); }
+      60% { transform: translateX(-3px) rotate(-1.5deg); }
+      80% { transform: translateX(3px) rotate(1.5deg); }
+      100% { transform: translateX(0) rotate(0deg); }
+    }
+
+    @keyframes tapShake {
+      0%   { transform: translateX(0); }
+      20%  { transform: translateX(-4px) rotate(-1deg); }
+      40%  { transform: translateX(4px) rotate(1deg); }
+      60%  { transform: translateX(-3px) rotate(-0.7deg); }
+      80%  { transform: translateX(3px) rotate(0.7deg); }
+      100% { transform: translateX(0); }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (min-width: 600px) {
+      .card {
+        padding: 26px 26px 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="card">
+      <div class="header">
+        <div class="logo-circle">
+          <span>🧧</span>
+        </div>
+        <div class="title">เสี่ยงเซียมซี Taithai</div>
+        <div class="subtitle">
+          ตั้งจิตให้สงบ แล้วแตะที่รูปเซียมซี<br />
+          5 ครั้งติดกันเพื่อเสี่ยงเซียมซี 💫
+        </div>
+      </div>
+
+      <div class="shake-box">
+        <div class="box-visual" id="boxVisual">
+          <div class="lamp"></div>
+          <!-- รูปเซียมซีจาก GitHub ของคุณ -->
+          <img
+            src="/v2/apps/NFCV.2/Seimsee/Seimsee.png"
+            alt="เซียมซี"
+            class="seimsee-img"
+            id="seimseeImg"
+          />
+        </div>
+      </div>
+
+      <div class="hint">
+        ใช้เพื่อความบันเทิงและสิริมงคลเท่านั้น ไม่ใช่การทำนายที่แน่นอน 🎋
+      </div>
+      <div id="tapStatus" class="tap-status">
+        แตะที่รูป 5 ครั้งภายในเวลาสั้น ๆ ระบบจะสุ่มใบเซียมซีให้คุณ 🎲
+      </div>
+
+      <div id="resultCard" class="result-card">
+        <div class="result-header">
+          <div class="result-number" id="resultNumber"></div>
+          <div class="result-level" id="resultLevel"></div>
+        </div>
+        <div class="result-title" id="resultTitle"></div>
+        <div class="result-main" id="resultMain"></div>
+
+        <div class="result-advice-label">คำแนะนำเพิ่มเติม</div>
+        <div class="result-advice" id="resultAdvice"></div>
+      </div>
+
+      <div class="footer">
+        © <span id="yearNow"></span> Taithai Seimsee — เสี่ยงเซียมซีออนไลน์
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ===== ข้อมูลเซียมซี =====
+    const fortunes = [
+      {
+        number: 1,
+        level: "โชคดีมาก",
+        title: "รุ่งเรืองดุจอรุณแรกของปี",
+        main: "ช่วงนี้ดวงขึ้น ทุกอย่างที่วางแผนไว้มีโอกาสสำเร็จสูง หากลงมือทำอย่างจริงจังจะเห็นผลเร็ว",
+        advice:
+          "อย่าประมาท ใช้จังหวะที่ดีนี้ในการวางรากฐานระยะยาว เช่น การเรียน การงาน หรือการลงทุนที่ศึกษามาดีแล้ว",
+      },
+      {
+        number: 2,
+        level: "โชคดี",
+        title: "น้ำขึ้นให้รีบตัก",
+        main: "มีโอกาสดีผ่านเข้ามา ทั้งด้านการเรียน การทำโปรเจกต์ หรือโอกาสใหม่ ๆ",
+        advice:
+          "หมั่นสังเกตโอกาสรอบตัว อย่าปล่อยผ่านเพราะความขี้เกียจ หรือความกลัวเล็ก ๆ น้อย ๆ",
+      },
+      {
+        number: 3,
+        level: "ปานกลาง",
+        title: "ค่อยเป็นค่อยไป",
+        main: "ช่วงนี้สิ่งต่าง ๆ ยังไปได้เรื่อย ๆ ไม่เร็วไม่ช้า ถ้าพยายามต่อเนื่องจะค่อย ๆ เห็นผล",
+        advice:
+          "โฟกัสที่วินัยและการจัดเวลา อย่าเปรียบเทียบตัวเองกับคนอื่นมากเกินไป",
+      },
+      {
+        number: 4,
+        level: "โชคดีเล็กน้อย",
+        title: "แสงเล็ก ๆ ปลายทาง",
+        main: "แม้ตอนนี้อาจยังไม่เห็นผลชัดเจน แต่กำลังเดินมาถูกทางแล้ว",
+        advice:
+          "ทบทวนแผน ปรับเล็กน้อย แล้วเดินต่อ อย่าท้อเพราะความสำเร็จมักมาช้ากว่าที่คิดเสมอ",
+      },
+      {
+        number: 5,
+        level: "เสี่ยงเล็กน้อย",
+        title: "ลมเปลี่ยนทิศ",
+        main: "อาจมีเรื่องไม่คาดคิดเกิดขึ้น ทำให้แผนที่วางไว้ต้องเปลี่ยนไปบ้าง",
+        advice:
+          "เตรียมแผนสำรองไว้ และระวังการตัดสินใจแบบรีบเร่ง พยายามตั้งสติให้ดี",
+      },
+      {
+        number: 6,
+        level: "โชคดี",
+        title: "มีผู้ใหญ่คอยช่วยเหลือ",
+        main: "หากมีปัญหา ให้ลองถามหรือขอคำปรึกษาจากผู้ใหญ่ ครู หรือคนที่มีประสบการณ์",
+        advice:
+          "อย่าเกรงใจที่จะขอคำแนะนำ บางครั้งคำพูดหนึ่งประโยคสามารถช่วยเปลี่ยนมุมมองทั้งชีวิตได้",
+      },
+      {
+        number: 7,
+        level: "ปานกลาง",
+        title: "สอบผ่านด้วยความพยายาม",
+        main: "เรื่องการเรียนหรือการทำงานอาจเหนื่อยหน่อย แต่ถ้าอ่านหนังสือหรือเตรียมตัวดีจะไปได้สวย",
+        advice:
+          "แบ่งเวลาอ่านหนังสือเป็นช่วงสั้น ๆ แต่สม่ำเสมอ แล้วให้รางวัลตัวเองเล็ก ๆ หลังทำสำเร็จ",
+      },
+      {
+        number: 8,
+        level: "โชคดีมาก",
+        title: "สิ่งดี ๆ กำลังเข้ามา",
+        main: "มีข่าวดีรออยู่ อาจเกี่ยวกับโปรเจกต์ งาน เงิน หรือคนที่คุณแอบหวัง",
+        advice:
+          "เตรียมตัวให้พร้อมรับสิ่งดี ๆ และรักษาความเป็นตัวเองที่จริงใจและขยันเอาไว้",
+      },
+      {
+        number: 9,
+        level: "เสี่ยงเล็กน้อย",
+        title: "พักก่อนแล้วค่อยลุยต่อ",
+        main: "ร่างกายและใจอาจเริ่มล้า ถ้าฝืนต่อไปอาจทำให้ผลลัพธ์ไม่ดีเท่าที่ควร",
+        advice:
+          "พักผ่อนให้พอ จัดสมดุลระหว่างงาน การเรียน และเวลาส่วนตัว อย่าลืมดูแลสุขภาพ",
+      },
+      {
+        number: 10,
+        level: "ไม่ค่อยดี",
+        title: "เมฆหมอกชั่วคราว",
+        main: "อาจมีอุปสรรคเข้ามาทดสอบความใจแข็งและความอดทนของคุณ",
+        advice:
+          "อย่าเพิ่งตัดสินใจเรื่องใหญ่ในช่วงนี้ ใช้เวลาไตร่ตรองให้ดี และมองหาคนที่ไว้ใจได้ไว้ปรึกษา",
+      },
+      {
+        number: 11,
+        level: "โชคดี",
+        title: "มิตรภาพช่วยเกื้อหนุน",
+        main: "เพื่อนหรือคนรอบตัวจะเป็นกุญแจสำคัญให้ผ่านเรื่องยาก ๆ ไปได้",
+        advice:
+          "รักษาความสัมพันธ์ดี ๆ ไว้ แบ่งปัน ทั้งคำปรึกษาและน้ำใจ ยิ่งให้ยิ่งได้กลับมา",
+      },
+      {
+        number: 12,
+        level: "ปานกลาง",
+        title: "เรียนรู้จากความผิดพลาด",
+        main: "สิ่งที่ยังไม่สำเร็จไม่ได้แปลว่าล้มเหลว แต่เป็นบทเรียนสำคัญในก้าวถัดไป",
+        advice:
+          "ลองมองสิ่งที่เกิดขึ้นแบบคนภายนอก แล้วถามตัวเองว่า ‘ฉันได้เรียนรู้อะไรจากเรื่องนี้?’",
+      },
+    ];
+
+    const boxVisual = document.getElementById("boxVisual");
+    const seimseeImg = document.getElementById("seimseeImg");
+
+    const resultCard = document.getElementById("resultCard");
+    const resultNumber = document.getElementById("resultNumber");
+    const resultLevel = document.getElementById("resultLevel");
+    const resultTitle = document.getElementById("resultTitle");
+    const resultMain = document.getElementById("resultMain");
+    const resultAdvice = document.getElementById("resultAdvice");
+
+    const tapStatus = document.getElementById("tapStatus");
+
+    let isDrawing = false;
+
+    // นับจำนวนครั้งที่แตะรูป
+    let tapCount = 0;
+    let tapTimer = null;
+    const TAP_RESET_DELAY = 1500; // ms ถ้าหยุดนานเกินนี้จะรีเซ็ตนับใหม่
+
+    function getRandomFortune() {
+      const index = Math.floor(Math.random() * fortunes.length);
+      return fortunes[index];
+    }
+
+    function showResult(fortune) {
+      resultNumber.textContent = `ใบที่ ${fortune.number}`;
+      resultLevel.textContent = fortune.level;
+      resultLevel.classList.remove("good", "bad");
+
+      if (
+        fortune.level.includes("ไม่ค่อยดี") ||
+        fortune.level.includes("เสี่ยง")
+      ) {
+        resultLevel.classList.add("bad");
+      } else if (fortune.level.includes("ดี")) {
+        resultLevel.classList.add("good");
+      }
+
+      resultTitle.textContent = fortune.title;
+      resultMain.textContent = fortune.main;
+      resultAdvice.textContent = fortune.advice;
+
+      resultCard.classList.remove("show");
+      void resultCard.offsetWidth;
+      resultCard.classList.add("show");
+    }
+
+    // สุ่มเซียมซี (เรียกตอนครบ 5 แตะ)
+    function performDraw() {
+      if (isDrawing) return;
+      isDrawing = true;
+
+      boxVisual.classList.add("box-shake");
+      tapStatus.textContent = "กำลังสุ่มใบเซียมซีให้คุณ... 🔮";
+
+      setTimeout(() => {
+        const fortune = getRandomFortune();
+        showResult(fortune);
+
+        boxVisual.classList.remove("box-shake");
+        tapStatus.textContent =
+          "แตะที่รูป 5 ครั้งภายในเวลาสั้น ๆ ระบบจะสุ่มใบเซียมซีให้คุณ 🎲";
+
+        isDrawing = false;
+      }, 900);
+    }
+
+    // ให้รูปสั่นทุกครั้งที่แตะ
+    function animateTapShake() {
+      seimseeImg.classList.remove("tap-shake");
+      void seimseeImg.offsetWidth;
+      seimseeImg.classList.add("tap-shake");
+    }
+
+    function handleTap() {
+      animateTapShake();
+
+      tapCount += 1;
+
+      if (tapTimer) clearTimeout(tapTimer);
+
+      tapTimer = setTimeout(() => {
+        tapCount = 0;
+        tapStatus.textContent =
+          "แตะที่รูป 5 ครั้งภายในเวลาสั้น ๆ ระบบจะสุ่มใบเซียมซีให้คุณ 🎲";
+      }, TAP_RESET_DELAY);
+
+      tapStatus.textContent = `แตะแล้ว ${tapCount} ครั้ง (ครบ 5 ครั้งจะสุ่มให้)`;
+
+      if (tapCount >= 5) {
+        tapCount = 0;
+        if (tapTimer) {
+          clearTimeout(tapTimer);
+          tapTimer = null;
+        }
+        performDraw();
+      }
+    }
+
+    // รองรับทั้ง click และ touch
+    seimseeImg.addEventListener("click", handleTap);
+    seimseeImg.addEventListener("touchend", (e) => {
+      e.preventDefault();
+      handleTap();
+    });
+
+    // ปีใน footer
+    document.getElementById("yearNow").textContent =
+      new Date().getFullYear();
+  </script>
+</body>
+</html>
