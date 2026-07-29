@@ -4,6 +4,7 @@ import { useState } from "react";
 import { formatPrice } from "@/lib/data";
 import type { Product } from "@/lib/types";
 import { useCart } from "./CartProvider";
+import { Icon } from "./Icons";
 
 export function ProductDetailClient({ product }: { product: Product }) {
   const [imageIndex, setImageIndex] = useState(0);
@@ -97,7 +98,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
               onClick={() => setQuantity((current) => Math.max(1, current - 1))}
               aria-label="ลดจำนวน"
             >
-              −
+              <Icon name="minus" />
             </button>
             <span>{quantity}</span>
             <button
@@ -105,11 +106,12 @@ export function ProductDetailClient({ product }: { product: Product }) {
               onClick={() => setQuantity((current) => Math.min(99, current + 1))}
               aria-label="เพิ่มจำนวน"
             >
-              +
+              <Icon name="plus" />
             </button>
           </div>
           <button type="button" className="primary-button grow" onClick={addToCart}>
-            {added ? "เพิ่มลงตะกร้าแล้ว ✓" : "เพิ่มลงตะกร้า"}
+            <Icon name={added ? "check" : "cart"} />
+            {added ? "เพิ่มลงตะกร้าแล้ว" : "เพิ่มลงตะกร้า"}
           </button>
         </div>
 

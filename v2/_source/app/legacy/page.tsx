@@ -1,5 +1,6 @@
 import manifest from "@/data/legacy-routes.json";
 import { PageHero } from "../components/PageElements";
+import { Icon } from "../components/Icons";
 
 type LegacyRoute = (typeof manifest.routes)[number];
 
@@ -51,7 +52,7 @@ export default function LegacyPage() {
               <div>
                 {routes.map((route) => (
                   <a href={route.directoryUrl ?? route.fileUrl} key={route.path}>
-                    <span>{titleFor(route)}</span><b>เปิดเวอร์ชันเดิม ↗</b>
+                    <span>{titleFor(route)}</span><b>เปิดเวอร์ชันเดิม <Icon name="arrow-up-right" /></b>
                   </a>
                 ))}
               </div>

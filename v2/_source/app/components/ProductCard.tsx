@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { formatPrice } from "@/lib/data";
 import type { Product } from "@/lib/types";
+import { Icon } from "./Icons";
 
 const categoryLabels = {
   wallets: "กระเป๋า & เครื่องหนัง",
@@ -33,7 +34,10 @@ export function ProductCard({ product }: { product: Product }) {
               ? ` – ${formatPrice(product.priceMax)}`
               : ""}
           </strong>
-          <span>ดูสินค้า ↗</span>
+          <span className="product-card-action">
+            ดูสินค้า
+            <Icon name="arrow-up-right" />
+          </span>
         </div>
       </div>
     </Link>

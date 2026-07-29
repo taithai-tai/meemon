@@ -3,16 +3,23 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCart } from "./CartProvider";
+import { BrandMark, Icon, type IconName } from "./Icons";
 
-const navItems = [
-  { href: "/", label: "หน้าแรก", icon: "✦" },
-  { href: "/v2/shop", label: "ร้านค้า", icon: "◇" },
-  { href: "/v2/fortune", label: "ดูดวง", icon: "☾" },
-  { href: "/v2/rituals", label: "พิธี", icon: "♨" },
+const navItems: Array<{ href: string; label: string; icon: IconName }> = [
+  { href: "/v2", label: "หน้าแรก", icon: "home" },
+  { href: "/v2/shop", label: "ร้านค้า", icon: "shop" },
+  { href: "/v2/fortune", label: "ดูดวง", icon: "fortune" },
+  { href: "/v2/rituals", label: "พิธีมงคล", icon: "ritual" },
+  { href: "/v2/wallpapers", label: "วอลเปเปอร์", icon: "wallpaper" },
+  { href: "/v2/contact", label: "ติดต่อ", icon: "contact" },
 ];
 
+const mobileNavItems = navItems.slice(0, 4);
+
 function isActive(pathname: string, href: string) {
-  if (href === "/") return pathname === "/";
+  if (href === "/v2") {
+    return pathname === "/" || pathname === "/v2" || pathname === "/v2/";
+  }
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
@@ -27,15 +34,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="site-shell">
       <header className="site-header">
-        <Link href="/" className="brand" aria-label="Meemon Home">
+        <Link href="/v2/" className="brand" aria-label="Meemon Home">
           <span className="brand-mark">
-            <img src="/v2/assets/brand/logo.png" alt="" />
+            <BrandMark />
           </span>
           <span>
             <strong>MEEMON</strong>
-            <small>Destiny · Faith · Living</small>
+            <small>DESTINY · FAITH · LIVING</small>
           </span>
         </Link>
+
         <nav className="desktop-nav" aria-label="เมนูหลัก">
           {navItems.map((item) => (
             <Link
@@ -43,15 +51,20 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               href={item.href}
               className={isActive(pathname, item.href) ? "active" : ""}
             >
+              <Icon name={item.icon} />
               {item.label}
             </Link>
           ))}
-          <Link href="/v2/wallpapers">วอลเปเปอร์</Link>
-          <Link href="/v2/contact">ติดต่อ</Link>
         </nav>
-        <Link href="/v2/cart" className="cart-button" aria-label="เปิดตะกร้า">
+
+        <Link
+          href="/v2/cart"
+          className={`cart-button ${isActive(pathname, "/v2/cart") ? "active" : ""}`}
+          aria-label={`เปิดตะกร้า มี ${itemCount} ชิ้น`}
+        >
+          <Icon name="cart" />
           <span>ตะกร้า</span>
-          <b>{itemCount}</b>
+          {itemCount > 0 ? <b>{itemCount}</b> : null}
         </Link>
       </header>
 
@@ -63,10 +76,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <p>โลกของความเชื่อ งานออกแบบ และสิ่งมงคลในที่เดียว</p>
         </div>
         <div className="footer-links">
-          <Link href="/v2/contact">ติดต่อ Meemon</Link>
-          <Link href="/legacy">คลังแอปเวอร์ชันเดิม</Link>
+          <Link href="/v2/contact"><Icon name="contact" />ติดต่อ Meemon</Link>
+          <Link href="/legacy"><Icon name="book" />คลังแอปเวอร์ชันเดิม</Link>
           <a href="https://shopee.co.th/king_6914" target="_blank" rel="noreferrer">
-            Shopee Store
+            <Icon name="store" />Shopee Store
           </a>
         </div>
         <p className="belief-note">
@@ -75,13 +88,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </footer>
 
       <nav className="mobile-nav" aria-label="เมนูมือถือ">
-        {navItems.map((item) => (
+        {mobileNavItems.map((item) => (
           <Link
             key={item.href}
             href={item.href}
             className={isActive(pathname, item.href) ? "active" : ""}
           >
-            <span>{item.icon}</span>
+            <span><Icon name={item.icon} /></span>
             {item.label}
           </Link>
         ))}
@@ -90,7 +103,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           className={isActive(pathname, "/v2/cart") ? "active" : ""}
         >
           <span className="nav-cart-icon">
-            ▱<b>{itemCount}</b>
+            <Icon name="cart" />
+            {itemCount > 0 ? <b>{itemCount}</b> : null}
           </span>
           ตะกร้า
         </Link>

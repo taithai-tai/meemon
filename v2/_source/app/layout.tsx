@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   description:
     "รวมร้านค้า เครื่องมือดูดวง พิธีมงคล และวอลเปเปอร์ของ Meemon ไว้ในที่เดียว",
   icons: {
-    icon: "/v2/assets/brand/icon-192.png",
+    icon: "/v2/assets/brand/mark.svg",
     apple: "/v2/assets/brand/icon-192.png",
   },
   manifest: "/v2/manifest.webmanifest",

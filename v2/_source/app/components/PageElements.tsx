@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ContentModule } from "@/lib/types";
+import { Icon } from "./Icons";
 
 export function PageHero({
   eyebrow,
@@ -27,13 +28,13 @@ export function ModuleGrid({ modules }: { modules: ContentModule[] }) {
     <div className="module-grid">
       {modules.map((module) => (
         <Link href={module.href} className="module-card" key={module.href}>
-          <span className="module-icon">{module.icon}</span>
+          <span className="module-icon"><Icon name={module.icon} /></span>
           <div>
             <small>{module.eyebrow}</small>
             <h3>{module.title}</h3>
             <p>{module.description}</p>
           </div>
-          <span className="module-arrow">↗</span>
+          <span className="module-arrow"><Icon name="arrow-up-right" /></span>
         </Link>
       ))}
     </div>
@@ -43,7 +44,8 @@ export function ModuleGrid({ modules }: { modules: ContentModule[] }) {
 export function BackLink({ href, label = "ย้อนกลับ" }: { href: string; label?: string }) {
   return (
     <Link href={href} className="back-link">
-      ← {label}
+      <Icon name="arrow-left" />
+      {label}
     </Link>
   );
 }

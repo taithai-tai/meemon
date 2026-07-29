@@ -62,7 +62,7 @@ export interface ContentModule {
   eyebrow: string;
   title: string;
   description: string;
-  icon: string;
+  icon: IconName;
 }
 
 export interface TarotCard {
@@ -87,3 +87,4 @@ export interface CheckoutProvider {
   ): Promise<{ orderId: string }>;
   createPaymentSession(orderId: string): Promise<{ redirectUrl: string }>;
 }
+import type { IconName } from "@/app/components/Icons";

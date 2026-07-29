@@ -3,23 +3,39 @@
 import { useMemo, useState } from "react";
 import { content } from "@/lib/data";
 import type { TarotCard } from "@/lib/types";
+import { Icon, type IconName } from "./Icons";
 
 function pick<T>(items: T[]) {
   return items[Math.floor(Math.random() * items.length)];
 }
+
+const oracleIcons: Record<string, IconName> = {
+  "The Sun": "sun",
+  "The Moon": "moon",
+  "The Star": "sparkle",
+  "The World": "oracle",
+  "The Wheel": "daily",
+  Strength: "shield",
+  "The Lovers": "heart",
+  "The Tower": "bolt",
+  "High Priest": "book",
+};
 
 export function OracleTool() {
   const [card, setCard] = useState<(typeof content.oracleCards)[number] | null>(null);
   return (
     <div className="tool-stage">
       <div className={`oracle-card ${card ? "revealed" : ""}`}>
-        <span>{card?.icon ?? "✦"}</span>
+        <span className="oracle-symbol">
+          <Icon name={card ? oracleIcons[card.name] ?? "oracle" : "oracle"} />
+        </span>
         <small>{card ? "YOUR ORACLE" : "MEEMON ORACLE"}</small>
         <h2>{card?.name ?? "ตั้งใจถึงคำถามหนึ่งเรื่อง"}</h2>
         <p>{card?.meaning ?? "หลับตา หายใจลึก แล้วเปิดรับข้อความที่เหมาะกับวันนี้"}</p>
         {card ? <b>เลขมงคล · {card.lucky}</b> : null}
       </div>
       <button className="button button-gold" onClick={() => setCard(pick(content.oracleCards))}>
+        <Icon name={card ? "sparkle" : "oracle"} />
         {card ? "เปิดไพ่อีกครั้ง" : "เปิดไพ่หนึ่งใบ"}
       </button>
     </div>
@@ -56,7 +72,7 @@ export function TarotTool() {
       ) : (
         <div className="tarot-deck"><img src="/v2/assets/tarot/back.webp" alt="" /><span>78 CARDS</span></div>
       )}
-      <button className="button button-gold" onClick={draw}>{cards.length ? "สับแล้วเปิดใหม่" : `เปิดไพ่ ${count} ใบ`}</button>
+      <button className="button button-gold" onClick={draw}><Icon name="tarot" />{cards.length ? "สับแล้วเปิดใหม่" : `เปิดไพ่ ${count} ใบ`}</button>
     </div>
   );
 }
@@ -77,15 +93,15 @@ export function SeimseeTool() {
           <h2>{fortune.title}</h2><p>{fortune.main}</p><div>{fortune.advice}</div>
         </article>
       ) : <p className="tool-prompt">ตั้งจิตอธิษฐานถึงเรื่องที่อยากรู้ แล้วเขย่ากระบอกเซียมซี</p>}
-      <button className="button button-gold" onClick={shake} disabled={shaking}>{shaking ? "กำลังเขย่า…" : "เขย่าเซียมซี"}</button>
+      <button className="button button-gold" onClick={shake} disabled={shaking}><Icon name="seimsee" />{shaking ? "กำลังเขย่า…" : "เขย่าเซียมซี"}</button>
     </div>
   );
 }
 
 const jiaobeiOutcomes = [
-  { icon: "◒ ◓", title: "เซิ่งปวย — คำตอบรับ", text: "หนึ่งคว่ำหนึ่งหงาย หมายถึงสิ่งศักดิ์สิทธิ์อนุญาตหรือเห็นชอบ" },
-  { icon: "◒ ◒", title: "อิมปวย — ยังไม่ใช่เวลา", text: "คว่ำทั้งคู่ แนะนำให้ทบทวนคำถามหรือรอจังหวะที่เหมาะสมกว่า" },
-  { icon: "◓ ◓", title: "เฉียวปวย — คำถามยังไม่ชัด", text: "หงายทั้งคู่ เปรียบเหมือนรอยยิ้ม ควรถามใหม่ให้กระชับและจริงใจ" },
+  { sides: ["down", "up"], title: "เซิ่งปวย — คำตอบรับ", text: "หนึ่งคว่ำหนึ่งหงาย หมายถึงสิ่งศักดิ์สิทธิ์อนุญาตหรือเห็นชอบ" },
+  { sides: ["down", "down"], title: "อิมปวย — ยังไม่ใช่เวลา", text: "คว่ำทั้งคู่ แนะนำให้ทบทวนคำถามหรือรอจังหวะที่เหมาะสมกว่า" },
+  { sides: ["up", "up"], title: "เฉียวปวย — คำถามยังไม่ชัด", text: "หงายทั้งคู่ เปรียบเหมือนรอยยิ้ม ควรถามใหม่ให้กระชับและจริงใจ" },
 ];
 
 export function JiaobeiTool() {
@@ -97,9 +113,9 @@ export function JiaobeiTool() {
   }
   return (
     <div className="tool-stage">
-      <div className={`jiaobei-blocks ${turn ? "throwing" : ""}`}><span>◖</span><span>◗</span></div>
-      {result ? <article className="result-card"><div className="result-icon">{result.icon}</div><h2>{result.title}</h2><p>{result.text}</p></article> : <p className="tool-prompt">ถามคำถามที่ตอบได้ว่า “ใช่” หรือ “ไม่ใช่” เพียงหนึ่งเรื่อง</p>}
-      <button className="button button-gold" onClick={throwBlocks} disabled={turn}>{turn ? "กำลังเสี่ยงทาย…" : "โยนเซ้งปวย"}</button>
+      <div className={`jiaobei-blocks ${turn ? "throwing" : ""}`} aria-label="ไม้เสี่ยงทายเซ้งปวย"><span /><span /></div>
+      {result ? <article className="result-card"><div className="jiaobei-result-visual">{result.sides.map((side, index) => <span className={side} key={`${side}-${index}`} />)}</div><h2>{result.title}</h2><p>{result.text}</p></article> : <p className="tool-prompt">ถามคำถามที่ตอบได้ว่า “ใช่” หรือ “ไม่ใช่” เพียงหนึ่งเรื่อง</p>}
+      <button className="button button-gold" onClick={throwBlocks} disabled={turn}><Icon name="jiaobei" />{turn ? "กำลังเสี่ยงทาย…" : "โยนเซ้งปวย"}</button>
     </div>
   );
 }
@@ -119,7 +135,7 @@ export function LuckyNumberTool() {
     <div className="tool-stage">
       <div className="lucky-digits">{digits.map((digit, index) => <span key={index}>{digit}</span>)}</div>
       <p className="tool-prompt">เลขที่ปรากฏเป็นสัญลักษณ์แห่งจังหวะและแรงบันดาลใจ ไม่ใช่การรับประกันผลลัพธ์</p>
-      <button className="button button-gold" onClick={generate} disabled={running}>{running ? "กำลังเปิดตัวเลข…" : "รับเลขมงคล 4 หลัก"}</button>
+      <button className="button button-gold" onClick={generate} disabled={running}><Icon name="lucky-number" />{running ? "กำลังเปิดตัวเลข…" : "รับเลขมงคล 4 หลัก"}</button>
     </div>
   );
 }
@@ -140,7 +156,7 @@ export function DailyTool() {
   return (
     <div className="tool-stage">
       <div className="field compact-field"><label>คุณเกิดวันอะไร</label><select value={birthday} onChange={(event) => setBirthday(Number(event.target.value))}>{content.luckyDays.slice(0, 7).map((day, index) => <option key={day.name} value={index}>{day.name}</option>)}</select></div>
-      <div className="moon-display"><span>☾</span><div><small>พลังจันทราวันนี้</small><h2>{lunar}</h2><p>{today.toLocaleDateString("th-TH", { dateStyle: "full" })}</p></div></div>
+      <div className="moon-display"><span><Icon name="moon" /></span><div><small>พลังจันทราวันนี้</small><h2>{lunar}</h2><p>{today.toLocaleDateString("th-TH", { dateStyle: "full" })}</p></div></div>
       <div className="daily-grid">
         <article><small>พลังที่ส่งเสริม</small><h3>{lead.label}</h3><p>{lead.meaning}</p></article>
         <article><small>สิ่งที่ควรระวัง</small><h3>{watch.label}</h3><p>{watch.meaning}</p></article>
@@ -159,7 +175,7 @@ export function ColorsTool() {
           <button key={key} onClick={() => setDay(key)} className={day === key ? "active" : ""}>{value.name.replace("วัน", "")}</button>
         ))}
       </div>
-      <article className="color-intro"><span>{info.icon}</span><div><small>{info.enName}</small><h2>{info.name}</h2><p>{info.deityName} · {info.worship}</p></div></article>
+      <article className="color-intro"><span><Icon name={day === "sunday" ? "sun" : day === "monday" ? "moon" : "colors"} /></span><div><small>{info.enName}</small><h2>{info.name}</h2><p>{info.deityName} · {info.worship}</p></div></article>
       <div className="color-grid">
         {info.luckyColors.map((color) => (
           <article key={`${color.label}-${color.color}`}>

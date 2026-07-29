@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { categories } from "@/lib/data";
 import type { Product, ProductCategory } from "@/lib/types";
 import { ProductCard } from "./ProductCard";
+import { Icon } from "./Icons";
 
 export function ShopClient({ products }: { products: Product[] }) {
   const [query, setQuery] = useState("");
@@ -35,11 +36,14 @@ export function ShopClient({ products }: { products: Product[] }) {
       <div className="shop-toolbar">
         <label className="search-field">
           <span>ค้นหาสินค้า</span>
-          <input
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="กระเป๋า กำไล การ์ดมงคล..."
-          />
+          <span className="search-input-wrap">
+            <Icon name="search" />
+            <input
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="กระเป๋า กำไล การ์ดมงคล..."
+            />
+          </span>
         </label>
         <label className="sort-field">
           <span>เรียงตาม</span>
@@ -75,7 +79,7 @@ export function ShopClient({ products }: { products: Product[] }) {
       </div>
       {filtered.length === 0 ? (
         <div className="empty-state">
-          <span>◇</span>
+          <span className="empty-icon"><Icon name="search" /></span>
           <h2>ยังไม่พบสินค้าที่ตรงกัน</h2>
           <p>ลองค้นหาด้วยคำอื่นหรือเลือกหมวด “ทั้งหมด”</p>
         </div>
