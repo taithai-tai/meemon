@@ -26,8 +26,9 @@ export function PageHero({
 export function ModuleGrid({ modules }: { modules: ContentModule[] }) {
   return (
     <div className="module-grid">
-      {modules.map((module) => (
-        <Link href={module.href} className="module-card" key={module.href}>
+      {modules.map((module) => {
+        const content = (
+          <>
           <span className="module-icon"><Icon name={module.icon} /></span>
           <div>
             <small>{module.eyebrow}</small>
@@ -35,8 +36,19 @@ export function ModuleGrid({ modules }: { modules: ContentModule[] }) {
             <p>{module.description}</p>
           </div>
           <span className="module-arrow"><Icon name="arrow-up-right" /></span>
-        </Link>
-      ))}
+          </>
+        );
+
+        return module.legacy ? (
+          <a href={module.href} className="module-card" key={module.href}>
+            {content}
+          </a>
+        ) : (
+          <Link href={module.href} className="module-card" key={module.href}>
+            {content}
+          </Link>
+        );
+      })}
     </div>
   );
 }

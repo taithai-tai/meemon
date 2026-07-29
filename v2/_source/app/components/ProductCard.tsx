@@ -11,9 +11,15 @@ const categoryLabels = {
   other: "คอลเลกชันพิเศษ",
 };
 
-export function ProductCard({ product }: { product: Product }) {
-  return (
-    <Link href={`/v2/shop/${product.slug}`} className="product-card">
+export function ProductCard({
+  product,
+  legacyHref,
+}: {
+  product: Product;
+  legacyHref?: string;
+}) {
+  const content = (
+    <>
       <div className="product-image">
         <img
           src={product.images[0] ?? "/v2/assets/brand/logo.png"}
@@ -40,6 +46,16 @@ export function ProductCard({ product }: { product: Product }) {
           </span>
         </div>
       </div>
+    </>
+  );
+
+  return legacyHref ? (
+    <a href={legacyHref} className="product-card">
+      {content}
+    </a>
+  ) : (
+    <Link href={`/v2/shop/${product.slug}`} className="product-card">
+      {content}
     </Link>
   );
 }

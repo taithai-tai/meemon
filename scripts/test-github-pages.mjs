@@ -63,6 +63,57 @@ if (!rootIndex.includes('window.location.replace("/v2/"')) {
   throw new Error("The root index does not redirect to /v2/.");
 }
 
+const homeIndex = readFileSync(resolve(repositoryRoot, "v2/index.html"), "utf8");
+const requiredLegacyHomeLinks = [
+  "/home/",
+  "/NFCV.2/home/",
+  "/NFCV.2/Seimsee/",
+  "/NFCV.2/Wood/",
+  "/NFCV.2/number/",
+  "/app/test1.html",
+  "/openday/",
+  "/card/Wallpaper/",
+];
+
+for (const href of requiredLegacyHomeLinks) {
+  if (!homeIndex.includes(`href="${href}"`)) {
+    throw new Error(`V2 Home is missing legacy app link: ${href}`);
+  }
+}
+
+const legacyForwardContracts = [
+  ["v2/shop/index.html", "/home/"],
+  ["v2/shop/77-50712224947/index.html", "/home/"],
+  ["v2/cart/index.html", "/home/"],
+  ["v2/checkout/index.html", "/home/"],
+  ["v2/fortune/index.html", "/NFCV.2/home/"],
+  ["v2/fortune/oracle/index.html", "/NFCV.2/home/"],
+  ["v2/fortune/tarot/index.html", "/NFCV.2/home/"],
+  ["v2/fortune/seimsee/index.html", "/NFCV.2/Seimsee/"],
+  ["v2/fortune/jiaobei/index.html", "/NFCV.2/Wood/"],
+  ["v2/fortune/lucky-number/index.html", "/NFCV.2/number/"],
+  ["v2/fortune/daily/index.html", "/NFCV.2/Lucky%20day/"],
+  ["v2/fortune/colors-2026/index.html", "/Color2026/Index.html"],
+  ["v2/rituals/index.html", "/How%20to/"],
+  ["v2/rituals/incense/index.html", "/app/test1.html"],
+  ["v2/rituals/wallet-opening/index.html", "/openday/"],
+  ["v2/rituals/wallet-guide/index.html", "/How%20to/"],
+  ["v2/rituals/horse-chant/index.html", "/pony/"],
+  ["v2/rituals/money-chant/index.html", "/How%20to/"],
+  ["v2/wallpapers/index.html", "/card/Wallpaper/"],
+  ["v2/contact/index.html", "/Contact/"],
+];
+
+for (const [page, href] of legacyForwardContracts) {
+  const html = readFileSync(resolve(repositoryRoot, page), "utf8");
+  if (
+    !html.includes(`href="${href}"`) ||
+    !html.includes("Meemon V2 เปิดใช้เฉพาะหน้า Home")
+  ) {
+    throw new Error(`V2 route does not forward to its legacy app: ${page}`);
+  }
+}
+
 function listHtmlFiles(directory) {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
     const path = resolve(directory, entry.name);

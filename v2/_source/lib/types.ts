@@ -63,6 +63,7 @@ export interface ContentModule {
   title: string;
   description: string;
   icon: IconName;
+  legacy?: boolean;
 }
 
 export interface TarotCard {
