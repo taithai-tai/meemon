@@ -1,0 +1,7 @@
+1:"$Sreact.fragment"
+2:I[23344,["/v2/_next/static/chunks/0zwh3phtdnk8r.js","/v2/_next/static/chunks/09mzkwykgmgkt.js","/v2/_next/static/chunks/07--iz-agqbjq.js","/v2/_next/static/chunks/0d_ttlq86_qnt.js"],""]
+3:I[42744,["/v2/_next/static/chunks/0zwh3phtdnk8r.js","/v2/_next/static/chunks/09mzkwykgmgkt.js","/v2/_next/static/chunks/07--iz-agqbjq.js","/v2/_next/static/chunks/0d_ttlq86_qnt.js"],"CheckoutClient"]
+4:I[99674,["/v2/_next/static/chunks/0zwh3phtdnk8r.js","/v2/_next/static/chunks/09mzkwykgmgkt.js"],"OutletBoundary"]
+5:"$Sreact.suspense"
+0:{"rsc":["$","$1","c",{"children":[[["$","section",null,{"className":"page-hero","children":[["$","div",null,{"className":"eyebrow","children":"CHECKOUT PROTOTYPE"}],["$","h1",null,{"children":"ทดลองเส้นทาง Checkout"}],["$","p",null,{"children":"ตรวจสอบประสบการณ์ตั้งแต่ตะกร้าถึงหน้าสรุป โดยไม่สร้างออเดอร์ ไม่ส่งข้อมูล และไม่รับเงินจริง"}],null]}],["$","section",null,{"className":"content-section","children":[["$","$L2",null,{"href":"/v2/cart","className":"back-link","children":["← ","กลับตะกร้า"]}],["$","$L3",null,{}]]}]],[["$","script","script-0",{"src":"/v2/_next/static/chunks/07--iz-agqbjq.js","async":true}],["$","script","script-1",{"src":"/v2/_next/static/chunks/0d_ttlq86_qnt.js","async":true}]],["$","$L4",null,{"children":["$","$5",null,{"name":"Next.MetadataOutlet","children":"$@6"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"-vE87DIxHbOCrniObht5d"}
+6:null

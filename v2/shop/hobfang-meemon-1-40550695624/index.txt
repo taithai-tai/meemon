@@ -1,0 +1,144 @@
+1:"$Sreact.fragment"
+2:I[68943,["/v2/_next/static/chunks/0zwh3phtdnk8r.js","/v2/_next/static/chunks/09mzkwykgmgkt.js"],"CartProvider"]
+3:I[64287,["/v2/_next/static/chunks/0zwh3phtdnk8r.js","/v2/_next/static/chunks/09mzkwykgmgkt.js"],"PwaRegister"]
+4:I[25045,["/v2/_next/static/chunks/0zwh3phtdnk8r.js","/v2/_next/static/chunks/09mzkwykgmgkt.js"],"AppShell"]
+5:I[76555,["/v2/_next/static/chunks/0zwh3phtdnk8r.js","/v2/_next/static/chunks/09mzkwykgmgkt.js"],"default"]
+6:I[76314,["/v2/_next/static/chunks/0zwh3phtdnk8r.js","/v2/_next/static/chunks/09mzkwykgmgkt.js"],"default"]
+8:I[99674,["/v2/_next/static/chunks/0zwh3phtdnk8r.js","/v2/_next/static/chunks/09mzkwykgmgkt.js"],"OutletBoundary"]
+9:"$Sreact.suspense"
+c:I[99674,["/v2/_next/static/chunks/0zwh3phtdnk8r.js","/v2/_next/static/chunks/09mzkwykgmgkt.js"],"ViewportBoundary"]
+e:I[99674,["/v2/_next/static/chunks/0zwh3phtdnk8r.js","/v2/_next/static/chunks/09mzkwykgmgkt.js"],"MetadataBoundary"]
+10:I[42761,["/v2/_next/static/chunks/0zwh3phtdnk8r.js","/v2/_next/static/chunks/09mzkwykgmgkt.js"],"default",1]
+:HL["/v2/_next/static/chunks/04-qdzkjzdxq7.css","style"]
+0:{"P":null,"c":["","v2","shop","hobfang-meemon-1-40550695624",""],"q":"","i":false,"f":[[["",{"children":["v2",{"children":["shop",{"children":[["slug","hobfang-meemon-1-40550695624","d",null],{"children":["__PAGE__",{}]}]}]}]},"$undefined","$undefined",16],[["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/v2/_next/static/chunks/04-qdzkjzdxq7.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","script","script-0",{"src":"/v2/_next/static/chunks/0zwh3phtdnk8r.js","async":true,"nonce":"$undefined"}],["$","script","script-1",{"src":"/v2/_next/static/chunks/09mzkwykgmgkt.js","async":true,"nonce":"$undefined"}]],["$","html",null,{"lang":"th","children":["$","body",null,{"children":["$","$L2",null,{"children":[["$","$L3",null,{}],["$","$L4",null,{"children":["$","$L5",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L6",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]]}]}]}]]}],{"children":[["$","$1","c",{"children":[null,["$","$L5",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L6",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":[["$","$1","c",{"children":[null,["$","$L5",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L6",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":[["$","$1","c",{"children":[null,["$","$L5",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L6",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":[["$","$1","c",{"children":["$L7",[["$","script","script-0",{"src":"/v2/_next/static/chunks/0ga61~fmcxqz4.js","async":true,"nonce":"$undefined"}],["$","script","script-1",{"src":"/v2/_next/static/chunks/0d_ttlq86_qnt.js","async":true,"nonce":"$undefined"}]],["$","$L8",null,{"children":["$","$9",null,{"name":"Next.MetadataOutlet","children":"$@a"}]}]]}],{},null,false,null]},null,false,"$@b"]},null,false,"$@b"]},null,false,"$@b"]},null,false,null],["$","$1","h",{"children":[null,["$","$Lc",null,{"children":"$Ld"}],["$","div",null,{"hidden":true,"children":["$","$Le",null,{"children":["$","$9",null,{"name":"Next.Metadata","children":"$Lf"}]}]}],null]}],false]],"m":"$undefined","G":["$10",[["$","link","0",{"rel":"stylesheet","href":"/v2/_next/static/chunks/04-qdzkjzdxq7.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]]],"S":true,"h":null,"s":"$undefined","l":"$undefined","p":"$undefined","d":"$undefined","b":"-vE87DIxHbOCrniObht5d"}
+11:[]
+b:"$W11"
+12:I[23344,["/v2/_next/static/chunks/0zwh3phtdnk8r.js","/v2/_next/static/chunks/09mzkwykgmgkt.js","/v2/_next/static/chunks/0ga61~fmcxqz4.js","/v2/_next/static/chunks/0d_ttlq86_qnt.js"],""]
+13:I[53136,["/v2/_next/static/chunks/0zwh3phtdnk8r.js","/v2/_next/static/chunks/09mzkwykgmgkt.js","/v2/_next/static/chunks/0ga61~fmcxqz4.js","/v2/_next/static/chunks/0d_ttlq86_qnt.js"],"ProductDetailClient"]
+14:T13d8,HOBFANG – FeatherLite
+
+กระเป๋าสะพายที่ออกแบบมาเพื่อผู้หญิงยุคใหม่ที่ใส่ใจสุขภาพ รักสไตล์ และเชื่อในพลังงานดี
+
+
+
+เบาที่สุดในชีวิตคุณ: น้ำหนักไม่ถึง 100 กรัม (แค่ 1 ขีด!)
+
+จุของได้เหลือเชื่อ: ใหญ่พอใส่ของทั้งวัน แต่ไม่รู้สึกแบก
+
+บุฟองนุ่มพิเศษ: ไม่เจ็บไหล่ ไม่บาดหลัง ไม่เสียบุคลิก
+
+ผ้าร่มพรีเมียมกันน้ำ: แม้ฝนตก สิ่งของคุณก็ปลอดภัย
+
+
+จุดเปลี่ยนอยู่ตรงนี้…
+
+
+เพราะนี่ไม่ใช่แค่ “กระเป๋า” แต่มันคือ “พลังงาน” ที่คุณสะพายได้
+
+แตะที่กระเป๋า = เปิดพลังการเงินทันที
+
+แตะปุ๊บ ดวงเปิดปั๊บ โอกาสใหม่ก็เดินมาหาคุณ
+
+
+เปลี่ยนใบนี้…เปลี่ยนทั้งภาพลักษณ์และโชคชะตา
+
+เพราะการเลือกใช้กระเป๋า 1 ใบ
+
+สะท้อนทั้งรสนิยมและเส้นทางชีวิตของคุณ
+
+ใครมองคุณ เขาจะรู้ทันทีว่าคุณ “เลือกที่จะเติบโต”
+
+
+
+เปลี่ยนกระเป๋า เปลี่ยนบุคลิก เปลี่ยนมุมมองที่โลกมองคุณ
+
+
+
+
+
+หลายคนอาจยังไม่รู้ว่า…
+
+“กระเป๋าสะพาย” ไม่ได้แค่ใส่ของ แต่มันคือภาษาร่างกายที่ส่งออกไปโดยไม่ต้องพูด
+
+
+
+ลองสังเกตดู…
+
+คนที่เลือกสะพายกระเป๋าสไตล์หรูเรียบ กับคนที่ใช้กระเป๋าโทรมใบเดิมทุกวัน
+
+คนรอบข้างมองต่างกันไหม?
+
+
+
+ใช่—ต่าง
+
+เพราะการเลือกกระเป๋า
+
+คือการบอกโลกว่า “ฉันให้คุณค่ากับตัวเองแค่ไหน”
+
+
+
+กระเป๋า 1 ใบ อาจไม่ใช่สิ่งสำคัญที่สุดในชีวิต
+
+แต่สามารถเปลี่ยน “บุคลิก” และ “มุมมองที่คนอื่นมีต่อคุณ” ได้ทันที
+
+
+
+กระเป๋าที่ดูดี สะพายแล้วส่งเสริมบุคลิก
+
+จะทำให้คุณดูน่าเชื่อถือขึ้น
+
+มีเสน่ห์ขึ้น
+
+ดูสุขภาพดีขึ้น
+
+แม้จะยังไม่ได้พูดสักคำ
+
+
+
+การเลือกใช้ = การใช้ชีวิต
+
+กระเป๋าที่คุณเลือก
+
+บ่งบอกถึงความคิด ไลฟ์สไตล์ และความใส่ใจตัวเองในทุกวัน
+
+
+มีให้เลือก 4 สีหรูดูดีทุกมุมมอง
+
+• Moonlight White
+สีขาวจันทราแห่งความบริสุทธิ์
+
+Soft as moonlight, strong with energy
+
+เสริมเสน่ห์ ความเมตตา เปิดทางรักและโอกาสใหม่
+
+
+• Mystic Black
+สีดำลุ่มลึก ลึกลับแต่มั่นคง
+
+พลังปกป้อง พลังบารมี
+
+เหมาะสำหรับผู้ที่ต้องการเกราะพลังงาน เสริมอำนาจจากภายใน
+
+• Olive Green (GLIVE)
+สีเขียวมะกอกแห่งพลังชีวิต
+
+เบาเหมือนฟาง แต่พลังงานแน่นล้น
+
+เสริมความมั่นคง สงบ ดึงดูดพลังธรรมชาติและโชคทางการเงิน
+
+
+• Caramel Angel (Beige)
+สีเบจนางฟ้า อ่อนโยน หรูหรา
+
+เงียบ เรียบ แต่รวย
+
+เสริมบุญ เสริมเมตตา โชคเข้ามาแบบนุ่มนวล
+
+
+
+7:["$","section",null,{"className":"page-shell","children":[["$","$L12",null,{"href":"/v2/shop","className":"back-link","children":["← ","กลับร้านค้า"]}],["$","$L13",null,{"product":{"id":"40550695624","slug":"hobfang-meemon-1-40550695624","name":"กระเป๋าผ้าร่ม hobfang meemon กระเป๋าผ้าร่มเบาหวิวมาพร้อมนวัตกรรมใหม่ล่าสุดแตะปุ๊ปเปิดพลังงาน กระเป๋ามีน้ำหนักเพียง 1ขีด","description":"$14","category":"wallets","priceMin":3599,"priceMax":3599,"originalPriceMin":null,"originalPriceMax":null,"rating":4,"reviewCount":4,"soldCount":4,"availability":"InStock","images":["/v2/assets/products/40550695624/01.webp","/v2/assets/products/40550695624/02.webp","/v2/assets/products/40550695624/03.webp","/v2/assets/products/40550695624/04.webp","/v2/assets/products/40550695624/05.webp","/v2/assets/products/40550695624/06.webp"],"variants":[{"id":"40550695624-1","name":"สี","options":[{"id":"40550695624-1-1","name":"ขาว","disabled":false},{"id":"40550695624-1-2","name":"ดำ","disabled":false}]}],"sourceUrl":"https://shopee.co.th/%E0%B8%81%E0%B8%A3%E0%B8%B0%E0%B9%80%E0%B8%9B%E0%B9%8B%E0%B8%B2%E0%B8%9C%E0%B9%89%E0%B8%B2%E0%B8%A3%E0%B9%88%E0%B8%A1-hobfang-meemon-%E0%B8%81%E0%B8%A3%E0%B8%B0%E0%B9%80%E0%B8%9B%E0%B9%8B%E0%B8%B2%E0%B8%9C%E0%B9%89%E0%B8%B2%E0%B8%A3%E0%B9%88%E0%B8%A1%E0%B9%80%E0%B8%9A%E0%B8%B2%E0%B8%AB%E0%B8%A7%E0%B8%B4%E0%B8%A7%E0%B8%A1%E0%B8%B2%E0%B8%9E%E0%B8%A3%E0%B9%89%E0%B8%AD%E0%B8%A1%E0%B8%99%E0%B8%A7%E0%B8%B1%E0%B8%95%E0%B8%81%E0%B8%A3%E0%B8%A3%E0%B8%A1%E0%B9%83%E0%B8%AB%E0%B8%A1%E0%B9%88%E0%B8%A5%E0%B9%88%E0%B8%B2%E0%B8%AA%E0%B8%B8%E0%B8%94%E0%B9%81%E0%B8%95%E0%B8%B0%E0%B8%9B%E0%B8%B8%E0%B9%8A%E0%B8%9B%E0%B9%80%E0%B8%9B%E0%B8%B4%E0%B8%94%E0%B8%9E%E0%B8%A5%E0%B8%B1%E0%B8%87%E0%B8%87%E0%B8%B2%E0%B8%99-%E0%B8%81%E0%B8%A3%E0%B8%B0%E0%B9%80%E0%B8%9B%E0%B9%8B%E0%B8%B2%E0%B8%A1%E0%B8%B5%E0%B8%99%E0%B9%89%E0%B8%B3%E0%B8%AB%E0%B8%99%E0%B8%B1%E0%B8%81%E0%B9%80%E0%B8%9E%E0%B8%B5%E0%B8%A2%E0%B8%87-1%E0%B8%82%E0%B8%B5%E0%B8%94-i.35401261.40550695624","capturedAt":"2026-07-29T04:21:52.142Z"}}]]}]
+d:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+15:I[36144,["/v2/_next/static/chunks/0zwh3phtdnk8r.js","/v2/_next/static/chunks/09mzkwykgmgkt.js"],"IconMark"]
+a:null
+f:[["$","title","0",{"children":"กระเป๋าผ้าร่ม hobfang meemon กระเป๋าผ้าร่มเบาหวิวมาพร้อมนวัตกรรมใหม่ล่าสุดแตะปุ๊ปเปิดพลังงาน กระเป๋ามีน้ำหนักเพียง 1ขีด | Meemon"}],["$","meta","1",{"name":"description","content":"รวมร้านค้า เครื่องมือดูดวง พิธีมงคล และวอลเปเปอร์ของ Meemon ไว้ในที่เดียว"}],["$","link","2",{"rel":"manifest","href":"/v2/manifest.webmanifest","crossOrigin":"$undefined"}],["$","meta","3",{"property":"og:title","content":"Meemon — Destiny · Faith · Living"}],["$","meta","4",{"property":"og:description","content":"โลกของความเชื่อ งานออกแบบ และสิ่งมงคลในที่เดียว"}],["$","meta","5",{"property":"og:image","content":"https://meemon.net/og.png"}],["$","meta","6",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","7",{"name":"twitter:title","content":"Meemon — Destiny · Faith · Living"}],["$","meta","8",{"name":"twitter:description","content":"โลกของความเชื่อ งานออกแบบ และสิ่งมงคลในที่เดียว"}],["$","meta","9",{"name":"twitter:image","content":"https://meemon.net/og.png"}],["$","link","10",{"rel":"icon","href":"/v2/assets/brand/icon-192.png"}],["$","link","11",{"rel":"apple-touch-icon","href":"/v2/assets/brand/icon-192.png"}],["$","$L15","12",{}]]

@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Meemon — Destiny & Faith</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void: #02000a;
+  --abyss: #080318;
+  --cosmos: #120828;
+  --nebula: #1e0d3e;
+  --violet: #2d1155;
+  --amethyst: #6b21a8;
+  --arcane: #9333ea;
+  --gold-dim: #7a5a15;
+  --gold: #d4af37;
+  --gold-bright: #f0d060;
+  --gold-glow: #ffe080;
+  --silver: #c8c0d8;
+  --cream: #fef9e7;
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; touch-action:manipulation; }
+html, body { height:100%; overflow-x:hidden; background:var(--void); font-family:'Prompt',sans-serif; color:var(--gold); }
+#bg-canvas { position:fixed; inset:0; z-index:0; pointer-events:none; }
+.orb { position:fixed; border-radius:50%; pointer-events:none; z-index:0; filter:blur(80px); animation:orbFloat var(--d) ease-in-out infinite alternate; }
+.orb-1 { width:500px; height:500px; background:radial-gradient(circle,rgba(107,33,168,0.35) 0%,transparent 70%); top:-100px; left:-100px; --d:12s; }
+.orb-2 { width:400px; height:400px; background:radial-gradient(circle,rgba(147,51,234,0.25) 0%,transparent 70%); bottom:-80px; right:-80px; --d:15s; animation-delay:-5s; }
+.orb-3 { width:300px; height:300px; background:radial-gradient(circle,rgba(212,175,55,0.12) 0%,transparent 70%); top:40%; left:50%; transform:translateX(-50%); --d:20s; animation-delay:-8s; }
+@keyframes orbFloat { 0%{transform:translate(0,0) scale(1)} 100%{transform:translate(20px,30px) scale(1.1)} }
+body::after { content:''; position:fixed; inset:0; z-index:1; pointer-events:none; opacity:0.3; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E"); }
+#app { position:relative; z-index:2; min-height:100vh; max-width:440px; margin:0 auto; padding:0 18px 60px; }
+.view { display:none; animation:fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) both; }
+.view.active { display:block; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+/* HEADER */
+.header { text-align:center; padding:36px 0 28px; }
+.logo-wrap { position:relative; width:90px; height:90px; margin:0 auto 14px; }
+.logo-wrap::before,.logo-wrap::after { content:''; position:absolute; inset:-6px; border-radius:50%; border:1px solid rgba(212,175,55,0.3); animation:ringPulse 3s ease-in-out infinite; }
+.logo-wrap::after { inset:-14px; border-color:rgba(212,175,55,0.12); animation-delay:-1.5s; }
+@keyframes ringPulse { 0%,100%{transform:scale(1);opacity:0.5} 50%{transform:scale(1.06);opacity:1} }
+.logo-img { width:90px; height:90px; object-fit:contain; border-radius:50%; background:radial-gradient(circle,rgba(45,17,85,0.9),rgba(2,0,10,0.9)); border:2px solid rgba(212,175,55,0.5); filter:drop-shadow(0 0 20px rgba(212,175,55,0.6)) drop-shadow(0 0 40px rgba(107,33,168,0.4)); padding:6px; }
+.header-title { font-family:'Cinzel Decorative',serif; font-size:2.6rem; font-weight:900; line-height:1; letter-spacing:0.1em; background:linear-gradient(180deg,var(--gold-glow) 0%,var(--gold) 45%,var(--gold-dim) 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; filter:drop-shadow(0 4px 16px rgba(212,175,55,0.5)); }
+.header-ornament { display:flex; align-items:center; justify-content:center; gap:12px; margin-top:8px; }
+.orn-line { flex:1; height:1px; max-width:60px; background:linear-gradient(90deg,transparent,rgba(212,175,55,0.5),transparent); }
+.header-sub { font-family:'Cinzel',serif; font-size:0.6rem; letter-spacing:0.5em; color:rgba(212,175,55,0.45); }
+.diamond { width:6px; height:6px; background:var(--gold); transform:rotate(45deg); opacity:0.6; flex-shrink:0; }
+
+/* HOME */
+.home-tagline { text-align:center; padding:0 10px 32px; font-size:0.85rem; color:rgba(212,175,55,0.45); line-height:1.8; font-weight:300; letter-spacing:0.03em; }
+.menu-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.menu-card { position:relative; border-radius:24px; padding:28px 16px; text-align:center; cursor:pointer; overflow:hidden; background:linear-gradient(145deg,rgba(30,13,62,0.9),rgba(8,3,24,0.95)); border:1px solid rgba(212,175,55,0.2); transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1); box-shadow:0 8px 32px rgba(0,0,0,0.5),inset 0 1px 0 rgba(212,175,55,0.1); }
+.menu-card::before { content:''; position:absolute; inset:0; border-radius:24px; opacity:0; background:radial-gradient(circle at 50% 0%,rgba(212,175,55,0.1),transparent 70%); transition:opacity 0.3s; }
+.menu-card:hover { transform:translateY(-6px) scale(1.02); border-color:rgba(212,175,55,0.5); box-shadow:0 20px 60px rgba(0,0,0,0.6),0 0 40px rgba(107,33,168,0.3),inset 0 1px 0 rgba(212,175,55,0.2); }
+.menu-card:hover::before { opacity:1; }
+.menu-card:active { transform:scale(0.97); }
+.card-glow { position:absolute; top:-20px; left:50%; transform:translateX(-50%); width:80px; height:80px; border-radius:50%; filter:blur(30px); opacity:0.5; }
+.gf { background:#7c3aed; } .gw { background:#059669; }
+.menu-icon { width:64px; height:64px; border-radius:18px; margin:0 auto 16px; display:flex; align-items:center; justify-content:center; font-size:2rem; box-shadow:inset 0 1px 0 rgba(255,255,255,0.1); }
+.if { background:linear-gradient(135deg,rgba(124,58,237,0.5),rgba(76,29,149,0.3)); border:1px solid rgba(124,58,237,0.4); }
+.iw { background:linear-gradient(135deg,rgba(5,150,105,0.4),rgba(4,120,87,0.2)); border:1px solid rgba(5,150,105,0.4); }
+.menu-card-title { font-family:'Cinzel',serif; font-size:0.78rem; font-weight:700; letter-spacing:0.08em; color:var(--gold); margin-bottom:6px; }
+.menu-card-sub { font-size:0.72rem; color:rgba(212,175,55,0.4); font-weight:300; }
+.menu-arrow { display:inline-block; margin-top:14px; font-size:0.65rem; color:rgba(212,175,55,0.3); letter-spacing:0.12em; font-family:'Cinzel',serif; }
+
+/* BACK */
+.back-btn { display:inline-flex; align-items:center; gap:8px; background:transparent; border:1px solid rgba(212,175,55,0.2); border-radius:50px; padding:9px 20px; cursor:pointer; color:rgba(212,175,55,0.7); font-family:'Cinzel',serif; font-size:0.7rem; letter-spacing:0.1em; transition:all 0.25s; margin-bottom:24px; }
+.back-btn:hover { border-color:rgba(212,175,55,0.5); color:var(--gold); background:rgba(212,175,55,0.05); }
+
+/* SECTION HEAD */
+.sec-head { text-align:center; margin-bottom:28px; }
+.sec-title { font-family:'Cinzel',serif; font-size:1.3rem; font-weight:700; letter-spacing:0.08em; margin-bottom:6px; }
+.sec-sub { font-size:0.78rem; color:rgba(212,175,55,0.4); font-weight:300; }
+.sec-rule { display:flex; align-items:center; gap:12px; margin:10px 0 0; }
+.sec-rule-line { flex:1; height:1px; background:linear-gradient(90deg,transparent,rgba(212,175,55,0.25),transparent); }
+.sec-rule-star { color:var(--gold); font-size:0.6rem; opacity:0.5; }
+
+/* TAROT */
+/* ── ORACLE CARD ── */
+.oracle-wrap {
+  display:flex; flex-direction:column; align-items:center; gap:0; padding:0 0 24px;
+}
+.oracle-hint {
+  font-family:'Prompt',sans-serif; font-style:italic; font-size:0.85rem;
+  color:rgba(167,139,250,0.6); margin-bottom:20px; letter-spacing:0.04em;
+  transition:opacity 0.6s ease;
+}
+.oracle-hint.hidden { opacity:0; pointer-events:none; }
+.oracle-scene {
+  perspective:1000px;
+  width:220px; height:330px;
+  cursor:pointer;
+  flex-shrink:0;
+}
+.oracle-card {
+  width:220px; height:330px;
+  position:relative;
+  transform-style:preserve-3d;
+  transition:transform 0.8s cubic-bezier(0.4,0,0.2,1);
+}
+.oracle-card:not(.flipped):hover {
+  transform:translateY(-8px) scale(1.03);
+}
+.oracle-card:not(.flipped):hover .ofront {
+  border-color:rgba(212,175,55,0.9);
+  box-shadow:0 0 40px rgba(212,175,55,0.35), 0 0 80px rgba(107,33,168,0.3), 0 20px 60px rgba(0,0,0,0.6);
+}
+.oracle-card.flipped { transform:rotateY(180deg); cursor:default; }
+.ofront,.oback {
+  position:absolute;
+  top:0; left:0;
+  width:220px; height:330px;
+  border-radius:20px;
+  backface-visibility:hidden; -webkit-backface-visibility:hidden;
+  overflow:hidden;
+}
+
+/* FRONT — mystery side */
+.ofront {
+  background: #1a1a1a;
+  border:2px solid var(--gold);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  box-shadow:0 8px 40px rgba(0,0,0,0.7);
+  transition:box-shadow 0.3s, border-color 0.3s;
+  position:relative;
+}
+.ofront-outer-border {
+  position:absolute; inset:8px; border-radius:14px;
+  border:1px solid rgba(212,175,55,0.3);
+}
+.ofront-inner-border {
+  position:absolute; inset:14px; border-radius:10px;
+  border:1px solid rgba(212,175,55,0.15);
+}
+.ofront-pattern {
+  position:absolute; inset:0; overflow:hidden; border-radius:20px; opacity:0.07;
+}
+.ofront-pattern::before {
+  content:''; position:absolute; inset:-40px;
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent, transparent 18px,
+    rgba(212,175,55,0.5) 18px, rgba(212,175,55,0.5) 19px
+  );
+}
+.ofront-logo {
+  width:72px; height:72px; object-fit:contain; border-radius:50%;
+  filter:drop-shadow(0 0 18px rgba(212,175,55,0.9)) drop-shadow(0 0 40px rgba(212,175,55,0.5));
+  position:relative; z-index:1; margin-bottom:16px;
+}
+.ofront-fate {
+  font-family:'Cinzel',serif; font-size:0.75rem; font-weight:700;
+  letter-spacing:0.5em; color:rgba(212,175,55,0.6);
+  position:relative; z-index:1;
+}
+.ofront-dots {
+  display:flex; gap:6px; position:absolute; bottom:20px; z-index:1;
+}
+.ofront-dots span {
+  width:4px; height:4px; border-radius:50%; background:rgba(212,175,55,0.2);
+}
+.ofront-dots span:nth-child(2) { background:rgba(212,175,55,0.6); transform:scale(1.3); }
+
+/* BACK — result side */
+.oback {
+  transform:rotateY(180deg);
+  background:linear-gradient(160deg, #fffdf0 0%, #fef3c0 40%, #fde68a 75%, #f5d060 100%);
+  border:3px solid var(--gold);
+  display:flex; flex-direction:column;
+  box-shadow:0 8px 40px rgba(0,0,0,0.5);
+}
+.oback-border {
+  position:absolute; inset:7px; border-radius:14px;
+  border:1px solid rgba(160,124,32,0.5); pointer-events:none;
+}
+.oback-border2 {
+  position:absolute; inset:11px; border-radius:11px;
+  border:1px solid rgba(160,124,32,0.2); pointer-events:none;
+}
+.oback-header {
+  padding:20px 16px 12px; text-align:center; position:relative; z-index:1;
+  border-bottom:1px solid rgba(160,124,32,0.25);
+}
+.oback-name {
+  font-family:'Cinzel',serif; font-size:1rem; font-weight:700;
+  color:#1a0a00; letter-spacing:0.08em;
+}
+.oback-body {
+  flex:1; display:flex; flex-direction:column; align-items:center;
+  justify-content:center; padding:16px 18px; position:relative; z-index:1;
+}
+.oback-icon { font-size:3.5rem; margin-bottom:14px; filter:drop-shadow(0 4px 8px rgba(0,0,0,0.2)); }
+.oback-meaning {
+  font-family:'Prompt',sans-serif; font-size:0.8rem; font-weight:300;
+  color:#3a1a00; line-height:1.8; text-align:center;
+}
+.oback-footer {
+  padding:12px 16px 18px; text-align:center; position:relative; z-index:1;
+  border-top:1px solid rgba(160,124,32,0.25);
+}
+.oback-lucky-label {
+  font-family:'Cinzel',serif; font-size:0.55rem; letter-spacing:0.3em;
+  color:rgba(100,60,0,0.5); margin-bottom:4px;
+}
+.oback-lucky-num {
+  font-family:'Cinzel',serif; font-size:1rem; font-weight:700;
+  color:#7a4a00; letter-spacing:0.15em;
+}
+
+/* RESET BUTTON */
+.oracle-reset {
+  opacity:0; transform:translateY(16px);
+  transition:opacity 0.5s ease, transform 0.5s ease;
+  pointer-events:none; margin-top:28px; width:100%; max-width:240px;
+}
+.oracle-reset.show { opacity:1; transform:translateY(0); pointer-events:auto; }
+
+/* STEPS */
+.steps { display:flex; align-items:center; justify-content:center; gap:0; margin-bottom:28px; padding:0 20px; }
+.step-col { display:flex; flex-direction:column; align-items:center; gap:4px; }
+.step-num { width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Cinzel',serif; font-size:0.75rem; font-weight:700; border:1.5px solid rgba(212,175,55,0.25); color:rgba(212,175,55,0.3); transition:all 0.4s; background:rgba(8,3,24,0.8); }
+.step-num.active { border-color:var(--gold); color:var(--gold); box-shadow:0 0 20px rgba(212,175,55,0.35),inset 0 0 12px rgba(212,175,55,0.1); background:rgba(212,175,55,0.08); }
+.step-num.done { border-color:rgba(212,175,55,0.5); color:rgba(212,175,55,0.6); background:rgba(212,175,55,0.07); }
+.step-lbl { font-family:'Cinzel',serif; font-size:0.5rem; letter-spacing:0.1em; color:rgba(212,175,55,0.3); margin-top:4px; transition:color 0.4s; white-space:nowrap; }
+.step-col.active .step-lbl { color:rgba(212,175,55,0.7); }
+.step-conn { flex:1; height:1px; background:rgba(212,175,55,0.15); min-width:24px; max-width:50px; margin:0 4px; align-self:center; margin-bottom:18px; }
+
+/* DAY SELECTOR */
+.day-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:12px; }
+.day-card { border-radius:16px; padding:14px 6px; text-align:center; cursor:pointer; background:linear-gradient(145deg,rgba(18,8,40,0.9),rgba(8,3,24,0.95)); border:1px solid rgba(212,175,55,0.12); transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1); position:relative; overflow:hidden; }
+.day-card::after { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,transparent,var(--gold),transparent); border-radius:16px 16px 0 0; opacity:0; transition:opacity 0.3s; }
+.day-card:hover { transform:translateY(-3px); border-color:rgba(212,175,55,0.35); }
+.day-card.selected { border-color:var(--gold); background:linear-gradient(145deg,rgba(45,17,85,0.9),rgba(18,8,40,0.95)); box-shadow:0 0 24px rgba(212,175,55,0.2),0 8px 24px rgba(0,0,0,0.4); }
+.day-card.selected::after { opacity:1; }
+.day-emoji { font-size:1.5rem; display:block; margin-bottom:5px; }
+.day-name { font-family:'Cinzel',serif; font-size:0.58rem; color:var(--gold); letter-spacing:0.04em; }
+.day-thai { font-size:0.58rem; color:rgba(212,175,55,0.4); margin-top:2px; }
+.day-anyday { border-radius:16px; padding:16px 20px; cursor:pointer; background:linear-gradient(145deg,rgba(45,17,85,0.4),rgba(8,3,24,0.95)); border:1px solid rgba(212,175,55,0.15); transition:all 0.3s; display:flex; align-items:center; gap:14px; position:relative; overflow:hidden; }
+.day-anyday:hover,.day-anyday.selected { border-color:var(--gold); box-shadow:0 0 24px rgba(212,175,55,0.15); }
+.day-anyday.selected { background:linear-gradient(145deg,rgba(45,17,85,0.7),rgba(8,3,24,0.95)); }
+.any-icon { font-size:1.8rem; }
+
+/* ASPECT STACK */
+.aspect-area { position:relative; height:300px; margin:8px 0; }
+.aspect-card { position:absolute; left:50%; border-radius:24px; width:210px; height:280px; border:1.5px solid rgba(212,175,55,0.3); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px 20px; cursor:pointer; user-select:none; transition:all 0.45s cubic-bezier(0.34,1.56,0.64,1); overflow:hidden; }
+.aspect-card::before { content:''; position:absolute; top:-30%; left:-30%; width:160%; height:100%; border-radius:50%; background:radial-gradient(circle,rgba(255,255,255,0.07),transparent 60%); pointer-events:none; }
+.aspect-card::after { content:''; position:absolute; bottom:-10px; left:10%; right:10%; height:1px; background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent); }
+.a-check { position:absolute; top:12px; right:12px; width:20px; height:20px; border-radius:50%; background:var(--gold); display:flex; align-items:center; justify-content:center; font-size:0.6rem; color:#000; font-weight:700; opacity:0; transition:opacity 0.3s; }
+.aspect-card.active .a-check { opacity:1; }
+.a-icon { font-size:2.8rem; margin-bottom:14px; filter:drop-shadow(0 4px 8px rgba(0,0,0,0.4)); }
+.a-name { font-family:'Cinzel',serif; font-size:1.05rem; font-weight:700; color:rgba(255,255,255,0.95); letter-spacing:0.05em; margin-bottom:8px; text-shadow:0 2px 8px rgba(0,0,0,0.5); }
+.a-sub { font-size:0.72rem; color:rgba(255,255,255,0.55); text-align:center; line-height:1.5; }
+.aspect-nav { display:flex; align-items:center; justify-content:center; gap:24px; margin-top:12px; }
+.nav-btn { width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg,rgba(45,17,85,0.9),rgba(8,3,24,0.9)); border:1px solid rgba(212,175,55,0.3); cursor:pointer; color:var(--gold); font-size:1.2rem; display:flex; align-items:center; justify-content:center; transition:all 0.25s; box-shadow:0 4px 16px rgba(0,0,0,0.4); }
+.nav-btn:hover { border-color:var(--gold); box-shadow:0 0 20px rgba(212,175,55,0.25),0 4px 16px rgba(0,0,0,0.4); transform:scale(1.08); }
+.nav-btn:active { transform:scale(0.95); }
+.nav-count { font-family:'Cinzel',serif; font-size:0.75rem; color:rgba(212,175,55,0.5); min-width:50px; text-align:center; }
+.scroll-dots { display:flex; justify-content:center; gap:6px; margin:16px 0 8px; }
+.scroll-dots span { width:5px; height:5px; border-radius:50%; background:rgba(212,175,55,0.2); transition:all 0.3s; }
+.scroll-dots span.on { background:var(--gold); box-shadow:0 0 8px rgba(212,175,55,0.5); }
+
+/* BUTTONS */
+.btn-gold { width:100%; padding:16px 32px; border-radius:50px; background:linear-gradient(135deg,#d4af37,#f0d060 45%,#a07c20); border:none; cursor:pointer; font-family:'Prompt',sans-serif; font-size:1rem; font-weight:700; color:#1a0a00; transition:all 0.3s; box-shadow:0 8px 32px rgba(212,175,55,0.25),0 2px 0 rgba(255,255,255,0.1) inset; letter-spacing:0.05em; position:relative; overflow:hidden; }
+.btn-gold::before { content:''; position:absolute; inset:0; border-radius:50px; background:linear-gradient(135deg,rgba(255,255,255,0.15),transparent); }
+.btn-gold:hover { transform:translateY(-3px); box-shadow:0 16px 48px rgba(212,175,55,0.35); }
+.btn-gold:active { transform:scale(0.98); }
+.btn-gold:disabled { opacity:0.3; cursor:not-allowed; transform:none; box-shadow:none; }
+.btn-arcane { width:100%; padding:16px 32px; border-radius:50px; background:linear-gradient(135deg,#4c1d95,#7c3aed 50%,#3b0764); border:1px solid rgba(212,175,55,0.4); cursor:pointer; font-family:'Prompt',sans-serif; font-size:1rem; font-weight:600; color:rgba(255,255,255,0.95); transition:all 0.3s; box-shadow:0 8px 32px rgba(107,33,168,0.4),0 1px 0 rgba(212,175,55,0.3) inset; letter-spacing:0.05em; position:relative; overflow:hidden; }
+.btn-arcane::before { content:''; position:absolute; inset:0; border-radius:50px; background:radial-gradient(circle at 50% 0%,rgba(212,175,55,0.15),transparent 60%); }
+.btn-arcane:hover { transform:translateY(-3px); box-shadow:0 16px 48px rgba(107,33,168,0.5),0 0 40px rgba(212,175,55,0.2); }
+.btn-arcane:active { transform:scale(0.98); }
+.btn-ghost { width:100%; padding:13px 32px; border-radius:50px; background:transparent; border:1px solid rgba(212,175,55,0.2); cursor:pointer; font-family:'Prompt',sans-serif; font-size:0.9rem; color:rgba(212,175,55,0.6); transition:all 0.25s; letter-spacing:0.05em; }
+.btn-ghost:hover { border-color:rgba(212,175,55,0.4); color:var(--gold); background:rgba(212,175,55,0.04); }
+
+/* DIVIDER */
+.divider { display:flex; align-items:center; gap:12px; margin:20px 0; }
+.div-line { flex:1; height:1px; background:linear-gradient(90deg,transparent,rgba(212,175,55,0.2),transparent); }
+.div-orn { font-size:0.5rem; color:rgba(212,175,55,0.3); letter-spacing:0.3em; font-family:'Cinzel',serif; }
+
+/* RESULT */
+.result-title { font-family:'Cinzel',serif; font-size:1.3rem; font-weight:700; margin-bottom:4px; text-align:center; }
+.result-sub { font-size:0.78rem; color:rgba(212,175,55,0.4); margin-bottom:20px; text-align:center; }
+.result-frame { position:relative; border-radius:24px; overflow:hidden; margin-bottom:20px; box-shadow:0 0 0 1px rgba(212,175,55,0.3),0 0 60px rgba(212,175,55,0.15),0 24px 80px rgba(0,0,0,0.6); }
+.result-frame::before { content:''; position:absolute; inset:0; z-index:1; pointer-events:none; background:linear-gradient(180deg,transparent 60%,rgba(2,0,10,0.7) 100%); }
+.result-img { width:100%; display:block; border-radius:24px; }
+.result-badge { position:absolute; bottom:16px; left:50%; transform:translateX(-50%); z-index:2; background:rgba(2,0,10,0.8); border:1px solid rgba(212,175,55,0.4); border-radius:50px; padding:6px 18px; font-family:'Cinzel',serif; font-size:0.65rem; letter-spacing:0.15em; color:var(--gold); backdrop-filter:blur(10px); white-space:nowrap; }
+.dl-btn { display:flex; align-items:center; justify-content:center; gap:10px; text-decoration:none; }
+
+/* CONSECRATE */
+@keyframes consecrate {
+  0%{transform:translateX(-50%) scale(1) translateY(0px);filter:brightness(1);}
+  20%{transform:translateX(-50%) scale(1.06) translateY(-16px);filter:brightness(1.4);}
+  50%{transform:translateX(-50%) scale(1.08) translateY(-20px);filter:brightness(1.6);box-shadow:0 0 80px rgba(212,175,55,1),0 0 160px rgba(147,51,234,0.8);}
+  80%{transform:translateX(-50%) scale(1.04) translateY(-12px);filter:brightness(1.3);}
+  100%{transform:translateX(-50%) scale(1) translateY(0px);filter:brightness(1);}
+}
+.consecrating { animation:consecrate 1.4s cubic-bezier(0.4,0,0.2,1) !important; }
+
+/* TOAST */
+#toast { position:fixed; top:20px; left:50%; z-index:9999; transform:translateX(-50%) translateY(-100px); background:linear-gradient(135deg,rgba(18,8,40,0.98),rgba(8,3,24,0.98)); border:1px solid rgba(212,175,55,0.5); border-radius:50px; padding:12px 24px; display:flex; align-items:center; gap:10px; font-size:0.85rem; color:var(--gold); backdrop-filter:blur(20px); box-shadow:0 0 30px rgba(212,175,55,0.2),0 16px 48px rgba(0,0,0,0.5); transition:transform 0.5s cubic-bezier(0.34,1.56,0.64,1); white-space:nowrap; max-width:90vw; }
+#toast.show { transform:translateX(-50%) translateY(0); }
+#toast-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+@media(max-width:360px){ .header-title{font-size:2rem} .tarot-grid{gap:10px} .tw{height:155px} }
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+<canvas id="bg-canvas"></canvas>
+
+<div id="app">
+  <header class="header">
+    <div class="logo-wrap">
+      <img src="https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/Picture/logo.png" class="logo-img" alt="M" onerror="this.style.fontSize='2rem';this.alt='🔮'">
+    </div>
+    <div class="header-title">MEEMON</div>
+    <div class="header-ornament">
+      <div class="orn-line"></div><div class="diamond"></div>
+      <div class="header-sub">Destiny &amp; Faith</div>
+      <div class="diamond"></div><div class="orn-line"></div>
+    </div>
+  </header>
+
+  <!-- HOME -->
+  <div id="v-home" class="view active">
+    <p class="home-tagline">ค้นพบชะตาชีวิตและเสริมดวงมงคล<br>ด้วยศาสตร์โบราณแห่งสายมู</p>
+    <div class="menu-grid">
+      <div class="menu-card" onclick="goFortune()">
+        <div class="card-glow gf"></div>
+        <div class="menu-icon if">🔮</div>
+        <div class="menu-card-title">ทำนายดวง</div>
+        <div class="menu-card-sub">เปิดไพ่ทาโรต์</div>
+        <div class="menu-arrow">TAP TO BEGIN</div>
+      </div>
+      <div class="menu-card" onclick="goWallpaper()">
+        <div class="card-glow gw"></div>
+        <div class="menu-icon iw">🧧</div>
+        <div class="menu-card-title">ยันต์วอลเปเปอร์</div>
+        <div class="menu-card-sub">เสริมดวงมงคล</div>
+        <div class="menu-arrow">TAP TO BEGIN</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORTUNE -->
+  <div id="v-fortune" class="view">
+    <button class="back-btn" onclick="goHome()">◂ BACK</button>
+    <div class="sec-head">
+      <div class="sec-title">✦ ทำนายดวงชะตา ✦</div>
+      <div class="sec-rule"><div class="sec-rule-line"></div><div class="sec-rule-star">✦</div><div class="sec-rule-line"></div></div>
+    </div>
+    <div class="oracle-wrap">
+      <div class="oracle-hint" id="oracle-hint">แตะที่ไพ่เพื่อเปิดคำทำนาย</div>
+      <div class="oracle-scene" onclick="flipOracle()">
+        <div class="oracle-card" id="oracle-card">
+          <div class="ofront">
+            <div class="ofront-pattern"></div>
+            <div class="ofront-outer-border"></div>
+            <div class="ofront-inner-border"></div>
+            <img src="https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/Picture/logo.png"
+                 class="ofront-logo" alt="✦"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+            <div style="display:none;font-size:2.5rem;position:relative;z-index:1;margin-bottom:16px;">🔮</div>
+            <div class="ofront-fate">FATE</div>
+            <div class="ofront-dots"><span></span><span></span><span></span></div>
+          </div>
+          <div class="oback" id="oracle-back">
+            <div class="oback-border"></div>
+            <div class="oback-border2"></div>
+            <div class="oback-header">
+              <div class="oback-name" id="ob-name">—</div>
+            </div>
+            <div class="oback-body">
+              <div class="oback-icon" id="ob-icon">✦</div>
+              <div class="oback-meaning" id="ob-meaning"></div>
+            </div>
+            <div class="oback-footer">
+              <div class="oback-lucky-label">LUCKY NUMBER</div>
+              <div class="oback-lucky-num" id="ob-lucky">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="btn-arcane oracle-reset" id="oracle-reset" onclick="resetOracle()">
+        🔀 &nbsp;สุ่มชะตาใหม่
+      </button>
+    </div>
+  </div>
+
+  <!-- WALLPAPER -->
+  <div id="v-wallpaper" class="view">
+    <button class="back-btn" onclick="goHome()">◂ BACK</button>
+    <div class="sec-head"><div class="sec-title">✦ ยันต์วอลเปเปอร์ ✦</div></div>
+    <div class="steps" id="steps-ui"></div>
+
+    <div id="step1">
+      <div class="sec-sub" style="text-align:center;margin-bottom:16px;font-size:0.8rem;">เลือกวันเกิดของคุณ</div>
+      <div class="day-grid" id="day-grid"></div>
+      <div style="margin-top:10px">
+        <div class="day-anyday" id="day-anyday" onclick="pickDay('anyday')">
+          <span class="any-icon">🌟</span>
+          <div>
+            <div class="day-name" style="font-size:0.85rem">ใช้ได้ทุกวัน</div>
+            <div class="day-thai" style="font-size:0.72rem">วอลเปเปอร์มงคลพิเศษ 14 แบบ</div>
+          </div>
+        </div>
+      </div>
+      <div class="divider"><div class="div-line"></div><div class="div-orn">✦ ✦ ✦</div><div class="div-line"></div></div>
+      <button class="btn-gold" id="btn-day" onclick="doStep2()" disabled>ถัดไป ›</button>
+    </div>
+
+    <div id="step2" style="display:none">
+      <div class="sec-sub" style="text-align:center;margin-bottom:4px;font-size:0.8rem;">เลือกด้านที่ต้องการเสริมดวง</div>
+      <div class="sec-sub" style="text-align:center;font-size:0.7rem;margin-bottom:0;">← เลื่อนหรือกดลูกศร →</div>
+      <div class="aspect-area" id="aspect-area"
+        onmousedown="swS(event,false)" ontouchstart="swS(event,true)"
+        onmouseup="swE(event,false)" ontouchend="swE(event,true)"
+        onmouseleave="swC()"></div>
+      <div class="scroll-dots" id="dots"></div>
+      <div class="aspect-nav">
+        <button class="nav-btn" onclick="moveA(-1)">‹</button>
+        <span class="nav-count" id="nav-count">1 / 4</span>
+        <button class="nav-btn" onclick="moveA(1)">›</button>
+      </div>
+      <div class="divider"><div class="div-line"></div><div class="div-orn">✦ ✦ ✦</div><div class="div-line"></div></div>
+      <button class="btn-arcane" onclick="doConsecrate()">🔱 &nbsp;ปลุกเสก</button>
+    </div>
+
+    <div id="step3" style="display:none">
+      <div class="result-title" id="r-title"></div>
+      <div class="result-sub" id="r-sub"></div>
+      <div class="result-frame">
+        <div id="r-loading" style="display:flex;align-items:center;justify-content:center;height:300px;flex-direction:column;gap:12px;color:rgba(212,175,55,0.5);">
+          <div style="font-size:2rem;animation:ringPulse 1.5s ease-in-out infinite">✦</div>
+          <div style="font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.2em;">กำลังโหลด...</div>
+        </div>
+        <img id="r-img" class="result-img" src="" alt="Sacred Wallpaper" style="display:none"
+          onload="this.style.display='block';document.getElementById('r-loading').style.display='none';"
+          onerror="document.getElementById('r-loading').innerHTML='<div style=\'padding:40px;text-align:center\'><div style=\'font-size:2rem;margin-bottom:12px\'>⚠️</div><div style=\'font-family:Cinzel,serif;font-size:0.75rem;letter-spacing:0.1em;color:rgba(212,175,55,0.6)\'>ไม่สามารถโหลดรูปได้<br><small style=\'font-size:0.6rem;margin-top:8px;display:block;word-break:break-all;color:rgba(212,175,55,0.4)\'></small></div></div>';"
+        >
+        <div class="result-badge">✦ SACRED WALLPAPER ✦</div>
+      </div>
+      <button id="r-dl" class="btn-gold dl-btn" onclick="doDownload()">⬇ &nbsp;ดาวน์โหลด</button>
+      <div class="divider"><div class="div-line"></div><div class="div-orn">✦ ✦ ✦</div><div class="div-line"></div></div>
+      <button class="btn-ghost" onclick="resetWP()">↩ เริ่มใหม่</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"><div id="toast-dot"></div><span id="toast-msg">สำเร็จ</span></div>
+
+<script>
+/* STAR CANVAS */
+(function(){
+  const c=document.getElementById('bg-canvas'),ctx=c.getContext('2d');
+  let W,H,stars=[];
+  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;init();}
+  function init(){stars=[];for(let i=0;i<180;i++)stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.6+0.2,a:Math.random(),da:(Math.random()*0.006+0.002)*(Math.random()<0.5?1:-1),col:Math.random()<0.15?'hsl(45,80%,85%)':'hsl(260,40%,90%)'});}
+  function draw(){ctx.clearRect(0,0,W,H);stars.forEach(s=>{s.a+=s.da;if(s.a>1||s.a<0)s.da*=-1;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle=s.col;ctx.globalAlpha=Math.max(0,Math.min(1,s.a));ctx.fill();});ctx.globalAlpha=1;requestAnimationFrame(draw);}
+  resize();window.addEventListener('resize',resize);draw();
+})();
+
+/* SOUND */
+const SFX={click:'https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3',flip:'https://cdn.pixabay.com/audio/2022/03/10/audio_71e4fc8a6e.mp3',magic:'https://cdn.pixabay.com/audio/2024/12/20/audio_d3efed8c6c.mp3'};
+function snd(k){try{const a=new Audio(SFX[k]);a.volume=0.45;a.play().catch(()=>{});}catch(e){}}
+
+/* VIEWS */
+function showView(id){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
+function goHome(){snd('click');showView('v-home');}
+function goFortune(){snd('click');buildTarot();showView('v-fortune');}
+function goWallpaper(){snd('click');initWP();showView('v-wallpaper');}
+
+/* TOAST */
+let toastT;
+function toast(msg,dot='#4ade80'){document.getElementById('toast-msg').textContent=msg;const d=document.getElementById('toast-dot');d.style.background=dot;d.style.boxShadow=`0 0 8px ${dot}`;const t=document.getElementById('toast');t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),3200);}
+
+/* TAROT */
+const CARDS=[
+  {name:'The Sun',icon:'☀️',meaning:'ความสำเร็จ ความสุข และพลังงานบวกที่ส่องสว่าง',lucky:'1 · 9 · 19'},
+  {name:'The Moon',icon:'🌕',meaning:'ความลึกลับ สัญชาตญาณ และความฝันอันแจ่มใส',lucky:'2 · 11 · 22'},
+  {name:'The Star',icon:'⭐',meaning:'ความหวัง แรงบันดาลใจ และการฟื้นฟูจิตใจ',lucky:'3 · 7 · 17'},
+  {name:'The World',icon:'🌍',meaning:'ความสมบูรณ์ ชัยชนะ และการเดินทางใหม่',lucky:'5 · 10 · 21'},
+  {name:'The Wheel',icon:'🎡',meaning:'โชคชะตา วงจรชีวิต และการเปลี่ยนแปลง',lucky:'0 · 10 · 20'},
+  {name:'Strength',icon:'🦁',meaning:'กำลังใจ ความกล้าหาญ และการควบคุมตนเอง',lucky:'8 · 18 · 28'},
+  {name:'The Lovers',icon:'💑',meaning:'ความรัก ความสัมพันธ์ และการเลือกที่ถูกต้อง',lucky:'6 · 16 · 26'},
+  {name:'The Tower',icon:'⚡',meaning:'การเปลี่ยนแปลงฉับพลัน และการปล่อยวาง',lucky:'4 · 14 · 16'},
+  {name:'High Priest',icon:'🧙',meaning:'ปัญญา คำแนะนำโบราณ และความรู้ลึกซึ้ง',lucky:'5 · 15 · 25'},
+];
+let oracleCard = null;
+
+function buildTarot(){
+  // Pick a random card and set it up — revealed on click
+  oracleCard = CARDS[Math.floor(Math.random()*CARDS.length)];
+  const card = document.getElementById('oracle-card');
+  const hint = document.getElementById('oracle-hint');
+  const reset = document.getElementById('oracle-reset');
+  if(card) card.classList.remove('flipped');
+  if(hint){ hint.classList.remove('hidden'); }
+  if(reset) reset.classList.remove('show');
+}
+
+function flipOracle(){
+  const card = document.getElementById('oracle-card');
+  if(!card || card.classList.contains('flipped')) return;
+  snd('flip');
+  // Fill card back with data
+  document.getElementById('ob-name').textContent = oracleCard.name;
+  document.getElementById('ob-icon').textContent = oracleCard.icon;
+  document.getElementById('ob-meaning').textContent = oracleCard.meaning;
+  document.getElementById('ob-lucky').textContent = oracleCard.lucky;
+  card.classList.add('flipped');
+  // Hide hint, show reset button
+  document.getElementById('oracle-hint').classList.add('hidden');
+  setTimeout(()=>{ document.getElementById('oracle-reset').classList.add('show'); }, 600);
+  toast('✨ ' + oracleCard.name + ' — ' + oracleCard.lucky, '#d4af37');
+}
+
+function resetOracle(){
+  snd('click');
+  const card = document.getElementById('oracle-card');
+  const reset = document.getElementById('oracle-reset');
+  const hint = document.getElementById('oracle-hint');
+  reset.classList.remove('show');
+  card.classList.remove('flipped');
+  setTimeout(()=>{
+    oracleCard = CARDS[Math.floor(Math.random()*CARDS.length)];
+    hint.classList.remove('hidden');
+  }, 400);
+}
+
+/* WALLPAPER DATA - URLs are hardcoded to avoid encoding issues */
+const DAYS=[
+  {id:'sun',name:'Sunday',thai:'อาทิตย์',emoji:'🌞',files:{'การเงิน':'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B8%AD%E0%B8%B2%E0%B8%97%E0%B8%B4%E0%B8%95%E0%B8%A2%E0%B9%8C/S__2908233_0.jpg','ความรัก':'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B8%AD%E0%B8%B2%E0%B8%97%E0%B8%B4%E0%B8%95%E0%B8%A2%E0%B9%8C/S__2908234_0.jpg','การงาน':'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B8%AD%E0%B8%B2%E0%B8%97%E0%B8%B4%E0%B8%95%E0%B8%A2%E0%B9%8C/S__2908235_0.jpg','สุขภาพ':'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B8%AD%E0%B8%B2%E0%B8%97%E0%B8%B4%E0%B8%95%E0%B8%A2%E0%B9%8C/S__2908236_0.jpg'}},
+  {id:'mon',name:'Monday',thai:'จันทร์',emoji:'🌙',files:{'การเงิน':'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B8%88%E0%B8%B1%E0%B8%99%E0%B8%97%E0%B8%A3%E0%B9%8C/S__2908191_0.jpg','ความรัก':'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B8%88%E0%B8%B1%E0%B8%99%E0%B8%97%E0%B8%A3%E0%B9%8C/S__2908192_0.jpg','การงาน':'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B8%88%E0%B8%B1%E0%B8%99%E0%B8%97%E0%B8%A3%E0%B9%8C/S__2908193_0.jpg','สุขภาพ':'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B8%88%E0%B8%B1%E0%B8%99%E0%B8%97%E0%B8%A3%E0%B9%8C/S__2908194_0.jpg'}},
+  {id:'tue',name:'Tuesday',thai:'อังคาร',emoji:'🔴',files:{'การเงิน':'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B8%AD%E0%B8%B1%E0%B8%87%E0%B8%84%E0%B8%B2%E0%B8%A3/S__2908197_0.jpg','ความรัก':'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B8%AD%E0%B8%B1%E0%B8%87%E0%B8%84%E0%B8%B2%E0%B8%A3/S__2908198_0.jpg','การงาน':'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B8%AD%E0%B8%B1%E0%B8%87%E0%B8%84%E0%B8%B2%E0%B8%A3/S__2908199_0.jpg','สุขภาพ':'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B8%AD%E0%B8%B1%E0%B8%87%E0%B8%84%E0%B8%B2%E0%B8%A3/S__2908200_0.jpg'}},
+  {id:'wed-d',name:'Wed Day',thai:'พุธกลางวัน',emoji:'💚',files:{'การเงิน':'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B8%9E%E0%B8%B8%E0%B8%97%E0%B8%81%E0%B8%A5%E0%B8%B2%E0%B8%A7%E0%B8%A7%E0%B8%B1%E0%B8%99/S__2908204_0.jpg','ความรัก':'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B8%9E%E0%B8%B8%E0%B8%97%E0%B8%81%E0%B8%A5%E0%B8%B2%E0%B8%A7%E0%B8%A7%E0%B8%B1%E0%B8%99/S__2908203_0.jpg','การงาน':'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B8%9E%E0%B8%B8%E0%B8%97%E0%B8%81%E0%B8%A5%E0%B8%B2%E0%B8%A7%E0%B8%A7%E0%B8%B1%E0%B8%99/S__2908205_0.jpg','สุขภาพ':'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B8%9E%E0%B8%B8%E0%B8%97%E0%B8%81%E0%B8%A5%E0%B8%B2%E0%B8%A7%E0%B8%A7%E0%B8%B1%E0%B8%99/S__2908206_0.jpg'}},
+  {id:'wed-n',name:'Wed Night',thai:'พุธกลางคืน',emoji:'🌑',files:{'การเงิน':'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B8%9E%E0%B8%B8%E0%B8%97%E0%B8%81%E0%B8%A5%E0%B8%B2%E0%B8%A7%E0%B8%A7%E0%B8%B1%E0%B8%99/S__2908209_0.jpg','ความรัก':'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B8%9E%E0%B8%B8%E0%B8%97%E0%B8%81%E0%B8%A5%E0%B8%B2%E0%B8%A7%E0%B8%A7%E0%B8%B1%E0%B8%99/S__2908210_0.jpg','การงาน':'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B8%9E%E0%B8%B8%E0%B8%97%E0%B8%81%E0%B8%A5%E0%B8%B2%E0%B8%A7%E0%B8%A7%E0%B8%B1%E0%B8%99/S__2908211_0.jpg','สุขภาพ':'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B8%9E%E0%B8%B8%E0%B8%97%E0%B8%81%E0%B8%A5%E0%B8%B2%E0%B8%A7%E0%B8%A7%E0%B8%B1%E0%B8%99/S__2908212_0.jpg'}},
+  {id:'thu',name:'Thursday',thai:'พฤหัสบดี',emoji:'🟠',files:{'การเงิน':'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B8%9E%E0%A4%A4%E0%B8%AB%E0%B8%B1%E0%B8%AA%E0%B8%9A%E0%B8%94%E0%B8%B5/S__2908215_0.jpg','ความรัก':'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B8%9E%E0%A4%A4%E0%B8%AB%E0%B8%B1%E0%B8%AA%E0%B8%9A%E0%B8%94%E0%B8%B5/S__2908216_0.jpg','การงาน':'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B8%9E%E0%A4%A4%E0%B8%AB%E0%B8%B1%E0%B8%AA%E0%B8%9A%E0%B8%94%E0%B8%B5/S__2908217_0.jpg','สุขภาพ':'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B8%9E%E0%A4%A4%E0%B8%AB%E0%B8%B1%E0%B8%AA%E0%B8%9A%E0%B8%94%E0%B8%B5/S__2908218_0.jpg'}},
+  {id:'fri',name:'Friday',thai:'ศุกร์',emoji:'💙',files:{'การเงิน':'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%A8%A8%E0%B8%B8%E0%B8%81%E0%B8%A3%E0%B9%8C/S__2908221_0.jpg','ความรัก':'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%A8%A8%E0%B8%B8%E0%B8%81%E0%B8%A3%E0%B9%8C/S__2908222_0.jpg','การงาน':'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%A8%A8%E0%B8%B8%E0%B8%81%E0%B8%A3%E0%B9%8C/S__2908223_0.jpg','สุขภาพ':'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%A8%A8%E0%B8%B8%E0%B8%81%E0%B8%A3%E0%B9%8C/S__2908224_0.jpg'}},
+  {id:'sat',name:'Saturday',thai:'เสาร์',emoji:'💜',files:{'การเงิน':'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B9%80%E0%B8%AA%E0%B8%B2%E0%B8%A3%E0%B9%8C/S__2908227_0.jpg','ความรัก':'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B9%80%E0%B8%AA%E0%B8%B2%E0%B8%A3%E0%B9%8C/S__2908228_0.jpg','การงาน':'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B9%80%E0%B8%AA%E0%B8%B2%E0%B8%A3%E0%B9%8C/S__2908229_0.jpg','สุขภาพ':'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B9%80%E0%B8%AA%E0%B8%B2%E0%B8%A3%E0%B9%8C/S__2908230_0.jpg'}},
+];
+const ANY=[
+  {name:'การเงิน',icon:'💰',sub:'เสริมทรัพย์ มั่งมี',grad:'linear-gradient(160deg,#052210,#0f4c1a)',url:'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908240_0.jpg'},
+  {name:'การงาน',icon:'💼',sub:'ก้าวหน้า มีตำแหน่ง',grad:'linear-gradient(160deg,#020c2a,#0a2c5a)',url:'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908241_0.jpg'},
+  {name:'ความรัก',icon:'💕',sub:'พบรัก มีคู่ครอง',grad:'linear-gradient(160deg,#200510,#5a0f2a)',url:'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908242_0.jpg'},
+  {name:'สุขภาพ',icon:'🌿',sub:'แข็งแรง ไม่มีโรคภัย',grad:'linear-gradient(160deg,#041508,#0f3a1a)',url:'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908243_0.jpg'},
+  {name:'อำนาจ',icon:'⚡',sub:'มีอำนาจ น่าเกรงขาม',grad:'linear-gradient(160deg,#180e00,#3a2a00)',url:'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908244_0.jpg'},
+  {name:'ค้าขาย',icon:'🏪',sub:'ค้าขายดี กำไรงาม',grad:'linear-gradient(160deg,#051000,#1a3a00)',url:'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908245_0.jpg'},
+  {name:'การเรียน',icon:'📚',sub:'เรียนเก่ง สอบผ่าน',grad:'linear-gradient(160deg,#000e1a,#001a3a)',url:'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908246_0.jpg'},
+  {name:'เมตตา',icon:'🙏',sub:'เป็นที่รัก มีคนช่วย',grad:'linear-gradient(160deg,#120008,#2a001a)',url:'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908248.jpg'},
+  {name:'โชคลาภ',icon:'🍀',sub:'โชคดี ถูกรางวัล',grad:'linear-gradient(160deg,#081000,#1a2a00)',url:'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908251.jpg'},
+  {name:'ความสำเร็จ',icon:'🏆',sub:'ประสบความสำเร็จ',grad:'linear-gradient(160deg,#1a0800,#3a1a00)',url:'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__15785987.jpg'},
+  {name:'แคล้วคลาด',icon:'🛡️',sub:'ปลอดภัย พ้นอันตราย',grad:'linear-gradient(160deg,#000b14,#001a2a)',url:'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__15785988.jpg'},
+  {name:'บารมี',icon:'👑',sub:'มีบารมี คนนับถือ',grad:'linear-gradient(160deg,#110800,#2a1a00)',url:'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__15785989.jpg'},
+  {name:'ร่มเย็น',icon:'🌸',sub:'ชีวิตสงบ ครอบครัวสุข',grad:'linear-gradient(160deg,#0d0015,#20003a)',url:'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__15785990.jpg'},
+  {name:'เริ่มต้นใหม่',icon:'🌅',sub:'ชีวิตใหม่ โอกาสใหม่',grad:'linear-gradient(160deg,#140800,#2e1500)',url:'https://cdn.jsdelivr.net/gh/taithai-tai/meemon@main/card/Picture/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__15785992.jpg'},
+];
+const DAILY=[
+  {name:'การเงิน',icon:'💰',sub:'เสริมทรัพย์สมบัติ',grad:'linear-gradient(160deg,#052210,#0f4c1a)',key:'การเงิน'},
+  {name:'ความรัก',icon:'💕',sub:'เสริมดวงความรัก',grad:'linear-gradient(160deg,#200510,#5a0f2a)',key:'ความรัก'},
+  {name:'การงาน',icon:'💼',sub:'เสริมหน้าที่การงาน',grad:'linear-gradient(160deg,#020c2a,#0a2c5a)',key:'การงาน'},
+  {name:'สุขภาพ',icon:'🌿',sub:'เสริมสุขภาพพลานามัย',grad:'linear-gradient(160deg,#041508,#0f3a1a)',key:'สุขภาพ'},
+];
+
+let selDay=null,aspects=[],aspIdx=0,swX=0,swDrag=false;
+
+function initWP(){
+  selDay=null;aspIdx=0;
+  renderSteps(1);
+  document.getElementById('step1').style.display='block';
+  document.getElementById('step2').style.display='none';
+  document.getElementById('step3').style.display='none';
+  document.getElementById('btn-day').disabled=true;
+  buildDayGrid();
+  document.querySelectorAll('.day-card,.day-anyday').forEach(e=>e.classList.remove('selected'));
+}
+
+function buildDayGrid(){
+  const g=document.getElementById('day-grid');g.innerHTML='';
+  DAYS.forEach(d=>{
+    const el=document.createElement('div');el.className='day-card';el.id='dc-'+d.id;
+    el.innerHTML=`<span class="day-emoji">${d.emoji}</span><div class="day-name">${d.name}</div><div class="day-thai">${d.thai}</div>`;
+    el.onclick=()=>pickDay(d.id);
+    g.appendChild(el);
+  });
+}
+
+function pickDay(id){
+  snd('click');selDay=id;
+  document.querySelectorAll('.day-card,.day-anyday').forEach(e=>e.classList.remove('selected'));
+  (id==='anyday'?document.getElementById('day-anyday'):document.getElementById('dc-'+id))?.classList.add('selected');
+  document.getElementById('btn-day').disabled=false;
+}
+
+function renderSteps(cur){
+  const L=['วันเกิด','ความปรารถนา','วอลเปเปอร์'];
+  const el=document.getElementById('steps-ui');el.innerHTML='';
+  for(let i=1;i<=3;i++){
+    const col=document.createElement('div');col.className='step-col';
+    if(i===cur)col.classList.add('active');
+    const num=document.createElement('div');num.className='step-num';
+    if(i<cur){num.classList.add('done');num.textContent='✓';}
+    else if(i===cur){num.classList.add('active');num.textContent=i;}
+    else num.textContent=i;
+    const lbl=document.createElement('div');lbl.className='step-lbl';lbl.textContent=L[i-1];
+    col.appendChild(num);col.appendChild(lbl);
+    el.appendChild(col);
+    if(i<3){const ln=document.createElement('div');ln.className='step-conn';el.appendChild(ln);}
+  }
+}
+
+function doStep2(){
+  if(!selDay)return;snd('click');
+  aspects=selDay==='anyday'?ANY:DAILY;aspIdx=0;
+  document.getElementById('step1').style.display='none';
+  document.getElementById('step2').style.display='block';
+  renderSteps(2);buildStack();
+}
+
+function buildStack(){
+  const area=document.getElementById('aspect-area');area.innerHTML='';
+  aspects.forEach((a,i)=>{
+    const c=document.createElement('div');c.className='aspect-card';c.id='ac-'+i;
+    c.innerHTML=`<div class="a-check">✓</div><div class="a-icon">${a.icon}</div><div class="a-name">${a.name}</div><div class="a-sub">${a.sub}</div>`;
+    c.onclick=()=>{if(i!==aspIdx){snd('click');aspIdx=i;posCards();}};
+    area.appendChild(c);
+  });
+  posCards();
+}
+
+function posCards(){
+  aspects.forEach((_,i)=>{
+    const c=document.getElementById('ac-'+i);if(!c)return;
+    const a=aspects[i];const d=i-aspIdx;const abs=Math.abs(d);
+    c.className='aspect-card';c.style.background=a.grad;
+    if(abs===0){c.classList.add('active');c.style.cssText+=`;background:${a.grad};transform:translateX(-50%) scale(1);opacity:1;top:0;z-index:10;border-color:rgba(212,175,55,0.6);box-shadow:0 24px 60px rgba(0,0,0,0.7),0 0 40px rgba(212,175,55,0.15);`;}
+    else if(abs===1){const dr=d>0?1:-1;c.style.cssText+=`;background:${a.grad};transform:translateX(calc(-50% + ${dr*38}px)) scale(0.87) translateY(18px);opacity:0.55;top:0;z-index:9;filter:blur(1px);border-color:rgba(212,175,55,0.2);box-shadow:0 12px 32px rgba(0,0,0,0.5);`;}
+    else if(abs===2){const dr=d>0?1:-1;c.style.cssText+=`;background:${a.grad};transform:translateX(calc(-50% + ${dr*58}px)) scale(0.76) translateY(30px);opacity:0.25;top:0;z-index:8;filter:blur(2px);border-color:rgba(212,175,55,0.1);`;}
+    else c.style.cssText+=`;opacity:0;pointer-events:none;top:0;z-index:1;transform:translateX(-50%);`;
+  });
+  document.getElementById('nav-count').textContent=`${aspIdx+1} / ${aspects.length}`;
+  const dots=document.getElementById('dots');dots.innerHTML='';
+  const total=Math.min(aspects.length,10);
+  for(let i=0;i<total;i++){const s=document.createElement('span');if(i===aspIdx)s.classList.add('on');dots.appendChild(s);}
+}
+
+function moveA(dir){snd('click');const n=aspIdx+dir;if(n>=0&&n<aspects.length){aspIdx=n;posCards();}}
+function swS(e,t){swDrag=true;swX=t?e.touches[0].clientX:e.clientX;}
+function swE(e,t){if(!swDrag)return;swDrag=false;const ex=t?e.changedTouches[0]?.clientX||swX:e.clientX;if(Math.abs(swX-ex)>40)moveA(swX-ex>0?1:-1);}
+function swC(){swDrag=false;}
+
+function doConsecrate(){
+  snd('magic');
+  const ac=document.getElementById('ac-'+aspIdx);
+  if(ac){ac.classList.add('consecrating');setTimeout(()=>{ac.classList.remove('consecrating');showResult();},1500);}
+  else showResult();
+}
+
+function showResult(){
+  const a=aspects[aspIdx];
+  let url='';
+  if(selDay==='anyday') url=a.url;
+  else{const d=DAYS.find(x=>x.id===selDay);if(d&&d.files[a.key||a.name])url=d.files[a.key||a.name];}
+  renderSteps(3);
+  document.getElementById('step2').style.display='none';
+  document.getElementById('step3').style.display='block';
+  document.getElementById('r-title').textContent='✦ '+a.name+' ✦';
+  const dl=DAYS.find(d=>d.id===selDay);
+  document.getElementById('r-sub').textContent='วันเกิด: '+(selDay==='anyday'?'ทุกวัน':(dl?.thai||''))+'  •  ด้าน: '+a.name;
+  document.getElementById('r-img').src=url;
+  document.getElementById('r-dl')._url=url;document.getElementById('r-dl')._name='meemon-'+a.name+'.jpg';
+  toast('🧧 ได้รับยันต์มงคลแล้ว!','#d4af37');
+}
+
+function doDownload(){
+  const btn = document.getElementById('r-dl');
+  const url = btn._url;
+  const name = btn._name || 'meemon-wallpaper.jpg';
+  if(!url){ toast('ไม่พบรูปภาพ','#ef4444'); return; }
+  btn.textContent = '⏳ กำลังโหลด...';
+  btn.disabled = true;
+  fetch(url)
+    .then(r => { if(!r.ok) throw new Error('fetch failed'); return r.blob(); })
+    .then(blob => {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = name;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+      btn.innerHTML = '⬇ &nbsp;ดาวน์โหลด';
+      btn.disabled = false;
+      toast('💾 บันทึกสำเร็จ!', '#4ade80');
+    })
+    .catch(() => {
+      // fallback: open in new tab
+      window.open(url, '_blank');
+      btn.innerHTML = '⬇ &nbsp;ดาวน์โหลด';
+      btn.disabled = false;
+      toast('📂 เปิดในแท็บใหม่แล้ว กด hold เพื่อบันทึก', '#d4af37');
+    });
+}
+
+function resetWP(){snd('click');initWP();}
+</script>
+</body>
+</html>

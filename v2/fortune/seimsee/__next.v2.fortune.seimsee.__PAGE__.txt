@@ -1,0 +1,7 @@
+1:"$Sreact.fragment"
+2:I[23344,["/v2/_next/static/chunks/0zwh3phtdnk8r.js","/v2/_next/static/chunks/09mzkwykgmgkt.js","/v2/_next/static/chunks/0r7r9vtyosf5u.js","/v2/_next/static/chunks/0d_ttlq86_qnt.js"],""]
+3:I[83966,["/v2/_next/static/chunks/0zwh3phtdnk8r.js","/v2/_next/static/chunks/09mzkwykgmgkt.js","/v2/_next/static/chunks/0r7r9vtyosf5u.js","/v2/_next/static/chunks/0d_ttlq86_qnt.js"],"SeimseeTool"]
+4:I[99674,["/v2/_next/static/chunks/0zwh3phtdnk8r.js","/v2/_next/static/chunks/09mzkwykgmgkt.js"],"OutletBoundary"]
+5:"$Sreact.suspense"
+0:{"rsc":["$","$1","c",{"children":[[["$","section",null,{"className":"page-hero","children":[["$","div",null,{"className":"eyebrow","children":"24 FORTUNE STICKS"}],["$","h1",null,{"children":"สงบใจ แล้วรับคำทำนาย"}],["$","p",null,{"children":"คำทำนายเซียมซีดั้งเดิม 24 ใบของ Meemon ในประสบการณ์ใหม่ที่เรียบง่ายขึ้น"}],null]}],["$","section",null,{"className":"content-section","children":[["$","$L2",null,{"href":"/v2/fortune","className":"back-link","children":["← ","รวมคำทำนาย"]}],["$","$L3",null,{}]]}]],[["$","script","script-0",{"src":"/v2/_next/static/chunks/0r7r9vtyosf5u.js","async":true}],["$","script","script-1",{"src":"/v2/_next/static/chunks/0d_ttlq86_qnt.js","async":true}]],["$","$L4",null,{"children":["$","$5",null,{"name":"Next.MetadataOutlet","children":"$@6"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"-vE87DIxHbOCrniObht5d"}
+6:null

@@ -1,0 +1,7 @@
+1:"$Sreact.fragment"
+2:I[23344,["/v2/_next/static/chunks/0zwh3phtdnk8r.js","/v2/_next/static/chunks/09mzkwykgmgkt.js","/v2/_next/static/chunks/183pnud08sfja.js","/v2/_next/static/chunks/0d_ttlq86_qnt.js"],""]
+3:I[26863,["/v2/_next/static/chunks/0zwh3phtdnk8r.js","/v2/_next/static/chunks/09mzkwykgmgkt.js","/v2/_next/static/chunks/183pnud08sfja.js","/v2/_next/static/chunks/0d_ttlq86_qnt.js"],"WallpaperExplorer"]
+4:I[99674,["/v2/_next/static/chunks/0zwh3phtdnk8r.js","/v2/_next/static/chunks/09mzkwykgmgkt.js"],"OutletBoundary"]
+5:"$Sreact.suspense"
+0:{"rsc":["$","$1","c",{"children":[[["$","section",null,{"className":"page-hero","children":[["$","div",null,{"className":"eyebrow","children":"46 LUCKY WALLPAPERS"}],["$","h1",null,{"children":"คลังวอลเปเปอร์มงคล"}],["$","p",null,{"children":"รวมวอลเปเปอร์ทุกวันเกิดและทุกความปรารถนาในคลังเดียว เลือกดูและดาวน์โหลดได้ทันที"}],null]}],["$","section",null,{"className":"content-section","children":[["$","$L2",null,{"href":"/","className":"back-link","children":["← ","กลับหน้าแรก"]}],["$","$L3",null,{}]]}]],[["$","script","script-0",{"src":"/v2/_next/static/chunks/183pnud08sfja.js","async":true}],["$","script","script-1",{"src":"/v2/_next/static/chunks/0d_ttlq86_qnt.js","async":true}]],["$","$L4",null,{"children":["$","$5",null,{"name":"Next.MetadataOutlet","children":"$@6"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"-vE87DIxHbOCrniObht5d"}
+6:null

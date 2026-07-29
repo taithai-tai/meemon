@@ -1,0 +1,6 @@
+1:"$Sreact.fragment"
+2:I[25002,["/v2/_next/static/chunks/0zwh3phtdnk8r.js","/v2/_next/static/chunks/09mzkwykgmgkt.js","/v2/_next/static/chunks/08auuz029ir3h.js","/v2/_next/static/chunks/0d_ttlq86_qnt.js"],"CartClient"]
+3:I[99674,["/v2/_next/static/chunks/0zwh3phtdnk8r.js","/v2/_next/static/chunks/09mzkwykgmgkt.js"],"OutletBoundary"]
+4:"$Sreact.suspense"
+0:{"rsc":["$","$1","c",{"children":[[["$","section",null,{"className":"page-hero","children":[["$","div",null,{"className":"eyebrow","children":"YOUR SELECTION"}],["$","h1",null,{"children":"ตะกร้าของคุณ"}],["$","p",null,{"children":"สินค้าที่เลือกจะถูกเก็บไว้เฉพาะในระบบ Meemon V2 บนอุปกรณ์นี้"}],null]}],["$","section",null,{"className":"content-section","children":["$","$L2",null,{}]}]],[["$","script","script-0",{"src":"/v2/_next/static/chunks/08auuz029ir3h.js","async":true}],["$","script","script-1",{"src":"/v2/_next/static/chunks/0d_ttlq86_qnt.js","async":true}]],["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"-vE87DIxHbOCrniObht5d"}
+5:null
