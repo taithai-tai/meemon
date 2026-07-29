@@ -5,7 +5,7 @@ import { CartProvider } from "./components/CartProvider";
 import { PwaRegister } from "./components/PwaRegister";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://meemon.net"),
+  metadataBase: new URL("https://meemon.com"),
   title: {
     default: "Meemon — Destiny · Faith · Living",
     template: "%s | Meemon",
