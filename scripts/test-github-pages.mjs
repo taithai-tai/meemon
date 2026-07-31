@@ -84,12 +84,21 @@ const homeIndex = readFileSync(resolve(repositoryRoot, "v2/index.html"), "utf8")
 const requiredCopiedHomeLinks = [
   "/v2/apps/home/",
   "/v2/apps/NFCV.2/home/token.html",
+  "/v2/apps/NFCV.2/taro/1/token.html",
+  "/v2/apps/NFCV.2/taro/3/token.html",
+  "/v2/apps/NFCV.2/taro/10/token.html",
   "/v2/apps/NFCV.2/Seimsee/token.html",
   "/v2/apps/NFCV.2/Wood/token.html",
   "/v2/apps/NFCV.2/number/token.html",
+  "/v2/apps/NFCV.2/Lucky%20day/",
   "/v2/apps/app/test1.html",
   "/v2/apps/openday/",
+  "/v2/apps/How%20to/",
+  "/v2/apps/pony/",
   "/v2/apps/card/Wallpaper/",
+  "/v2/apps/Color2026/Index.html",
+  "/v2/apps/Contact/",
+  "/legacy",
 ];
 
 for (const href of requiredCopiedHomeLinks) {
@@ -103,7 +112,7 @@ const requiredLauncherIcons = [
   "fortune",
   "wallpaper",
   "rituals",
-  "contact",
+  "seimsee",
   "more",
 ];
 

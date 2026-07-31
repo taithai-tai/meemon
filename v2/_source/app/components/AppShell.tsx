@@ -18,10 +18,9 @@ const navItems: NavItem[] = [
   { href: "/v2/apps/NFCV.2/home/token.html", label: "ดูดวง", icon: "fortune", legacy: true },
   { href: "/v2/apps/card/Wallpaper/", label: "วอลเปเปอร์", icon: "wallpaper", legacy: true },
   { href: "/v2/apps/How%20to/", label: "คู่มือ", icon: "book", legacy: true },
-  { href: "/v2/apps/Contact/", label: "ติดต่อ", icon: "contact", legacy: true },
 ];
 
-const mobileNavItems = [navItems[0], navItems[1], navItems[2], navItems[3], navItems[5]];
+const mobileNavItems = navItems;
 
 const legacyRedirects: Array<{
   prefix: string;
@@ -161,7 +160,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <p>หน้า Home ใหม่และสำเนาแอป Meemon ที่จัดเก็บอยู่ภายใน V2</p>
         </div>
         <div className="footer-links">
-          <a href="/v2/apps/Contact/"><Icon name="contact" />ติดต่อ Meemon</a>
           <Link href="/legacy"><Icon name="book" />คลังแอปเวอร์ชันเดิม</Link>
           <a href="https://shopee.co.th/king_6914" target="_blank" rel="noreferrer">
             <Icon name="store" />Shopee Store
