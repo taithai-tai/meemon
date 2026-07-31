@@ -8,6 +8,45 @@ import { ProductCard } from "./ProductCard";
 import { ModuleGrid } from "./PageElements";
 import { BrandMark, Icon } from "./Icons";
 
+const launcherApps = [
+  {
+    href: "/v2/apps/home/",
+    label: "ร้านค้า",
+    eyebrow: "SHOP",
+    image: "/v2/assets/app-icons/shop.png",
+  },
+  {
+    href: "/v2/apps/NFCV.2/home/token.html",
+    label: "ดูดวง",
+    eyebrow: "FORTUNE",
+    image: "/v2/assets/app-icons/fortune.png",
+  },
+  {
+    href: "/v2/apps/card/Wallpaper/",
+    label: "วอลเปเปอร์",
+    eyebrow: "WALLPAPER",
+    image: "/v2/assets/app-icons/wallpaper.png",
+  },
+  {
+    href: "/v2/apps/How%20to/",
+    label: "พิธีและคู่มือ",
+    eyebrow: "RITUALS",
+    image: "/v2/assets/app-icons/rituals.png",
+  },
+  {
+    href: "/v2/apps/Contact/",
+    label: "ติดต่อ",
+    eyebrow: "CONTACT",
+    image: "/v2/assets/app-icons/contact.png",
+  },
+  {
+    href: "#daily-tools",
+    label: "แอปอื่น ๆ",
+    eyebrow: "EXPLORE",
+    image: "/v2/assets/app-icons/more.png",
+  },
+];
+
 function SectionLink({
   href,
   children,
@@ -28,6 +67,33 @@ function SectionLink({
 export function HomeExperience() {
   return (
     <>
+      <section className="app-launcher" aria-labelledby="app-launcher-title">
+        <div className="app-launcher-heading">
+          <div>
+            <div className="eyebrow">MEEMON UNIVERSE</div>
+            <h2 id="app-launcher-title">เลือกประตูที่อยากเปิด</h2>
+          </div>
+          <p>ทุกแอปสำคัญ อยู่ใกล้แค่หนึ่งสัมผัส</p>
+        </div>
+        <div className="app-launcher-grid">
+          {launcherApps.map((app, index) => (
+            <a
+              href={app.href}
+              className={`app-launcher-card${index === launcherApps.length - 1 ? " app-launcher-more" : ""}`}
+              key={app.label}
+            >
+              <span className="app-launcher-art">
+                <img src={app.image} alt="" width="640" height="640" />
+              </span>
+              <span className="app-launcher-copy">
+                <small>{app.eyebrow}</small>
+                <strong>{app.label}</strong>
+              </span>
+            </a>
+          ))}
+        </div>
+      </section>
+
       <section className="home-hero">
         <div className="hero-orbit orbit-one" />
         <div className="hero-orbit orbit-two" />
@@ -73,7 +139,7 @@ export function HomeExperience() {
         </div>
       </section>
 
-      <section className="home-section ritual-strip">
+      <section className="home-section ritual-strip" id="daily-tools">
         <div className="section-heading">
           <div>
             <div className="eyebrow">DAILY MOMENTS</div>

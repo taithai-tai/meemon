@@ -98,6 +98,29 @@ for (const href of requiredCopiedHomeLinks) {
   }
 }
 
+const requiredLauncherIcons = [
+  "shop",
+  "fortune",
+  "wallpaper",
+  "rituals",
+  "contact",
+  "more",
+];
+
+if (!homeIndex.includes("เลือกประตูที่อยากเปิด")) {
+  throw new Error("V2 Home is missing the app launcher.");
+}
+
+for (const icon of requiredLauncherIcons) {
+  const assetPath = `/v2/assets/app-icons/${icon}.png`;
+  if (
+    !homeIndex.includes(`src="${assetPath}"`) ||
+    !existsSync(resolve(repositoryRoot, assetPath.slice(1)))
+  ) {
+    throw new Error(`V2 Home is missing launcher icon: ${assetPath}`);
+  }
+}
+
 const copiedAppForwardContracts = [
   ["v2/shop/index.html", "/v2/apps/home/"],
   ["v2/shop/77-50712224947/index.html", "/v2/apps/home/"],

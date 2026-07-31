@@ -128,6 +128,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="site-shell">
+      <div className="cosmic-sky" aria-hidden="true" />
       <header className="site-header">
         <Link href="/v2/" className="brand" aria-label="Meemon Home">
           <span className="brand-mark">
