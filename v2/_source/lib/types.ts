@@ -121,3 +121,16 @@ export interface PublicOrder {
     lineTotalSatang: number;
   }>;
 }
+
+export interface PhoneOrderSummary {
+  orderNumber: string;
+  status: OrderStatus;
+  totalSatang: number;
+  createdAt: string;
+  items: Array<{
+    name: string;
+    variant: string;
+    image: string | null;
+    quantity: number;
+  }>;
+}

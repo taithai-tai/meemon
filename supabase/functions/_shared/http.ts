@@ -18,7 +18,7 @@ export function corsHeaders(request: Request) {
   return {
     ...(origin ? { "access-control-allow-origin": origin } : {}),
     "access-control-allow-headers": "authorization, apikey, content-type, x-client-info, x-maintenance-secret",
-    "access-control-allow-methods": "GET, POST, PATCH, OPTIONS",
+    "access-control-allow-methods": "GET, POST, PATCH, DELETE, OPTIONS",
     "access-control-max-age": "86400",
     vary: "Origin",
   };

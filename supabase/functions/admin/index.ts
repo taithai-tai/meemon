@@ -32,9 +32,9 @@ async function list(request: Request, auth: NonNullable<Awaited<ReturnType<typeo
   const client = auth.client;
   if (action === "dashboard") {
     const [orders, products, review] = await Promise.all([
-      client.from("orders").select("id", { count: "exact", head: true }),
+      client.from("orders").select("id", { count: "exact", head: true }).is("deleted_at", null),
       client.from("products").select("id", { count: "exact", head: true }),
-      client.from("orders").select("id", { count: "exact", head: true }).eq("status", "needs_review"),
+      client.from("orders").select("id", { count: "exact", head: true }).eq("status", "needs_review").is("deleted_at", null),
     ]);
     return json(request, { profile: auth.profile, counts: { orders: orders.count ?? 0, products: products.count ?? 0, needsReview: review.count ?? 0 } });
   }
@@ -44,7 +44,7 @@ async function list(request: Request, auth: NonNullable<Awaited<ReturnType<typeo
     return json(request, { products: data ?? [] });
   }
   if (action === "orders") {
-    const { data, error } = await client.from("orders").select("*, order_items(*), payments(*)").order("created_at", { ascending: false }).limit(250);
+    const { data, error } = await client.from("orders").select("*, order_items(*), payments(*)").is("deleted_at", null).order("created_at", { ascending: false }).limit(250);
     if (error) throw error;
     return json(request, { orders: data ?? [] });
   }
@@ -144,8 +144,17 @@ async function updateOrder(request: Request, auth: NonNullable<Awaited<ReturnTyp
   const body = await request.json() as { id?: string; status?: string };
   if (!body.id || !body.status) return publicError(request, "ข้อมูลไม่ครบ", 400);
   const client = auth.client;
-  const { data: before } = await client.from("orders").select("*").eq("id", body.id).single();
+  const { data: before } = await client.from("orders").select("*").eq("id", body.id).is("deleted_at", null).single();
   if (!before) return publicError(request, "ไม่พบออเดอร์", 404);
+  if (["packing", "shipped"].includes(body.status)) {
+    if (!["paid", "packing", "shipped"].includes(before.status)) {
+      return publicError(request, "ต้องยืนยันการชำระเงินก่อนเปลี่ยนเป็นสถานะจัดเตรียมสินค้า", 409, "PAYMENT_REQUIRED");
+    }
+    const { data: after, error } = await client.from("orders").update({ status: body.status }).eq("id", body.id).is("deleted_at", null).select("*").single();
+    if (error) throw error;
+    await audit(client, auth.user.id, "order.fulfillment_status", "order", body.id, before, after);
+    return json(request, { order: after });
+  }
   const transitions: Record<string, string[]> = {
     pending_payment: ["cancelled"],
     verification_failed: ["cancelled"],
@@ -169,6 +178,23 @@ async function updateOrder(request: Request, auth: NonNullable<Awaited<ReturnTyp
   const { data: after } = await client.from("orders").select("*").eq("id", body.id).single();
   await audit(client, auth.user.id, "order.status", "order", body.id, before, after);
   return json(request, { order: after });
+}
+
+async function deleteOrder(request: Request, auth: NonNullable<Awaited<ReturnType<typeof authenticate>>>) {
+  const body = await request.json().catch(() => ({})) as { id?: string };
+  if (!body.id) return publicError(request, "ไม่พบออเดอร์", 400);
+  const client = auth.client;
+  const { data: before } = await client.from("orders").select("*").eq("id", body.id).is("deleted_at", null).maybeSingle();
+  if (!before) return publicError(request, "ไม่พบออเดอร์", 404);
+  if (["pending_payment", "verification_failed", "expired", "cancelled"].includes(before.status)) {
+    await client.rpc("release_order_stock_v1", { p_order_id: body.id });
+  }
+  const { data: after, error } = await client.from("orders")
+    .update({ deleted_at: new Date().toISOString() })
+    .eq("id", body.id).is("deleted_at", null).select("*").single();
+  if (error) throw error;
+  await audit(client, auth.user.id, "order.delete", "order", body.id, before, after);
+  return json(request, { deleted: true, orderId: body.id });
 }
 
 async function createAccount(request: Request, auth: NonNullable<Awaited<ReturnType<typeof authenticate>>>) {
@@ -226,6 +252,7 @@ export default {
       if (request.method === "PATCH" && action === "product") return await updateProduct(request, auth);
       if (request.method === "POST" && action === "product-image") return await uploadProductImage(request, auth);
       if (request.method === "PATCH" && action === "order") return await updateOrder(request, auth);
+      if (request.method === "DELETE" && action === "order") return await deleteOrder(request, auth);
       if (request.method === "POST" && action === "account") return await createAccount(request, auth);
       if (request.method === "POST" && action === "validate-account") return await validateAccount(request, auth);
       return publicError(request, "ไม่พบ API", 404, "NOT_FOUND");

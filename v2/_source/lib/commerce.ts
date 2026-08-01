@@ -1,4 +1,4 @@
-import type { CartItem, CheckoutDraft, Product, PublicOrder } from "./types";
+import type { CartItem, CheckoutDraft, PhoneOrderSummary, Product, PublicOrder } from "./types";
 
 // These three values are public browser configuration, not backend secrets.
 // Keeping production defaults here makes both GitHub Pages and local testing
@@ -87,6 +87,14 @@ export async function recoverOrder(orderNumber: string, phone: string, turnstile
     method: "POST",
     headers: publicHeaders(),
     body: JSON.stringify({ orderNumber, phone, turnstileToken }),
+  }));
+}
+
+export async function lookupOrdersByPhone(phone: string, turnstileToken: string) {
+  return parseResponse<{ orders: PhoneOrderSummary[] }>(await fetch(`${checkoutEndpoint}?action=orders-by-phone`, {
+    method: "POST",
+    headers: publicHeaders(),
+    body: JSON.stringify({ phone, turnstileToken }),
   }));
 }
 

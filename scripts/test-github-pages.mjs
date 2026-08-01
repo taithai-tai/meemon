@@ -299,6 +299,10 @@ const checkoutFunction = readFileSync(
   resolve(repositoryRoot, "supabase/functions/checkout/index.ts"),
   "utf8",
 );
+const adminFunction = readFileSync(
+  resolve(repositoryRoot, "supabase/functions/admin/index.ts"),
+  "utf8",
+);
 const easySlipFunction = readFileSync(
   resolve(repositoryRoot, "supabase/functions/_shared/easyslip.ts"),
   "utf8",
@@ -307,11 +311,17 @@ const easySlipParser = readFileSync(
   resolve(repositoryRoot, "supabase/functions/_shared/easyslip-parser.ts"),
   "utf8",
 );
+const sharedHttpFunction = readFileSync(
+  resolve(repositoryRoot, "supabase/functions/_shared/http.ts"),
+  "utf8",
+);
 if (
   !checkoutFunction.includes('4 * 1024 * 1024') ||
   !checkoutFunction.includes('attemptNumber > 5') ||
   !checkoutFunction.includes('consume_rate_limit_v1') ||
   !checkoutFunction.includes('recover_order_access_v1') ||
+  !checkoutFunction.includes('lookup_orders_by_phone_v1') ||
+  !checkoutFunction.includes('action === "orders-by-phone"') ||
   !checkoutFunction.includes('receiver.bank_code ?? receiver.bankCode') ||
   !checkoutFunction.includes('receiver.account_number ?? receiver.accountNumber') ||
   !easySlipFunction.includes('form.set("image"') ||
@@ -326,6 +336,14 @@ if (
   !easySlipParser.includes("visibleDigits.length >= 4")
 ) {
   throw new Error("The protected EasySlip upload contract is incomplete.");
+}
+if (
+  !adminFunction.includes('request.method === "DELETE" && action === "order"') ||
+  !adminFunction.includes('order.fulfillment_status') ||
+  !adminFunction.includes('.is("deleted_at", null)') ||
+  !sharedHttpFunction.includes('GET, POST, PATCH, DELETE, OPTIONS')
+) {
+  throw new Error("The administrator order workflow contract is incomplete.");
 }
 
 const supabaseConfig = readFileSync(
@@ -352,6 +370,8 @@ for (const table of protectedTables) {
 if (
   !migrations.includes("unique (provider, trans_ref)") ||
   !migrations.includes("recover_order_access_v1") ||
+  !migrations.includes("lookup_orders_by_phone_v1") ||
+  !migrations.includes("deleted_at is null") ||
   !migrations.includes("country_code = 'TH'") ||
   !migrations.includes("shipping_satang integer not null default 0 check (shipping_satang = 0)")
 ) {

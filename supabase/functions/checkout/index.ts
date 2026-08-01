@@ -118,6 +118,21 @@ async function recoverOrder(request: Request) {
   return json(request, { order, token });
 }
 
+async function lookupOrdersByPhone(request: Request) {
+  if (!await rateLimit(request, "orders-by-phone", 10, 900)) {
+    return publicError(request, "ค้นหาออเดอร์บ่อยเกินไป กรุณารอ 15 นาที", 429, "RATE_LIMITED");
+  }
+  const body = await request.json() as { phone?: string; turnstileToken?: string };
+  if (!await verifyTurnstile(body.turnstileToken ?? "", requestIp(request))) {
+    return publicError(request, "กรุณายืนยันว่าคุณไม่ใช่ระบบอัตโนมัติ", 403, "TURNSTILE_FAILED");
+  }
+  const phone = normalizeThaiPhone(body.phone ?? "");
+  if (!phone) return publicError(request, "กรุณากรอกเบอร์โทรศัพท์มือถือไทยให้ถูกต้อง", 400, "INVALID_PHONE");
+  const { data, error } = await serviceClient().rpc("lookup_orders_by_phone_v1", { p_phone: phone });
+  if (error) throw error;
+  return json(request, { orders: Array.isArray(data) ? data : [] });
+}
+
 async function getOrder(request: Request) {
   const token = new URL(request.url).searchParams.get("token") ?? "";
   if (token.length < 32) return publicError(request, "ไม่พบคำสั่งซื้อ", 404, "ORDER_NOT_FOUND");
@@ -252,6 +267,7 @@ export default {
       if (request.method === "GET" && action === "catalog") return await catalog(request);
       if (request.method === "GET" && action === "order") return await getOrder(request);
       if (request.method === "POST" && action === "order") return await createOrder(request);
+      if (request.method === "POST" && action === "orders-by-phone") return await lookupOrdersByPhone(request);
       if (request.method === "POST" && action === "recover-order") return await recoverOrder(request);
       if (request.method === "POST" && action === "slip") return await uploadSlip(request);
       return publicError(request, "ไม่พบ API", 404, "NOT_FOUND");

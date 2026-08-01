@@ -145,6 +145,20 @@
 .saved-order-total { display: grid; justify-items: end; gap: 3px; }
 .saved-order-total span { color: var(--muted); font-size: 8px; }
 .saved-order-total strong { color: var(--gold-soft); font: 19px/1 var(--serif); }
+.phone-history-list { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; }
+.phone-history-card { padding: 19px; display: grid; gap: 15px; border: 1px solid var(--line); border-radius: 21px; background: var(--panel); box-shadow: var(--shadow-sm); }
+.phone-history-card > header, .phone-history-card > footer { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+.phone-history-card h3 { margin: 3px 0 0; font: 19px/1.3 var(--serif); }
+.phone-history-card header small, .phone-history-card footer span { color: var(--muted); font-size: 8px; }
+.phone-history-items { display: grid; gap: 8px; }
+.phone-history-items > div { min-width: 0; display: grid; grid-template-columns: 44px 1fr; align-items: center; gap: 10px; }
+.phone-history-items img, .phone-history-placeholder { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 12px; object-fit: cover; background: rgba(255,255,255,.04); }
+.phone-history-placeholder svg { width: 21px; height: 21px; color: var(--gold); }
+.phone-history-items p { min-width: 0; margin: 0; display: grid; gap: 2px; }
+.phone-history-items strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; }
+.phone-history-items small { color: var(--muted); font-size: 8px; }
+.phone-history-card > footer { padding-top: 12px; border-top: 1px solid var(--line); }
+.phone-history-card > footer strong { color: var(--gold-soft); font: 20px/1 var(--serif); }
 .compact-empty { padding-block: 46px; }
 .order-recovery-card { padding: 30px; display: grid; grid-template-columns: minmax(0,.8fr) minmax(360px,1fr); align-items: start; gap: 38px; border: 1px solid var(--line); border-radius: 28px; background: radial-gradient(circle at 0 0,rgba(126,75,157,.18),transparent 48%),var(--panel); box-shadow: var(--shadow-lg); }
 .recovery-copy { display: grid; justify-items: start; gap: 8px; }
@@ -215,6 +229,8 @@
 .order-item-mini span { padding: 5px 8px; border-radius: 999px; color: var(--muted-strong); background: rgba(255,255,255,.04); font-size: 8px; }
 .admin-order-actions { margin-top: 14px; flex-wrap: wrap; }
 .admin-order-actions select { width: auto; min-width: 180px; }
+.button-danger { color: #ffc1c6; border-color: rgba(239,154,154,.32); background: rgba(154,48,66,.12); }
+.button-danger:hover { border-color: rgba(239,154,154,.6); background: rgba(154,48,66,.2); }
 .order-print-sheet { display: none; }
 .admin-account { align-items: stretch; flex-direction: column; }
 .admin-account > header { width: 100%; }
@@ -256,57 +272,60 @@
   .saved-order-card { grid-template-columns: auto 1fr; }
   .saved-order-total { justify-items: start; grid-column: 2; }
   .saved-order-card .button { grid-column: 1 / -1; width: 100%; }
+  .phone-history-list { grid-template-columns: 1fr; }
   .order-recovery-card { padding: 23px 18px; gap: 25px; }
 }
 
-@page { size: A4 portrait; margin: 12mm; }
+@page { size: A4 portrait; margin: 8mm; }
 @media print {
   html, body { background: #fff !important; }
-  body.printing-order * { visibility: hidden !important; }
-  body.printing-order .order-print-sheet.is-printing,
-  body.printing-order .order-print-sheet.is-printing * { visibility: visible !important; }
-  body.printing-order .order-print-sheet.is-printing {
+  body.printing-order > *:not(.active-order-print) { display: none !important; }
+  body.printing-order > .active-order-print {
     display: flex !important;
-    position: fixed;
-    inset: 0;
-    z-index: 2147483647;
+    position: relative;
     width: auto;
-    min-height: 273mm;
+    height: 281mm;
+    max-height: 281mm;
     padding: 0;
+    overflow: hidden;
     flex-direction: column;
     color: #15121a !important;
     background: #fff !important;
     font-family: "Tahoma", "Noto Sans Thai", sans-serif;
-    font-size: 10pt;
+    font-size: 8.5pt;
+    break-after: avoid-page;
+    page-break-after: avoid;
   }
   .order-print-sheet h1, .order-print-sheet h2, .order-print-sheet p, .order-print-sheet dl, .order-print-sheet dd { margin: 0; }
-  .order-print-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12mm; padding-bottom: 8mm; border-bottom: 2px solid #17121d; }
-  .order-print-header > div > small { display: block; margin-bottom: 2mm; font-weight: 700; letter-spacing: .18em; }
-  .order-print-header h1 { font-size: 21pt; line-height: 1.2; }
-  .order-print-header dl { min-width: 62mm; display: grid; gap: 2mm; }
+  .order-print-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8mm; padding-bottom: 5mm; border-bottom: 2px solid #17121d; }
+  .order-print-brand { display: flex; align-items: center; gap: 4mm; }
+  .order-print-brand img { width: 20mm; height: 20mm; object-fit: contain; }
+  .order-print-brand small { display: block; margin-bottom: 1mm; font-weight: 700; letter-spacing: .12em; }
+  .order-print-header h1 { font-size: 17pt; line-height: 1.15; }
+  .order-print-header dl { min-width: 57mm; display: grid; gap: 1.5mm; }
   .order-print-header dl > div { display: grid; grid-template-columns: 23mm 1fr; gap: 3mm; }
   .order-print-header dt { color: #66606b; }
   .order-print-header dd { font-weight: 700; text-align: right; }
   .order-print-block, .order-print-section-title { display: grid; grid-template-columns: 11mm 1fr; gap: 4mm; }
-  .order-print-block { padding: 7mm 0; border-bottom: 1px solid #d9d5dc; }
-  .order-print-step { width: 9mm; height: 9mm; display: grid; place-items: center; border: 1px solid #17121d; border-radius: 50%; font-size: 8pt; font-weight: 700; }
+  .order-print-block { padding: 4.5mm 0; border-bottom: 1px solid #d9d5dc; }
+  .order-print-step { width: 8mm; height: 8mm; display: grid; place-items: center; border: 1px solid #17121d; border-radius: 50%; font-size: 7.5pt; font-weight: 700; }
   .order-print-block small, .order-print-section-title small { display: block; margin-bottom: 1mm; color: #66606b !important; font-weight: 700; letter-spacing: .08em; }
-  .order-print-block h2, .order-print-section-title h2 { font-size: 14pt; line-height: 1.3; }
-  .order-print-block p, .order-print-block address { margin-top: 2mm; font-style: normal; line-height: 1.65; }
+  .order-print-block h2, .order-print-section-title h2 { font-size: 12pt; line-height: 1.25; }
+  .order-print-block p, .order-print-block address { margin-top: 1.2mm; font-style: normal; line-height: 1.5; }
   .order-print-phone { font-weight: 700; }
-  .order-print-items { padding-top: 7mm; }
-  .order-print-section-title { align-items: center; margin-bottom: 4mm; }
+  .order-print-items { padding-top: 4.5mm; }
+  .order-print-section-title { align-items: center; margin-bottom: 2.5mm; }
   .order-print-sheet table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-  .order-print-sheet th, .order-print-sheet td { padding: 3mm; border-bottom: 1px solid #d9d5dc; text-align: left; vertical-align: top; }
-  .order-print-sheet th { color: #5e5963 !important; background: #f3f1f4 !important; font-size: 8.5pt; }
+  .order-print-sheet th, .order-print-sheet td { padding: 2mm 2.5mm; border-bottom: 1px solid #d9d5dc; text-align: left; vertical-align: top; }
+  .order-print-sheet th { color: #5e5963 !important; background: #f3f1f4 !important; font-size: 7.5pt; }
   .order-print-sheet th:first-child, .order-print-sheet td:first-child { width: 15mm; text-align: center; }
   .order-print-sheet th:nth-child(3), .order-print-sheet td:nth-child(3) { width: 20mm; text-align: center; }
   .order-print-sheet th:last-child, .order-print-sheet td:last-child { width: 30mm; text-align: right; }
   .order-print-sheet td strong, .order-print-sheet td small { display: block; }
   .order-print-sheet td small { margin-top: 1mm; color: #6b6570 !important; }
-  .order-print-sheet tfoot td { padding-top: 4mm; border-bottom: 0; font-size: 12pt; font-weight: 700; }
-  .order-print-note { margin-top: 5mm !important; padding: 4mm; border: 1px solid #d9d5dc; border-radius: 2mm; line-height: 1.6; }
-  .order-print-sheet footer { display: flex; justify-content: space-between; margin-top: auto; padding-top: 6mm; border-top: 1px solid #d9d5dc; color: #6b6570 !important; font-size: 8.5pt; }
+  .order-print-sheet tfoot td { padding-top: 3mm; border-bottom: 0; font-size: 11pt; font-weight: 700; }
+  .order-print-note { margin-top: 3mm !important; padding: 2.5mm; border: 1px solid #d9d5dc; border-radius: 2mm; line-height: 1.45; }
+  .order-print-sheet footer { display: flex; justify-content: space-between; margin-top: auto; padding-top: 3.5mm; border-top: 1px solid #d9d5dc; color: #6b6570 !important; font-size: 7.5pt; }
 }
 
 * { box-sizing: border-box; }

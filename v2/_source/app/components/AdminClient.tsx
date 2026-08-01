@@ -7,8 +7,15 @@ import { Icon } from "./Icons";
 
 const SESSION_KEY = "meemon:v2:admin-access-token";
 const ORDER_SENDER = "นาคีมีมนตรมีมนตร์ 92 ม7  บ้านบังบาตร ตำบลชัยพร อำเภอเมือเมือง จังหวจังหวัดบึงกาฬ บึงกาฬ 38000";
+const ORDER_COMPANY = "MEEMON · นาคีมีมนตร์";
 type Tab = "dashboard" | "orders" | "products" | "accounts" | "audit";
 type Row = Record<string, unknown>;
+
+const adminStatusLabel: Record<string, string> = {
+  pending_payment: "ยังไม่ชำระเงิน", verifying: "กำลังตรวจสลิป", verification_failed: "ตรวจสลิปไม่ผ่าน",
+  needs_review: "รอร้านตรวจสอบ", paid: "จ่ายเงินแล้ว", packing: "กำลังแพ็ค", shipped: "จัดส่งแล้ว",
+  completed: "สำเร็จ", expired: "หมดเวลา", cancelled: "ยกเลิก", refunded: "คืนเงินแล้ว",
+};
 
 const tabs: Array<{ id: Tab; label: string }> = [
   { id: "dashboard", label: "ภาพรวม" }, { id: "orders", label: "ออเดอร์" },
@@ -105,35 +112,71 @@ function CreateProduct({ token, reload }: { token: string; reload: () => void })
   return <div className="admin-create"><button className="button button-gold" onClick={() => setOpen(!open)}>{open ? "ปิดแบบฟอร์ม" : "+ เพิ่มสินค้า"}</button>{open ? <form className="admin-inline-form" onSubmit={submit}><input name="name" required placeholder="ชื่อสินค้า" /><input name="slug" required pattern="[a-z0-9][a-z0-9-]{2,100}" placeholder="url-slug" /><select name="category"><option value="other">อื่น ๆ</option><option value="wallets">กระเป๋า</option><option value="charms">เครื่องราง</option><option value="sacred">ของมงคล</option><option value="lifestyle">ไลฟ์สไตล์</option></select><input name="price" type="number" min="0" step="0.01" required placeholder="ราคา" /><button className="button button-ghost">สร้างสินค้า</button></form> : null}<span>{message}</span></div>;
 }
 
-const nextStatuses: Record<string, string[]> = { pending_payment: ["cancelled"], verification_failed: ["cancelled"], needs_review: ["paid", "cancelled", "refunded"], paid: ["packing", "refunded"], packing: ["shipped", "refunded"], shipped: ["completed", "refunded"], completed: ["refunded"] };
 function OrderAdmin({ order, token, reload }: { order: Row; token: string; reload: () => void }) {
   const [status, setStatus] = useState(""); const items = (order.order_items ?? []) as Row[];
+  const [actionBusy, setActionBusy] = useState(false);
   const printSheet = useRef<HTMLElement>(null);
-  async function save() { if (!status) return; try { await adminRequest(token, "order", { method: "PATCH", body: JSON.stringify({ id: order.id, status }) }); reload(); } catch (error) { window.alert(error instanceof Error ? error.message : "เปลี่ยนสถานะไม่สำเร็จ"); } }
-  function printOrder() {
+  async function save() {
+    if (!status) return;
+    setActionBusy(true);
+    try { await adminRequest(token, "order", { method: "PATCH", body: JSON.stringify({ id: order.id, status }) }); setStatus(""); reload(); }
+    catch (error) { window.alert(error instanceof Error ? error.message : "เปลี่ยนสถานะไม่สำเร็จ"); }
+    finally { setActionBusy(false); }
+  }
+  async function removeOrder() {
+    if (!window.confirm(`ลบออเดอร์ ${String(order.order_number)} ออกจากรายการใช่หรือไม่?`)) return;
+    setActionBusy(true);
+    try { await adminRequest(token, "order", { method: "DELETE", body: JSON.stringify({ id: order.id }) }); reload(); }
+    catch (error) { window.alert(error instanceof Error ? error.message : "ลบออเดอร์ไม่สำเร็จ"); }
+    finally { setActionBusy(false); }
+  }
+  async function printOrder() {
     const sheet = printSheet.current;
     if (!sheet) return;
+    if (!["paid", "packing", "shipped"].includes(String(order.status))) {
+      window.alert("ออเดอร์นี้ยังไม่ยืนยันการชำระเงิน จึงยังเปลี่ยนเป็นกำลังแพ็คไม่ได้");
+      return;
+    }
+    setActionBusy(true);
+    try {
+      if (order.status === "paid") {
+        await adminRequest(token, "order", { method: "PATCH", body: JSON.stringify({ id: order.id, status: "packing" }) });
+        reload();
+      }
+    } catch (error) {
+      window.alert(error instanceof Error ? error.message : "เปลี่ยนสถานะเป็นกำลังแพ็คไม่สำเร็จ");
+      setActionBusy(false);
+      return;
+    }
+    const printable = sheet.cloneNode(true) as HTMLElement;
+    printable.removeAttribute("aria-hidden");
+    printable.classList.add("is-printing", "active-order-print");
+    document.body.appendChild(printable);
     const cleanup = () => {
-      sheet.classList.remove("is-printing");
+      printable.remove();
       document.body.classList.remove("printing-order");
+      setActionBusy(false);
     };
-    sheet.classList.add("is-printing");
     document.body.classList.add("printing-order");
     window.addEventListener("afterprint", cleanup, { once: true });
+    const logo = printable.querySelector("img");
+    if (logo) await logo.decode().catch(() => undefined);
     window.print();
   }
   return <article className="admin-order">
-    <header><div><small>{new Date(String(order.created_at)).toLocaleString("th-TH")}</small><h3>{String(order.order_number)}</h3></div><em className={`status-pill ${String(order.status)}`}>{String(order.status)}</em></header>
+    <header><div><small>{new Date(String(order.created_at)).toLocaleString("th-TH")}</small><h3>{String(order.order_number)}</h3></div><em className={`status-pill ${String(order.status)}`}>{adminStatusLabel[String(order.status)] ?? String(order.status)}</em></header>
     <p>{String(order.full_name)} · {String(order.phone)}<br />{String(order.address)} {String(order.province)} {String(order.postal_code)}</p>
     <div className="order-item-mini">{items.map((item) => <span key={String(item.id)}>{String(item.product_name)} × {String(item.quantity)}</span>)}</div>
     <strong>{formatPrice(Number(order.total_satang) / 100)}</strong>
     <div className="admin-actions admin-order-actions">
-      <button className="button button-gold" type="button" onClick={printOrder}>พิมพ์ออเดอร์</button>
-      {nextStatuses[String(order.status)]?.length ? <><select aria-label="เลือกสถานะถัดไป" value={status} onChange={(event) => setStatus(event.target.value)}><option value="">เลือกสถานะถัดไป</option>{nextStatuses[String(order.status)].map((next) => <option key={next}>{next}</option>)}</select><button className="button button-ghost" type="button" onClick={save}>อัปเดต</button></> : null}
+      <button className="button button-gold" type="button" disabled={actionBusy} onClick={printOrder}>พิมพ์ออเดอร์</button>
+      <select aria-label="เลือกสถานะถัดไป" value={status} disabled={actionBusy} onChange={(event) => setStatus(event.target.value)}><option value="">เลือกสถานะถัดไป</option><option value="packing">กำลังแพ็ค</option><option value="shipped">จัดส่งแล้ว</option></select>
+      <button className="button button-ghost" type="button" disabled={actionBusy || !status} onClick={save}>เปลี่ยนสถานะ</button>
+      <button className="button button-danger" type="button" disabled={actionBusy} onClick={removeOrder}>ลบออเดอร์</button>
     </div>
     <section className="order-print-sheet" ref={printSheet} aria-hidden="true">
       <header className="order-print-header">
-        <div><small>MEEMON ORDER</small><h1>ใบจัดเตรียมและจัดส่งสินค้า</h1></div>
+        <div className="order-print-brand"><img src="/v2/assets/brand/logo.png" alt="Meemon" /><div><small>{ORDER_COMPANY}</small><h1>ใบจัดเตรียมและจัดส่งสินค้า</h1></div></div>
         <dl><div><dt>เลขออเดอร์</dt><dd>{String(order.order_number)}</dd></div><div><dt>วันที่สั่งซื้อ</dt><dd>{new Date(String(order.created_at)).toLocaleString("th-TH")}</dd></div></dl>
       </header>
       <section className="order-print-block">
