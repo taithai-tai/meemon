@@ -1,2 +1,7 @@
 # Local dependency directories must never be committed or published.
 node_modules/
+v2/_source/.env*
+!v2/_source/.env.example
+supabase/.env
+supabase/.env.local
+.supabase/

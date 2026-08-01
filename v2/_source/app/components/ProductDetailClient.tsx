@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { commerceConfigured, fetchCatalog } from "@/lib/commerce";
 import { formatPrice } from "@/lib/data";
 import type { Product } from "@/lib/types";
 import { useCart } from "./CartProvider";
@@ -22,17 +23,47 @@ export function ProductDetailClient({ product }: { product: Product }) {
         ]),
     ),
   );
+  const [selectionIds, setSelectionIds] = useState<Record<string, string>>(() =>
+    Object.fromEntries(
+      product.variants
+        .filter((group) => group.options.some((option) => !option.disabled))
+        .map((group) => [group.id, group.options.find((option) => !option.disabled)?.id ?? ""]),
+    ),
+  );
+  const [liveSkus, setLiveSkus] = useState<Array<{ selection_key: string; price_satang: number | null; active: boolean; stock_quantity: number | null; reserved_quantity: number }>>([]);
+  const [liveStatus, setLiveStatus] = useState<string | null>(null);
   const [added, setAdded] = useState(false);
   const { addProduct } = useCart();
 
+  useEffect(() => {
+    fetchCatalog(product.id).then(({ products }) => {
+      const live = products[0] as { status?: string; product_skus?: typeof liveSkus } | undefined;
+      if (live) {
+        setLiveStatus(live.status ?? null);
+        setLiveSkus(live.product_skus ?? []);
+      }
+    }).catch(() => undefined);
+  }, [product.id]);
+
+  const selectedKey = useMemo(() => Object.values(selectionIds).filter(Boolean).sort().join("|"), [selectionIds]);
+  const selectedSku = liveSkus.find((sku) => sku.selection_key === selectedKey);
+  const staticPriced = product.priceMin === product.priceMax;
+  const canBuy = commerceConfigured
+    ? Boolean(selectedSku && selectedSku.active && selectedSku.price_satang !== null && liveStatus === "active" && (selectedSku.stock_quantity === null || selectedSku.stock_quantity > selectedSku.reserved_quantity))
+    : staticPriced;
+  const displayPrice = selectedSku?.price_satang !== null && selectedSku?.price_satang !== undefined ? selectedSku.price_satang / 100 : product.priceMin;
+  const cartProduct = { ...product, priceMin: displayPrice, priceMax: displayPrice };
+
   function addToCart() {
-    addProduct(product, selections, quantity);
+    if (!canBuy) return;
+    addProduct(cartProduct, selections, selectionIds, quantity);
     setAdded(true);
     window.setTimeout(() => setAdded(false), 2200);
   }
 
   function buyNow() {
-    addProduct(product, selections, quantity);
+    if (!canBuy) return;
+    addProduct(cartProduct, selections, selectionIds, quantity);
     router.push("/v2/checkout");
   }
 
@@ -64,8 +95,8 @@ export function ProductDetailClient({ product }: { product: Product }) {
         <div className="eyebrow">MEEMON OFFICIAL COLLECTION</div>
         <h1>{product.name}</h1>
         <div className="detail-price">
-          {formatPrice(product.priceMin)}
-          {product.priceMax !== product.priceMin
+          {formatPrice(displayPrice)}
+          {!selectedSku && product.priceMax !== product.priceMin
             ? ` – ${formatPrice(product.priceMax)}`
             : ""}
         </div>
@@ -84,12 +115,12 @@ export function ProductDetailClient({ product }: { product: Product }) {
                   type="button"
                   key={option.id}
                   disabled={option.disabled}
-                  className={selections[group.name] === option.name ? "active" : ""}
+                  className={selectionIds[group.id] === option.id ? "active" : ""}
                   onClick={() =>
-                    setSelections((current) => ({
-                      ...current,
-                      [group.name]: option.name,
-                    }))
+                    {
+                      setSelections((current) => ({ ...current, [group.name]: option.name }));
+                      setSelectionIds((current) => ({ ...current, [group.id]: option.id }));
+                    }
                   }
                 >
                   {option.name}
@@ -117,12 +148,12 @@ export function ProductDetailClient({ product }: { product: Product }) {
               <Icon name="plus" />
             </button>
           </div>
-          <button type="button" className="primary-button grow" onClick={addToCart}>
+          <button type="button" className="primary-button grow" onClick={addToCart} disabled={!canBuy}>
             <Icon name={added ? "check" : "cart"} />
-            {added ? "เพิ่มลงตะกร้าแล้ว" : "เพิ่มลงตะกร้า"}
+            {added ? "เพิ่มลงตะกร้าแล้ว" : canBuy ? "เพิ่มลงตะกร้า" : "รอกำหนดราคาตัวเลือก"}
           </button>
-          <button type="button" className="button button-ghost grow" onClick={buyNow}>
-            ซื้อเลย (ทดลอง)
+          <button type="button" className="button button-ghost grow" onClick={buyNow} disabled={!canBuy}>
+            ซื้อเลย
             <Icon name="arrow-right" />
           </button>
         </div>
@@ -134,7 +165,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
         </Link>
 
         <div className="prototype-note">
-          รุ่นทดลองนี้ให้ลองเลือกสินค้า กรอกที่อยู่ และเปิด QR จำลองได้ครบ แต่จะไม่สร้างคำสั่งซื้อ ไม่ส่งข้อมูล และไม่รับเงินจริง
+          {canBuy ? "ส่งฟรีทั่วประเทศ · ชำระโดยโอนผ่านธนาคารและตรวจสลิปก่อนจัดส่ง" : "สินค้านี้ยังแสดงให้ชมได้ แต่ยังสั่งซื้อไม่ได้จนกว่าร้านค้าจะกำหนดราคาครบทุกตัวเลือก"}
         </div>
 
         <div className="product-description">

@@ -20,6 +20,7 @@ interface CartContextValue {
   addProduct: (
     product: Product,
     selections?: Record<string, string>,
+    selectionIds?: Record<string, string>,
     quantity?: number,
   ) => void;
   updateQuantity: (key: string, quantity: number) => void;
@@ -61,6 +62,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     (
       product: Product,
       selections: Record<string, string> = {},
+      selectionIds: Record<string, string> = {},
       quantity = 1,
     ) => {
       const key = itemKey(product.id, selections);
@@ -84,6 +86,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             price: product.priceMin,
             quantity,
             selections,
+            selectionIds,
           },
         ];
       });

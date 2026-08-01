@@ -4,12 +4,9 @@ import type {
   CheckoutProvider,
 } from "./types";
 
-export const prototypeCheckoutProvider: CheckoutProvider = {
-  mode: "prototype",
+export const checkoutProvider: CheckoutProvider = {
+  mode: "live",
   async createOrder(_draft: CheckoutDraft, _items: CartItem[]) {
-    throw new Error("Prototype checkout never creates an order.");
-  },
-  async createPaymentSession(_orderId: string) {
-    throw new Error("Prototype checkout never creates a payment session.");
+    throw new Error("Use the protected commerce client with Turnstile verification.");
   },
 };

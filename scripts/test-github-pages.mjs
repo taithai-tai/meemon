@@ -35,6 +35,10 @@ const requiredPages = [
   "v2/shop/index.html",
   "v2/cart/index.html",
   "v2/checkout/index.html",
+  "v2/order/index.html",
+  "v2/orders/index.html",
+  "v2/product/index.html",
+  "v2/admin/index.html",
   "v2/fortune/oracle/index.html",
   "v2/fortune/tarot/index.html",
   "v2/fortune/seimsee/index.html",
@@ -161,9 +165,15 @@ for (const [page, href] of copiedAppForwardContracts) {
 
 const nativeCommerceContracts = [
   ["v2/shop/index.html", "คอลเลกชันที่คัดสรรจากความเชื่อ"],
-  ["v2/shop/77-50712224947/index.html", "ซื้อเลย (ทดลอง)"],
+  ["v2/shop/77-50712224947/index.html", "ซื้อเลย"],
   ["v2/cart/index.html", "ตะกร้าของคุณ"],
-  ["v2/checkout/index.html", "ข้อมูลจัดส่งและชำระเงินจำลอง"],
+  ["v2/checkout/index.html", "จัดส่งฟรีเฉพาะในประเทศไทย"],
+  ["v2/order/index.html", "ติดตามคำสั่งซื้อ"],
+  ["v2/orders/index.html", "ออเดอร์ของฉัน"],
+  // This marker exists both before configuration and in the production login
+  // page. The production build must not be rejected merely because Supabase is
+  // correctly configured and the login form replaces the setup placeholder.
+  ["v2/admin/index.html", "admin-page"],
 ];
 
 for (const [page, expectedText] of nativeCommerceContracts) {
@@ -210,7 +220,16 @@ function listHtmlFiles(directory) {
   });
 }
 
-const v2HtmlFiles = listHtmlFiles(resolve(repositoryRoot, "v2"));
+function listFiles(directory) {
+  return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const path = resolve(directory, entry.name);
+    return entry.isDirectory() ? listFiles(path) : [path];
+  });
+}
+
+const v2SourceRoot = `${resolve(repositoryRoot, "v2/_source")}/`;
+const v2HtmlFiles = listHtmlFiles(resolve(repositoryRoot, "v2"))
+  .filter((htmlFile) => !htmlFile.startsWith(v2SourceRoot));
 const assetPaths = v2HtmlFiles.flatMap((htmlFile) => {
   const html = readFileSync(htmlFile, "utf8");
   return [...html.matchAll(/(?:src|href)="(\/v2\/[^"]+)"/g)].map(
@@ -255,13 +274,108 @@ const checkoutSource = readFileSync(
   resolve(repositoryRoot, "v2/_source/app/components/CheckoutClient.tsx"),
   "utf8",
 );
+const paymentPanelSource = readFileSync(
+  resolve(repositoryRoot, "v2/_source/app/components/OrderPaymentPanel.tsx"),
+  "utf8",
+);
+const pendingOrdersSource = readFileSync(
+  resolve(repositoryRoot, "v2/_source/lib/pending-orders.ts"),
+  "utf8",
+);
 if (
-  !checkoutSource.includes('QR Code (จำลอง)') ||
-  !checkoutSource.includes('QR จำลอง · สแกนไม่ได้') ||
-  !checkoutSource.includes('DEMO') ||
-  /fetch\s*\(|createOrder|createPaymentSession/.test(checkoutSource)
+  !checkoutSource.includes('createOrder') ||
+  !checkoutSource.includes('จัดส่งเฉพาะในประเทศไทยเท่านั้น') ||
+  !paymentPanelSource.includes('uploadSlip') ||
+  !paymentPanelSource.includes('โอนเงินและอัปโหลดสลิป') ||
+  !pendingOrdersSource.includes('"meemon:v2:orders"') ||
+  checkoutSource.includes('mockQrCells') ||
+  checkoutSource.includes('QR Code (จำลอง)') ||
+  checkoutSource.includes('0793953402')
 ) {
-  throw new Error("The V2 checkout prototype can create a real transaction.");
+  throw new Error("The V2 checkout is not using the protected bank-transfer flow.");
+}
+
+const checkoutFunction = readFileSync(
+  resolve(repositoryRoot, "supabase/functions/checkout/index.ts"),
+  "utf8",
+);
+const easySlipFunction = readFileSync(
+  resolve(repositoryRoot, "supabase/functions/_shared/easyslip.ts"),
+  "utf8",
+);
+const easySlipParser = readFileSync(
+  resolve(repositoryRoot, "supabase/functions/_shared/easyslip-parser.ts"),
+  "utf8",
+);
+if (
+  !checkoutFunction.includes('4 * 1024 * 1024') ||
+  !checkoutFunction.includes('attemptNumber > 5') ||
+  !checkoutFunction.includes('consume_rate_limit_v1') ||
+  !checkoutFunction.includes('recover_order_access_v1') ||
+  !checkoutFunction.includes('receiver.bank_code ?? receiver.bankCode') ||
+  !checkoutFunction.includes('receiver.account_number ?? receiver.accountNumber') ||
+  !easySlipFunction.includes('form.set("image"') ||
+  !easySlipFunction.includes('form.set("matchAccount", "true")') ||
+  !easySlipFunction.includes('form.set("matchAmount"') ||
+  !easySlipFunction.includes('form.set("checkDuplicate", "true")') ||
+  !easySlipFunction.includes('env("EASYSLIP_API_KEY")') ||
+  !easySlipFunction.includes("applyExpectedReceiver") ||
+  !easySlipParser.includes("maskedAccountMatches") ||
+  !easySlipParser.includes("canPromoteUnregisteredReceiver") ||
+  !easySlipParser.includes("pattern.length === expected.length") ||
+  !easySlipParser.includes("visibleDigits.length >= 4")
+) {
+  throw new Error("The protected EasySlip upload contract is incomplete.");
+}
+
+const supabaseConfig = readFileSync(
+  resolve(repositoryRoot, "supabase/config.toml"),
+  "utf8",
+);
+if (
+  !/\[functions\.checkout\]\s+verify_jwt = false/.test(supabaseConfig) ||
+  !/\[functions\.admin\]\s+verify_jwt = true/.test(supabaseConfig) ||
+  !/\[functions\.maintenance\]\s+verify_jwt = true/.test(supabaseConfig)
+) {
+  throw new Error("Supabase Edge Function authentication scopes are unsafe.");
+}
+
+const migrationFiles = readdirSync(resolve(repositoryRoot, "supabase/migrations"))
+  .filter((file) => file.endsWith(".sql"));
+const migrations = migrationFiles.map((file) => readFileSync(resolve(repositoryRoot, "supabase/migrations", file), "utf8")).join("\n");
+const protectedTables = ["products", "product_skus", "payment_accounts", "orders", "order_items", "order_access_tokens", "slip_attempts", "payments", "admin_profiles", "audit_logs", "api_rate_limits"];
+for (const table of protectedTables) {
+  if (!migrations.includes(`alter table public.${table} enable row level security;`)) {
+    throw new Error(`RLS is missing for Supabase table: ${table}`);
+  }
+}
+if (
+  !migrations.includes("unique (provider, trans_ref)") ||
+  !migrations.includes("recover_order_access_v1") ||
+  !migrations.includes("country_code = 'TH'") ||
+  !migrations.includes("shipping_satang integer not null default 0 check (shipping_satang = 0)")
+) {
+  throw new Error("The database order/payment contract is incomplete.");
+}
+const unlimitedPaymentMigration = readFileSync(
+  resolve(repositoryRoot, "supabase/migrations/20260801000700_unlimited_payment_and_phone_lookup.sql"),
+  "utf8",
+);
+if (
+  !unlimitedPaymentMigration.includes("interval '100 years'") ||
+  !unlimitedPaymentMigration.includes("select 0;") ||
+  unlimitedPaymentMigration.includes("p_transaction_at > v_order.expires_at") ||
+  unlimitedPaymentMigration.includes("now() > v_order.expires_at")
+) {
+  throw new Error("Orders must remain payable without an automatic transfer deadline.");
+}
+
+const nextFiles = listFiles(resolve(repositoryRoot, "v2/_next/static/chunks"))
+  .filter((file) => file.endsWith(".js"))
+  .map((file) => readFileSync(file, "utf8"))
+  .join("\n");
+for (const forbidden of ["SUPABASE_SERVICE_ROLE_KEY", "EASYSLIP_API_KEY", "TURNSTILE_SECRET_KEY", "ADMIN_BOOTSTRAP_PASSWORD", "0793953402"]) {
+  if (nextFiles.includes(forbidden)) throw new Error(`A private commerce value leaked into the static build: ${forbidden}`);
 }
 
 process.stdout.write(

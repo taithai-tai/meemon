@@ -29,10 +29,10 @@ const launcherApps = [
     image: "/v2/assets/app-icons/rituals.png",
   },
   {
-    href: "/v2/apps/NFCV.2/Seimsee/token.html",
-    label: "เซียมซี",
-    eyebrow: "SEIMSEE",
-    image: "/v2/assets/app-icons/seimsee.png",
+    href: "/v2/orders",
+    label: "ออเดอร์ของฉัน",
+    eyebrow: "MY ORDERS",
+    image: "/v2/assets/app-icons/archive.png",
   },
 ];
 
@@ -154,6 +154,12 @@ const allAppGroups: Array<{
     eyebrow: "CONTACT & ARCHIVE",
     title: "ติดต่อและคลังแอป",
     apps: [
+      {
+        href: "/v2/orders",
+        label: "ออเดอร์ของฉัน",
+        description: "กลับมาส่งสลิปและติดตามสถานะ",
+        image: "/v2/assets/app-icons/archive.png",
+      },
       {
         href: "/v2/apps/Contact/",
         label: "ติดต่อ Meemon",

@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, type CSSProperties } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
+import { isOrderAwaitingCustomer, PENDING_ORDERS_EVENT, readSavedOrders } from "@/lib/pending-orders";
 import { BrandMark, Icon } from "./Icons";
 
 const cosmicStars = Array.from({ length: 72 }, (_, index) => ({
@@ -77,6 +78,17 @@ function LegacyForward({
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const [pendingOrders, setPendingOrders] = useState(0);
+  useEffect(() => {
+    const refresh = () => setPendingOrders(readSavedOrders().filter((order) => isOrderAwaitingCustomer(order.status)).length);
+    refresh();
+    window.addEventListener(PENDING_ORDERS_EVENT, refresh);
+    window.addEventListener("storage", refresh);
+    return () => {
+      window.removeEventListener(PENDING_ORDERS_EVENT, refresh);
+      window.removeEventListener("storage", refresh);
+    };
+  }, []);
   const legacyTarget = legacyTargetFor(pathname);
   const isLegacyContent =
     !pathname.startsWith("/v2") && pathname !== "/" && pathname !== "/legacy";
@@ -122,7 +134,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <small>DESTINY · FAITH · LIVING</small>
           </span>
         </Link>
-
+        <nav className="header-commerce-nav" aria-label="ร้านค้าและออเดอร์">
+          <Link href="/v2/orders" className="header-order-link"><Icon name="briefcase" /><span>ออเดอร์ของฉัน</span>{pendingOrders ? <b>{pendingOrders}</b> : null}</Link>
+          <Link href="/v2/cart" className="header-cart-link" aria-label="ตะกร้าสินค้า"><Icon name="cart" /><span>ตะกร้า</span></Link>
+        </nav>
       </header>
 
       <main>{children}</main>

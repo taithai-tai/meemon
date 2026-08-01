@@ -1,0 +1,11 @@
+project_id = "meemon"
+
+[functions.checkout]
+verify_jwt = false
+
+[functions.admin]
+verify_jwt = true
+
+[functions.maintenance]
+verify_jwt = true
+

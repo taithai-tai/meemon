@@ -46,6 +46,7 @@ export interface CartItem {
   price: number;
   quantity: number;
   selections: Record<string, string>;
+  selectionIds: Record<string, string>;
 }
 
 export interface CheckoutDraft {
@@ -81,11 +82,42 @@ export interface Wallpaper {
 }
 
 export interface CheckoutProvider {
-  readonly mode: "prototype" | "live";
+  readonly mode: "live";
   createOrder(
     draft: CheckoutDraft,
     items: CartItem[],
   ): Promise<{ orderId: string }>;
-  createPaymentSession(orderId: string): Promise<{ redirectUrl: string }>;
 }
 import type { IconName } from "@/app/components/Icons";
+
+export type OrderStatus =
+  | "pending_payment" | "verifying" | "paid" | "packing" | "shipped"
+  | "completed" | "verification_failed" | "needs_review" | "expired"
+  | "cancelled" | "refunded";
+
+export interface PaymentAccountSnapshot {
+  bankCode: string;
+  bankName: string;
+  accountHolder: string;
+  accountNumber: string;
+}
+
+export interface PublicOrder {
+  orderId: string;
+  orderNumber: string;
+  status: OrderStatus;
+  totalSatang: number;
+  expiresAt: string;
+  paidAt: string | null;
+  createdAt: string;
+  paymentAccount: PaymentAccountSnapshot;
+  shipping: CheckoutDraft;
+  items: Array<{
+    name: string;
+    variant: string;
+    image: string | null;
+    unitPriceSatang: number;
+    quantity: number;
+    lineTotalSatang: number;
+  }>;
+}

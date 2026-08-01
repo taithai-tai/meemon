@@ -14,9 +14,11 @@ const categoryLabels = {
 export function ProductCard({
   product,
   legacyHref,
+  href,
 }: {
   product: Product;
   legacyHref?: string;
+  href?: string;
 }) {
   const content = (
     <>
@@ -54,7 +56,7 @@ export function ProductCard({
       {content}
     </a>
   ) : (
-    <Link href={`/v2/shop/${product.slug}`} className="product-card">
+    <Link href={href ?? `/v2/shop/${product.slug}`} className="product-card">
       {content}
     </Link>
   );

@@ -1,19 +1,27 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { catalogRowToProduct, fetchCatalog } from "@/lib/commerce";
 import { categories } from "@/lib/data";
 import type { Product, ProductCategory } from "@/lib/types";
 import { ProductCard } from "./ProductCard";
 import { Icon } from "./Icons";
 
 export function ShopClient({ products }: { products: Product[] }) {
+  const [displayProducts, setDisplayProducts] = useState(products);
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<"all" | ProductCategory>("all");
   const [sort, setSort] = useState("featured");
 
+  useEffect(() => {
+    fetchCatalog().then(({ products: rows }) => {
+      if (rows.length) setDisplayProducts(rows.map(catalogRowToProduct));
+    }).catch(() => undefined);
+  }, []);
+
   const filtered = useMemo(() => {
     const normalized = query.trim().toLocaleLowerCase("th");
-    const next = products.filter((product) => {
+    const next = displayProducts.filter((product) => {
       const matchesCategory =
         category === "all" || product.category === category;
       const matchesQuery =
@@ -27,9 +35,9 @@ export function ShopClient({ products }: { products: Product[] }) {
       if (sort === "price-low") return left.priceMin - right.priceMin;
       if (sort === "price-high") return right.priceMin - left.priceMin;
       if (sort === "popular") return right.soldCount - left.soldCount;
-      return products.indexOf(left) - products.indexOf(right);
+      return displayProducts.indexOf(left) - displayProducts.indexOf(right);
     });
-  }, [category, products, query, sort]);
+  }, [category, displayProducts, query, sort]);
 
   return (
     <>
@@ -70,11 +78,11 @@ export function ShopClient({ products }: { products: Product[] }) {
       </div>
 
       <div className="result-count">
-        แสดง {filtered.length} จาก {products.length} รายการ
+        แสดง {filtered.length} จาก {displayProducts.length} รายการ
       </div>
       <div className="product-grid">
         {filtered.map((product) => (
-          <ProductCard product={product} key={product.id} />
+          <ProductCard product={product} key={product.id} href={products.some((staticProduct) => staticProduct.id === product.id) ? undefined : `/v2/product/?id=${encodeURIComponent(product.id)}`} />
         ))}
       </div>
       {filtered.length === 0 ? (
