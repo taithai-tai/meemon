@@ -1,11 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { adminLogin, adminRequest, commerceConfigured } from "@/lib/commerce";
 import { formatPrice } from "@/lib/data";
 import { Icon } from "./Icons";
 
 const SESSION_KEY = "meemon:v2:admin-access-token";
+const ORDER_SENDER = "นาคีมีมนตรมีมนตร์ 92 ม7  บ้านบังบาตร ตำบลชัยพร อำเภอเมือเมือง จังหวจังหวัดบึงกาฬ บึงกาฬ 38000";
 type Tab = "dashboard" | "orders" | "products" | "accounts" | "audit";
 type Row = Record<string, unknown>;
 
@@ -107,8 +108,48 @@ function CreateProduct({ token, reload }: { token: string; reload: () => void })
 const nextStatuses: Record<string, string[]> = { pending_payment: ["cancelled"], verification_failed: ["cancelled"], needs_review: ["paid", "cancelled", "refunded"], paid: ["packing", "refunded"], packing: ["shipped", "refunded"], shipped: ["completed", "refunded"], completed: ["refunded"] };
 function OrderAdmin({ order, token, reload }: { order: Row; token: string; reload: () => void }) {
   const [status, setStatus] = useState(""); const items = (order.order_items ?? []) as Row[];
+  const printSheet = useRef<HTMLElement>(null);
   async function save() { if (!status) return; try { await adminRequest(token, "order", { method: "PATCH", body: JSON.stringify({ id: order.id, status }) }); reload(); } catch (error) { window.alert(error instanceof Error ? error.message : "เปลี่ยนสถานะไม่สำเร็จ"); } }
-  return <article className="admin-order"><header><div><small>{new Date(String(order.created_at)).toLocaleString("th-TH")}</small><h3>{String(order.order_number)}</h3></div><em className={`status-pill ${String(order.status)}`}>{String(order.status)}</em></header><p>{String(order.full_name)} · {String(order.phone)}<br />{String(order.address)} {String(order.province)} {String(order.postal_code)}</p><div className="order-item-mini">{items.map((item) => <span key={String(item.id)}>{String(item.product_name)} × {String(item.quantity)}</span>)}</div><strong>{formatPrice(Number(order.total_satang) / 100)}</strong>{nextStatuses[String(order.status)]?.length ? <div className="admin-actions"><select value={status} onChange={(event) => setStatus(event.target.value)}><option value="">เลือกสถานะถัดไป</option>{nextStatuses[String(order.status)].map((next) => <option key={next}>{next}</option>)}</select><button className="button button-ghost" onClick={save}>อัปเดต</button></div> : null}</article>;
+  function printOrder() {
+    const sheet = printSheet.current;
+    if (!sheet) return;
+    const cleanup = () => {
+      sheet.classList.remove("is-printing");
+      document.body.classList.remove("printing-order");
+    };
+    sheet.classList.add("is-printing");
+    document.body.classList.add("printing-order");
+    window.addEventListener("afterprint", cleanup, { once: true });
+    window.print();
+  }
+  return <article className="admin-order">
+    <header><div><small>{new Date(String(order.created_at)).toLocaleString("th-TH")}</small><h3>{String(order.order_number)}</h3></div><em className={`status-pill ${String(order.status)}`}>{String(order.status)}</em></header>
+    <p>{String(order.full_name)} · {String(order.phone)}<br />{String(order.address)} {String(order.province)} {String(order.postal_code)}</p>
+    <div className="order-item-mini">{items.map((item) => <span key={String(item.id)}>{String(item.product_name)} × {String(item.quantity)}</span>)}</div>
+    <strong>{formatPrice(Number(order.total_satang) / 100)}</strong>
+    <div className="admin-actions admin-order-actions">
+      <button className="button button-gold" type="button" onClick={printOrder}>พิมพ์ออเดอร์</button>
+      {nextStatuses[String(order.status)]?.length ? <><select aria-label="เลือกสถานะถัดไป" value={status} onChange={(event) => setStatus(event.target.value)}><option value="">เลือกสถานะถัดไป</option>{nextStatuses[String(order.status)].map((next) => <option key={next}>{next}</option>)}</select><button className="button button-ghost" type="button" onClick={save}>อัปเดต</button></> : null}
+    </div>
+    <section className="order-print-sheet" ref={printSheet} aria-hidden="true">
+      <header className="order-print-header">
+        <div><small>MEEMON ORDER</small><h1>ใบจัดเตรียมและจัดส่งสินค้า</h1></div>
+        <dl><div><dt>เลขออเดอร์</dt><dd>{String(order.order_number)}</dd></div><div><dt>วันที่สั่งซื้อ</dt><dd>{new Date(String(order.created_at)).toLocaleString("th-TH")}</dd></div></dl>
+      </header>
+      <section className="order-print-block">
+        <span className="order-print-step">01</span><div><small>ผู้ส่ง</small><h2>ชื่อและที่อยู่ผู้ส่ง</h2><p>{ORDER_SENDER}</p></div>
+      </section>
+      <section className="order-print-block">
+        <span className="order-print-step">02</span><div><small>ผู้รับ</small><h2>{String(order.full_name)}</h2><p className="order-print-phone">โทร. {String(order.phone)}</p><address>{String(order.address)} {String(order.province)} {String(order.postal_code)}<br />ประเทศไทย</address></div>
+      </section>
+      <section className="order-print-items">
+        <div className="order-print-section-title"><span className="order-print-step">03</span><div><small>รายการสินค้า</small><h2>สินค้าที่สั่งซื้อ</h2></div></div>
+        <table><thead><tr><th>ลำดับ</th><th>สินค้า / ตัวเลือก</th><th>จำนวน</th><th>รวม</th></tr></thead><tbody>{items.map((item, index) => <tr key={String(item.id)}><td>{index + 1}</td><td><strong>{String(item.product_name)}</strong><small>{String(item.sku_label ?? "แบบมาตรฐาน")}</small></td><td>{String(item.quantity)}</td><td>{formatPrice(Number(item.line_total_satang ?? 0) / 100)}</td></tr>)}</tbody><tfoot><tr><td colSpan={3}>ยอดรวมทั้งสิ้น</td><td>{formatPrice(Number(order.total_satang) / 100)}</td></tr></tfoot></table>
+        {String(order.note ?? "").trim() ? <p className="order-print-note"><strong>หมายเหตุ:</strong> {String(order.note)}</p> : null}
+      </section>
+      <footer><span>จัดส่งในประเทศไทยเท่านั้น</span><span>พิมพ์จาก Meemon Admin</span></footer>
+    </section>
+  </article>;
 }
 
 function AccountsAdmin({ accounts, token, reload }: { accounts: Row[]; token: string; reload: () => void }) {
