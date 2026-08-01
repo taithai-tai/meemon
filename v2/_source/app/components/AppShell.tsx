@@ -2,8 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, type CSSProperties } from "react";
 import { BrandMark, Icon } from "./Icons";
+
+const cosmicStars = Array.from({ length: 72 }, (_, index) => ({
+  left: `${(index * 47 + 11) % 101}%`,
+  top: `${(index * 73 + 7) % 103}%`,
+  size: 1 + ((index * 29) % 4) * 0.55,
+  duration: 3.6 + ((index * 31) % 43) / 10,
+  delay: ((index * 17) % 67) / 10,
+  tone: index % 5 === 0 ? "violet" : index % 3 === 0 ? "gold" : "ivory",
+}));
 
 const legacyRedirects: Array<{
   prefix: string;
@@ -83,7 +92,29 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="site-shell">
-      <div className="cosmic-sky" aria-hidden="true" />
+      <div className="cosmic-sky" aria-hidden="true">
+        <div className="cosmic-watermark">
+          <span>DISCOVER YOUR PATH</span>
+          <BrandMark />
+          <small>DESTINY · FAITH · LIVING</small>
+        </div>
+        <div className="cosmic-starfield">
+          {cosmicStars.map((star, index) => (
+            <i
+              className={`cosmic-star cosmic-star-${star.tone}`}
+              key={index}
+              style={{
+                left: star.left,
+                top: star.top,
+                width: star.size,
+                height: star.size,
+                animationDuration: `${star.duration}s`,
+                animationDelay: `-${star.delay}s`,
+              } as CSSProperties}
+            />
+          ))}
+        </div>
+      </div>
       <header className="site-header">
         <Link href="/v2/" className="brand" aria-label="Meemon Home">
           <span className="brand-mark">

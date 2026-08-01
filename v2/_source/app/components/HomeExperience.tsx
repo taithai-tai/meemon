@@ -1,6 +1,6 @@
 import { products } from "@/lib/data";
 import { ProductCard } from "./ProductCard";
-import { BrandMark, Icon } from "./Icons";
+import { Icon } from "./Icons";
 import { AppFolder } from "./AppFolder";
 
 const launcherApps = [
@@ -173,6 +173,26 @@ const allAppGroups: Array<{
 export function HomeExperience() {
   return (
     <>
+      <section className="home-hero">
+        <div className="hero-orbit orbit-one" />
+        <div className="hero-orbit orbit-two" />
+        <div className="home-hero-copy">
+          <div className="hero-kicker">
+            <Icon name="sparkle" />
+            MEEMON HOME · VERSION 2
+          </div>
+          <h1>
+            ทุกความเชื่อ
+            <br />
+            มีพื้นที่ให้<span>เปล่งประกาย</span>
+          </h1>
+          <p>
+            บ้านของ Meemon ที่รวมสิ่งมงคล งานออกแบบ คำทำนาย
+            และพิธีประจำวันไว้ในประสบการณ์เดียวที่สงบและค้นพบได้ง่าย
+          </p>
+        </div>
+      </section>
+
       <section className="app-launcher" aria-labelledby="app-launcher-title">
         <div className="app-launcher-heading">
           <div>
@@ -198,40 +218,6 @@ export function HomeExperience() {
             </a>
           ))}
           <AppFolder groups={allAppGroups} />
-        </div>
-      </section>
-
-      <section className="home-hero">
-        <div className="hero-orbit orbit-one" />
-        <div className="hero-orbit orbit-two" />
-        <div className="home-hero-copy">
-          <div className="hero-kicker">
-            <Icon name="sparkle" />
-            MEEMON HOME · VERSION 2
-          </div>
-          <h1>
-            ทุกความเชื่อ
-            <br />
-            มีพื้นที่ให้<span>เปล่งประกาย</span>
-          </h1>
-          <p>
-            บ้านของ Meemon ที่รวมสิ่งมงคล งานออกแบบ คำทำนาย
-            และพิธีประจำวันไว้ในประสบการณ์เดียวที่สงบและค้นพบได้ง่าย
-          </p>
-          <div className="hero-stats" aria-label="สิ่งที่มีใน Meemon">
-            <div><strong>45</strong><span>สินค้าจริง</span></div>
-            <div><strong>13</strong><span>เครื่องมือและพิธี</span></div>
-            <div><strong>46</strong><span>วอลเปเปอร์มงคล</span></div>
-          </div>
-        </div>
-
-        <div className="hero-emblem" aria-hidden="true">
-          <div className="emblem-stars">
-            <Icon name="sparkle" />
-            <span>DISCOVER YOUR PATH</span>
-          </div>
-          <BrandMark />
-          <div className="emblem-caption">DESTINY · FAITH · LIVING</div>
         </div>
       </section>
 
