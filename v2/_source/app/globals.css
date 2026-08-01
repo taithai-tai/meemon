@@ -448,17 +448,19 @@ main { min-height: 72vh; overflow: clip; }
 .all-app-list {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 8px;
+  gap: 12px;
 }
 .all-app-link {
-  min-height: 72px;
-  padding: 10px 11px;
-  display: grid;
-  grid-template-columns: 40px minmax(0,1fr) 16px;
+  min-height: 178px;
+  padding: 16px 10px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
   gap: 10px;
   border: 1px solid rgba(232,194,112,.12);
-  border-radius: 15px;
+  border-radius: 24px;
+  text-align: center;
   background: rgba(255,255,255,.025);
   transition: border-color .2s ease, background .2s ease, transform .2s ease;
 }
@@ -472,15 +474,16 @@ main { min-height: 72vh; overflow: clip; }
   display: flex;
   flex-direction: column;
   gap: 4px;
+  align-items: center;
 }
 .all-app-link strong {
   overflow: hidden;
   color: var(--ink);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 650;
   line-height: 1.35;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: normal;
 }
 .all-app-link small {
   overflow: hidden;
@@ -491,22 +494,24 @@ main { min-height: 72vh; overflow: clip; }
   white-space: nowrap;
 }
 .all-app-icon {
-  width: 40px;
-  height: 40px;
+  width: 96px;
+  height: 96px;
   display: grid;
   place-items: center;
   border: 1px solid rgba(232,194,112,.2);
-  border-radius: 12px;
+  border-radius: 25px;
   color: var(--gold);
   background: rgba(232,194,112,.055);
 }
-.all-app-icon svg { width: 21px; height: 21px; }
-.all-app-link > svg {
-  width: 14px;
-  height: 14px;
-  color: var(--gold);
-  opacity: .66;
+.all-app-icon img {
+  width: 100%;
+  height: 100%;
+  padding: 4px;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 14px rgba(0,0,0,.36));
+  transition: transform .5s var(--ease-fluid), filter .4s ease;
 }
+.all-app-link:hover .all-app-icon img { transform: scale(1.07) translateY(-2px); }
 
 .home-hero {
   min-height: 660px;
@@ -2385,17 +2390,14 @@ main { min-height: 72vh; overflow: clip; }
   .all-app-group-heading h3 { font-size: 16px; }
   .all-app-list { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 6px; }
   .all-app-link {
-    min-height: 69px;
-    padding: 8px;
-    grid-template-columns: 34px minmax(0,1fr) 12px;
+    min-height: 148px;
+    padding: 11px 6px 12px;
     gap: 7px;
-    border-radius: 13px;
+    border-radius: 19px;
   }
-  .all-app-icon { width: 34px; height: 34px; border-radius: 10px; }
-  .all-app-icon svg { width: 18px; height: 18px; }
-  .all-app-link strong { font-size: 9px; }
+  .all-app-icon { width: 78px; height: 78px; border-radius: 21px; }
+  .all-app-link strong { font-size: 10px; }
   .all-app-link small { font-size: 6px; }
-  .all-app-link > svg { width: 11px; height: 11px; }
 
   .home-hero { padding: 58px 20px 50px; gap: 48px; }
   .home-hero h1 { font-size: clamp(45px, 13vw, 58px); }
@@ -2591,11 +2593,11 @@ main { min-height: 72vh; overflow: clip; }
     letter-spacing: -.02em;
   }
   .all-app-link {
-    min-height: 72px;
-    border-radius: 16px;
+    min-height: 148px;
+    border-radius: 19px;
     background: rgba(255,255,255,.052);
   }
-  .all-app-icon { border-radius: 11px; }
+  .all-app-icon { border-radius: 21px; }
   .home-hero { padding-top: 66px; }
   .home-hero h1 { letter-spacing: -.035em; }
   .mobile-nav {

@@ -1,12 +1,6 @@
-import Link from "next/link";
-import {
-  legacyHomeModules,
-  legacyQuickModules,
-  products,
-} from "@/lib/data";
+import { products } from "@/lib/data";
 import { ProductCard } from "./ProductCard";
-import { ModuleGrid } from "./PageElements";
-import { BrandMark, Icon, type IconName } from "./Icons";
+import { BrandMark, Icon } from "./Icons";
 import { AppFolder } from "./AppFolder";
 
 const launcherApps = [
@@ -46,7 +40,7 @@ type AllApp = {
   href: string;
   label: string;
   description: string;
-  icon: IconName;
+  image: string;
 };
 
 const allAppGroups: Array<{
@@ -62,55 +56,55 @@ const allAppGroups: Array<{
         href: "/v2/apps/NFCV.2/home/token.html",
         label: "ศูนย์รวมดูดวง",
         description: "ทางเข้าหลักของแอปดูดวง",
-        icon: "fortune",
+        image: "/v2/assets/app-icons/fortune.png",
       },
       {
         href: "/v2/apps/NFCV.2/taro/1/token.html",
         label: "ไพ่ทาโรต์ 1 ใบ",
         description: "คำตอบสั้นสำหรับวันนี้",
-        icon: "tarot",
+        image: "/v2/assets/app-icons/tarot-one.png",
       },
       {
         href: "/v2/apps/NFCV.2/taro/3/token.html",
         label: "ไพ่ทาโรต์ 3 ใบ",
         description: "อดีต ปัจจุบัน และอนาคต",
-        icon: "tarot",
+        image: "/v2/assets/app-icons/tarot-three.png",
       },
       {
         href: "/v2/apps/NFCV.2/taro/10/token.html",
         label: "ไพ่ทาโรต์ 10 ใบ",
         description: "อ่านภาพรวมอย่างละเอียด",
-        icon: "tarot",
+        image: "/v2/assets/app-icons/tarot-ten.png",
       },
       {
         href: "/v2/apps/NFCV.2/Seimsee/token.html",
         label: "เสี่ยงเซียมซี",
         description: "เซียมซีออนไลน์ 24 ใบ",
-        icon: "seimsee",
+        image: "/v2/assets/app-icons/seimsee.png",
       },
       {
         href: "/v2/apps/NFCV.2/Wood/token.html",
         label: "ไม้เซ้งปวย",
         description: "โยนไม้ถามสิ่งศักดิ์สิทธิ์",
-        icon: "jiaobei",
+        image: "/v2/assets/app-icons/jiaobei.png",
       },
       {
         href: "/v2/apps/NFCV.2/number/token.html",
         label: "เลขมงคล",
         description: "สุ่มตัวเลขประจำจังหวะ",
-        icon: "lucky-number",
+        image: "/v2/assets/app-icons/lucky-number.png",
       },
       {
         href: "/v2/apps/NFCV.2/Lucky%20day/",
         label: "ดวงประจำวัน",
         description: "พลังวันเกิดและจังหวะจันทรา",
-        icon: "daily",
+        image: "/v2/assets/app-icons/daily.png",
       },
       {
         href: "/v2/apps/Color2026/Index.html",
         label: "สีมงคล 2026",
         description: "สีเสริมพลังตามวันเกิด",
-        icon: "colors",
+        image: "/v2/assets/app-icons/colors-2026.png",
       },
     ],
   },
@@ -122,37 +116,37 @@ const allAppGroups: Array<{
         href: "/v2/apps/home/",
         label: "ร้านค้า Meemon",
         description: "สินค้าและสิ่งมงคล",
-        icon: "shop",
+        image: "/v2/assets/app-icons/shop.png",
       },
       {
         href: "/v2/apps/app/test1.html",
         label: "จุดธูปขอเลข",
         description: "เปิดแอปจุดธูปเดิม",
-        icon: "incense",
+        image: "/v2/assets/app-icons/incense.png",
       },
       {
         href: "/v2/apps/openday/",
         label: "ฤกษ์เปิดกระเป๋า",
         description: "ตรวจวันเริ่มใช้กระเป๋า",
-        icon: "wallet-opening",
+        image: "/v2/assets/app-icons/wallet-opening.png",
       },
       {
         href: "/v2/apps/How%20to/",
         label: "คู่มือและคาถา",
         description: "วิธีเปิดกระเป๋าและคาถาเรียกเงิน",
-        icon: "wallet-guide",
+        image: "/v2/assets/app-icons/wallet-guide.png",
       },
       {
         href: "/v2/apps/pony/",
         label: "คาถาอัศวินพาหนะ",
         description: "ม้ามงคลและบทสวด",
-        icon: "horse",
+        image: "/v2/assets/app-icons/horse.png",
       },
       {
         href: "/v2/apps/card/Wallpaper/",
         label: "วอลเปเปอร์มงคล",
         description: "คลังภาพตามวันเกิด",
-        icon: "wallpaper",
+        image: "/v2/assets/app-icons/wallpaper.png",
       },
     ],
   },
@@ -164,34 +158,17 @@ const allAppGroups: Array<{
         href: "/v2/apps/Contact/",
         label: "ติดต่อ Meemon",
         description: "LINE, Facebook, TikTok และโทรศัพท์",
-        icon: "contact",
+        image: "/v2/assets/app-icons/contact.png",
       },
       {
         href: "/legacy",
         label: "คลังแอปเวอร์ชันเดิม",
         description: "ดูสารบัญ URL เก่าทั้งหมด",
-        icon: "book",
+        image: "/v2/assets/app-icons/archive.png",
       },
     ],
   },
 ];
-
-function SectionLink({
-  href,
-  children,
-  legacy = false,
-}: {
-  href: string;
-  children: React.ReactNode;
-  legacy?: boolean;
-}) {
-  const content = <>{children}<Icon name="arrow-right" /></>;
-  return legacy ? (
-    <a href={href} className="section-link">{content}</a>
-  ) : (
-    <Link href={href} className="section-link">{content}</Link>
-  );
-}
 
 export function HomeExperience() {
   return (
@@ -241,17 +218,6 @@ export function HomeExperience() {
             บ้านของ Meemon ที่รวมสิ่งมงคล งานออกแบบ คำทำนาย
             และพิธีประจำวันไว้ในประสบการณ์เดียวที่สงบและค้นพบได้ง่าย
           </p>
-          <div className="hero-actions">
-            <a href="/v2/apps/home/" className="button button-gold">
-              <Icon name="shop" />
-              สำรวจร้านค้า
-              <Icon name="arrow-right" />
-            </a>
-            <a href="/v2/apps/NFCV.2/home/token.html" className="button button-ghost">
-              <Icon name="fortune" />
-              เปิดคำทำนายวันนี้
-            </a>
-          </div>
           <div className="hero-stats" aria-label="สิ่งที่มีใน Meemon">
             <div><strong>45</strong><span>สินค้าจริง</span></div>
             <div><strong>13</strong><span>เครื่องมือและพิธี</span></div>
@@ -269,32 +235,12 @@ export function HomeExperience() {
         </div>
       </section>
 
-      <section className="home-section ritual-strip" id="daily-tools">
-        <div className="section-heading">
-          <div>
-            <div className="eyebrow">DAILY MOMENTS</div>
-            <h2>วันนี้ ให้ Meemon ช่วยเรื่องอะไร</h2>
-          </div>
-          <SectionLink href="/v2/apps/NFCV.2/home/token.html" legacy>ดูเครื่องมือทั้งหมด</SectionLink>
-        </div>
-        <div className="quick-grid">
-          {legacyQuickModules.map((item) => (
-            <a href={item.href} key={item.href} className="quick-card">
-              <span className="quick-icon"><Icon name={item.icon} /></span>
-              <div><small>{item.eyebrow}</small><strong>{item.title}</strong></div>
-              <span className="card-arrow"><Icon name="arrow-up-right" /></span>
-            </a>
-          ))}
-        </div>
-      </section>
-
       <section className="home-section">
         <div className="section-heading">
           <div>
             <div className="eyebrow">MEEMON SELECTION</div>
             <h2>สิ่งมงคลที่คัดสรรมาเพื่อคุณ</h2>
           </div>
-          <SectionLink href="/v2/apps/home/" legacy>เปิดร้านค้าฉบับที่คัดลอกมา</SectionLink>
         </div>
         <div className="product-grid featured-products">
           {products.slice(0, 4).map((product) => (
@@ -303,27 +249,11 @@ export function HomeExperience() {
         </div>
       </section>
 
-      <section className="home-section">
-        <div className="section-heading">
-          <div>
-            <div className="eyebrow">EXPLORE YOUR PATH</div>
-            <h2>ศาสตร์ความเชื่อ ในภาษาของวันนี้</h2>
-          </div>
-          <SectionLink href="/v2/apps/NFCV.2/home/token.html" legacy>เปิดศูนย์รวมดูดวงฉบับที่คัดลอกมา</SectionLink>
-        </div>
-        <ModuleGrid modules={legacyHomeModules} />
-      </section>
-
       <section className="home-section home-banner">
         <div>
           <div className="eyebrow">WALLPAPER COLLECTION</div>
           <h2>พกพลังดี ๆ ไปกับคุณทุกวัน</h2>
           <p>รวมวอลเปเปอร์มงคลตามวันเกิดและความปรารถนาในคลังเดียว</p>
-          <a href="/v2/apps/card/Wallpaper/" className="button button-gold">
-            <Icon name="wallpaper" />
-            เลือกวอลเปเปอร์
-            <Icon name="arrow-right" />
-          </a>
         </div>
         <div className="banner-symbol" aria-hidden="true">
           <Icon name="wallpaper" />

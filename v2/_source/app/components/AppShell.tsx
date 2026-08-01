@@ -3,24 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
-import { BrandMark, Icon, type IconName } from "./Icons";
-
-type NavItem = {
-  href: string;
-  label: string;
-  icon: IconName;
-  legacy?: boolean;
-};
-
-const navItems: NavItem[] = [
-  { href: "/v2/", label: "หน้าแรก", icon: "home" },
-  { href: "/v2/apps/home/", label: "ร้านค้า", icon: "shop", legacy: true },
-  { href: "/v2/apps/NFCV.2/home/token.html", label: "ดูดวง", icon: "fortune", legacy: true },
-  { href: "/v2/apps/card/Wallpaper/", label: "วอลเปเปอร์", icon: "wallpaper", legacy: true },
-  { href: "/v2/apps/How%20to/", label: "คู่มือ", icon: "book", legacy: true },
-];
-
-const mobileNavItems = navItems;
+import { BrandMark, Icon } from "./Icons";
 
 const legacyRedirects: Array<{
   prefix: string;
@@ -86,33 +69,6 @@ function LegacyForward({
   );
 }
 
-function NavLink({
-  item,
-  active = false,
-}: {
-  item: NavItem;
-  active?: boolean;
-}) {
-  const content = (
-    <>
-      <span className="nav-item-icon">
-        <Icon name={item.icon} />
-      </span>
-      {item.label}
-    </>
-  );
-
-  return item.legacy ? (
-    <a href={item.href} className={active ? "active" : ""}>
-      {content}
-    </a>
-  ) : (
-    <Link href={item.href} className={active ? "active" : ""}>
-      {content}
-    </Link>
-  );
-}
-
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const legacyTarget = legacyTargetFor(pathname);
@@ -139,17 +95,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </span>
         </Link>
 
-        <nav className="desktop-nav" aria-label="เมนูหลัก">
-          {navItems.map((item) => (
-            <NavLink item={item} active={!item.legacy && isHome(pathname)} key={item.href} />
-          ))}
-        </nav>
-
-        <a href="/v2/apps/home/" className="cart-button" aria-label="เปิดสำเนาร้านค้าใน V2">
-          <Icon name="shop" />
-          <span>เปิดร้านค้า</span>
-          <Icon name="arrow-up-right" />
-        </a>
       </header>
 
       <main>{children}</main>
@@ -159,22 +104,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <div className="footer-brand">MEEMON</div>
           <p>หน้า Home ใหม่และสำเนาแอป Meemon ที่จัดเก็บอยู่ภายใน V2</p>
         </div>
-        <div className="footer-links">
-          <Link href="/legacy"><Icon name="book" />คลังแอปเวอร์ชันเดิม</Link>
-          <a href="https://shopee.co.th/king_6914" target="_blank" rel="noreferrer">
-            <Icon name="store" />Shopee Store
-          </a>
-        </div>
         <p className="belief-note">
           เนื้อหาคำทำนายและพิธีทั้งหมดเป็นความเชื่อส่วนบุคคล
         </p>
       </footer>
-
-      <nav className="mobile-nav" aria-label="เมนูมือถือ">
-        {mobileNavItems.map((item) => (
-          <NavLink item={item} active={!item.legacy && isHome(pathname)} key={item.href} />
-        ))}
-      </nav>
     </div>
   );
 }

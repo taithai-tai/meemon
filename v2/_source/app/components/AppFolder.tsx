@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Icon, type IconName } from "./Icons";
 
 export type AllAppGroup = {
   eyebrow: string;
@@ -10,7 +9,7 @@ export type AllAppGroup = {
     href: string;
     label: string;
     description: string;
-    icon: IconName;
+    image: string;
   }>;
 };
 
@@ -59,13 +58,18 @@ export function AppFolder({ groups }: { groups: AllAppGroup[] }) {
                 {group.apps.map((app) => (
                   <a href={app.href} className="all-app-link" key={app.href}>
                     <span className="all-app-icon">
-                      <Icon name={app.icon} />
+                      <img
+                        src={app.image}
+                        alt=""
+                        width="640"
+                        height="640"
+                        loading="lazy"
+                      />
                     </span>
                     <span>
                       <strong>{app.label}</strong>
                       <small>{app.description}</small>
                     </span>
-                    <Icon name="arrow-up-right" />
                   </a>
                 ))}
               </div>
