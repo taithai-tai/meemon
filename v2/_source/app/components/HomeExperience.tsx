@@ -5,7 +5,7 @@ import { AppFolder } from "./AppFolder";
 
 const launcherApps = [
   {
-    href: "/v2/apps/home/",
+    href: "/v2/shop",
     label: "ร้านค้า",
     eyebrow: "SHOP",
     image: "/v2/assets/app-icons/shop.png",
@@ -113,7 +113,7 @@ const allAppGroups: Array<{
     title: "พิธี คู่มือ และไลฟ์สไตล์",
     apps: [
       {
-        href: "/v2/apps/home/",
+        href: "/v2/shop",
         label: "ร้านค้า Meemon",
         description: "สินค้าและสิ่งมงคล",
         image: "/v2/assets/app-icons/shop.png",
@@ -230,7 +230,7 @@ export function HomeExperience() {
         </div>
         <div className="product-grid featured-products">
           {products.slice(0, 4).map((product) => (
-            <ProductCard product={product} legacyHref="/v2/apps/home/" key={product.id} />
+            <ProductCard product={product} key={product.id} />
           ))}
         </div>
       </section>

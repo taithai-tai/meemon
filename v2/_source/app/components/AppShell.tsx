@@ -35,9 +35,6 @@ const legacyRedirects: Array<{
   { prefix: "/v2/rituals", href: "/v2/apps/How%20to/", label: "สำเนาคู่มือและพิธี" },
   { prefix: "/v2/wallpapers", href: "/v2/apps/card/Wallpaper/", label: "สำเนาแอปวอลเปเปอร์" },
   { prefix: "/v2/contact", href: "/v2/apps/Contact/", label: "สำเนาหน้าติดต่อ" },
-  { prefix: "/v2/checkout", href: "/v2/apps/home/", label: "สำเนาร้านค้า" },
-  { prefix: "/v2/cart", href: "/v2/apps/home/", label: "สำเนาร้านค้า" },
-  { prefix: "/v2/shop", href: "/v2/apps/home/", label: "สำเนาร้านค้า" },
 ];
 
 function isHome(pathname: string) {

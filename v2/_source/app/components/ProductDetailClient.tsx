@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { formatPrice } from "@/lib/data";
 import type { Product } from "@/lib/types";
@@ -7,6 +9,7 @@ import { useCart } from "./CartProvider";
 import { Icon } from "./Icons";
 
 export function ProductDetailClient({ product }: { product: Product }) {
+  const router = useRouter();
   const [imageIndex, setImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [selections, setSelections] = useState<Record<string, string>>(() =>
@@ -26,6 +29,11 @@ export function ProductDetailClient({ product }: { product: Product }) {
     addProduct(product, selections, quantity);
     setAdded(true);
     window.setTimeout(() => setAdded(false), 2200);
+  }
+
+  function buyNow() {
+    addProduct(product, selections, quantity);
+    router.push("/v2/checkout");
   }
 
   return (
@@ -113,10 +121,20 @@ export function ProductDetailClient({ product }: { product: Product }) {
             <Icon name={added ? "check" : "cart"} />
             {added ? "เพิ่มลงตะกร้าแล้ว" : "เพิ่มลงตะกร้า"}
           </button>
+          <button type="button" className="button button-ghost grow" onClick={buyNow}>
+            ซื้อเลย (ทดลอง)
+            <Icon name="arrow-right" />
+          </button>
         </div>
 
+        <Link className="product-cart-link" href="/v2/cart">
+          <Icon name="cart" />
+          ดูตะกร้าของฉัน
+          <Icon name="arrow-right" />
+        </Link>
+
         <div className="prototype-note">
-          รุ่นทดลองนี้ให้ทดลองตะกร้าและ checkout ได้ครบ แต่ยังไม่รับคำสั่งซื้อหรือชำระเงินจริง
+          รุ่นทดลองนี้ให้ลองเลือกสินค้า กรอกที่อยู่ และเปิด QR จำลองได้ครบ แต่จะไม่สร้างคำสั่งซื้อ ไม่ส่งข้อมูล และไม่รับเงินจริง
         </div>
 
         <div className="product-description">

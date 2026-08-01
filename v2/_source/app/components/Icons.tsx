@@ -26,6 +26,7 @@ export type IconName =
   | "money"
   | "download"
   | "search"
+  | "scan"
   | "check"
   | "trash"
   | "plus"
@@ -192,6 +193,15 @@ const paths: Record<IconName, ReactNode> = {
     <>
       <circle cx="10.7" cy="10.7" r="6.7" />
       <path d="m15.8 15.8 4.2 4.2" />
+    </>
+  ),
+  scan: (
+    <>
+      <path d="M8 4H5a1 1 0 0 0-1 1v3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3" />
+      <rect x="8" y="8" width="3" height="3" rx=".4" />
+      <rect x="13" y="8" width="3" height="3" rx=".4" />
+      <rect x="8" y="13" width="3" height="3" rx=".4" />
+      <path d="M13 13h1v1h2v2h-3v-3Z" />
     </>
   ),
   check: <path d="m5 12.5 4.2 4.2L19.5 6.5" />,

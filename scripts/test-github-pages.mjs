@@ -81,8 +81,8 @@ if (!rootIndex.includes('window.location.replace("/v2/"')) {
 }
 
 const homeIndex = readFileSync(resolve(repositoryRoot, "v2/index.html"), "utf8");
-const requiredCopiedHomeLinks = [
-  "/v2/apps/home/",
+const requiredHomeLinks = [
+  "/v2/shop",
   "/v2/apps/NFCV.2/home/token.html",
   "/v2/apps/NFCV.2/taro/1/token.html",
   "/v2/apps/NFCV.2/taro/3/token.html",
@@ -101,7 +101,7 @@ const requiredCopiedHomeLinks = [
   "/legacy",
 ];
 
-for (const href of requiredCopiedHomeLinks) {
+for (const href of requiredHomeLinks) {
   if (!homeIndex.includes(`href="${href}"`)) {
     throw new Error(`V2 Home is missing copied app link: ${href}`);
   }
@@ -131,10 +131,6 @@ for (const icon of requiredLauncherIcons) {
 }
 
 const copiedAppForwardContracts = [
-  ["v2/shop/index.html", "/v2/apps/home/"],
-  ["v2/shop/77-50712224947/index.html", "/v2/apps/home/"],
-  ["v2/cart/index.html", "/v2/apps/home/"],
-  ["v2/checkout/index.html", "/v2/apps/home/"],
   ["v2/fortune/index.html", "/v2/apps/NFCV.2/home/token.html"],
   ["v2/fortune/oracle/index.html", "/v2/apps/NFCV.2/home/token.html"],
   ["v2/fortune/tarot/index.html", "/v2/apps/NFCV.2/home/token.html"],
@@ -160,6 +156,23 @@ for (const [page, href] of copiedAppForwardContracts) {
     !html.includes("สำเนาแอปเดิมที่เก็บอยู่ภายในโฟลเดอร์ V2")
   ) {
     throw new Error(`V2 route does not forward to its copied app: ${page}`);
+  }
+}
+
+const nativeCommerceContracts = [
+  ["v2/shop/index.html", "คอลเลกชันที่คัดสรรจากความเชื่อ"],
+  ["v2/shop/77-50712224947/index.html", "ซื้อเลย (ทดลอง)"],
+  ["v2/cart/index.html", "ตะกร้าของคุณ"],
+  ["v2/checkout/index.html", "ข้อมูลจัดส่งและชำระเงินจำลอง"],
+];
+
+for (const [page, expectedText] of nativeCommerceContracts) {
+  const html = readFileSync(resolve(repositoryRoot, page), "utf8");
+  if (
+    !html.includes(expectedText) ||
+    html.includes("สำเนาแอปเดิมที่เก็บอยู่ภายในโฟลเดอร์ V2")
+  ) {
+    throw new Error(`V2 commerce route is not native: ${page}`);
   }
 }
 
@@ -236,6 +249,19 @@ const cartSource = readFileSync(
 );
 if (!cartSource.includes('"meemon:v2:cart"')) {
   throw new Error("The V2 cart does not use its isolated storage namespace.");
+}
+
+const checkoutSource = readFileSync(
+  resolve(repositoryRoot, "v2/_source/app/components/CheckoutClient.tsx"),
+  "utf8",
+);
+if (
+  !checkoutSource.includes('QR Code (จำลอง)') ||
+  !checkoutSource.includes('QR จำลอง · สแกนไม่ได้') ||
+  !checkoutSource.includes('DEMO') ||
+  /fetch\s*\(|createOrder|createPaymentSession/.test(checkoutSource)
+) {
+  throw new Error("The V2 checkout prototype can create a real transaction.");
 }
 
 process.stdout.write(

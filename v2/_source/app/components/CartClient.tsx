@@ -21,7 +21,7 @@ export function CartClient() {
         </article>)}
         <button className="text-button" onClick={clearCart}>ล้างตะกร้า</button>
       </div>
-      <aside className="cart-summary"><small>ORDER SUMMARY</small><h2>สรุปตะกร้า</h2><div><span>ยอดรวมสินค้า</span><strong>{formatPrice(subtotal)}</strong></div><div><span>ค่าจัดส่ง</span><span>คำนวณในขั้นถัดไป</span></div><div className="summary-total"><span>ยอดประมาณการ</span><strong>{formatPrice(subtotal)}</strong></div><div className="notice"><Icon name="info" />Checkout นี้เป็นต้นแบบเท่านั้น ระบบจะไม่สร้างออเดอร์ ไม่ส่งข้อมูลส่วนตัว และไม่รับเงินจริง</div><Link href="/v2/checkout" className="button button-gold">ไปยัง Checkout ทดลอง<Icon name="arrow-right" /></Link><Link href="/v2/shop" className="continue-link">เลือกสินค้าต่อ</Link></aside>
+      <aside className="cart-summary"><small>ORDER SUMMARY</small><h2>สรุปตะกร้า</h2><div><span>ยอดรวมสินค้า</span><strong>{formatPrice(subtotal)}</strong></div><div><span>ค่าจัดส่ง</span><span>คำนวณในขั้นถัดไป</span></div><div className="summary-total"><span>ยอดประมาณการ</span><strong>{formatPrice(subtotal)}</strong></div><div className="notice"><Icon name="info" />Checkout นี้เป็นต้นแบบเท่านั้น ระบบจะไม่สร้างออเดอร์ ไม่ส่งข้อมูลส่วนตัว และไม่รับเงินจริง</div><Link href="/v2/checkout" className="button button-gold">กรอกที่อยู่และชำระเงินจำลอง<Icon name="arrow-right" /></Link><Link href="/v2/shop" className="continue-link">เลือกสินค้าต่อ</Link></aside>
     </div>
   );
 }
