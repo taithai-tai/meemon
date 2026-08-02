@@ -36,6 +36,12 @@ test("admin order evidence, search, and credential management stay protected", (
   assert.match(adminFunction, /order\.slip\.view/);
 });
 
+test("admin orders normalize one-to-one payment embeds before rendering", () => {
+  assert.match(adminUi, /function rows\(value: unknown\): Row\[\]/);
+  assert.match(adminUi, /const payments = rows\(order\.payments\)/);
+  assert.doesNotMatch(adminUi, /const payments = \(order\.payments \?\? \[\]\) as Row\[\]/);
+});
+
 test("home typography is enlarged on desktop and remains responsive on mobile", () => {
   assert.match(globalCss, /\.home-hero h1 \{ font-size: clamp\(62px, 7\.5vw, 102px\); \}/);
   assert.match(globalCss, /\.home-hero-copy > p \{ max-width: 680px; font-size: 19px; \}/);

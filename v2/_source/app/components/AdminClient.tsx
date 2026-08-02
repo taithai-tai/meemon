@@ -11,6 +11,13 @@ const ORDER_COMPANY = "MEEMON · นาคีมีมนตร์";
 type Tab = "dashboard" | "orders" | "products" | "accounts" | "admins" | "audit";
 type Row = Record<string, unknown>;
 
+function rows(value: unknown): Row[] {
+  if (Array.isArray(value)) {
+    return value.filter((item): item is Row => Boolean(item) && typeof item === "object");
+  }
+  return value && typeof value === "object" ? [value as Row] : [];
+}
+
 const adminStatusLabel: Record<string, string> = {
   pending_payment: "ยังไม่ชำระเงิน", verifying: "กำลังตรวจสลิป", verification_failed: "ตรวจสลิปไม่ผ่าน",
   needs_review: "รอร้านตรวจสอบ", paid: "จ่ายเงินแล้ว", packing: "กำลังแพ็ค", shipped: "จัดส่งแล้ว",
@@ -105,11 +112,11 @@ function AdminPanel({ tab, data, token, reload }: { tab: Tab; data: Row; token: 
     const counts = (data.counts ?? {}) as Row;
     return <><div className="admin-metrics"><article><span>ออเดอร์ทั้งหมด</span><strong>{String(counts.orders ?? 0)}</strong></article><article><span>สินค้า</span><strong>{String(counts.products ?? 0)}</strong></article><article><span>รอตรวจสอบ</span><strong>{String(counts.needsReview ?? 0)}</strong></article></div><div className="notice"><Icon name="shield" />ข้อมูลสลิปเป็นไฟล์ส่วนตัว เปิดดูได้เฉพาะผู้ดูแลที่เข้าสู่ระบบ</div></>;
   }
-  if (tab === "products") return <div className="admin-stack"><CreateProduct token={token} reload={reload} />{((data.products ?? []) as Row[]).map((product) => <ProductEditor key={String(product.id)} token={token} product={product} reload={reload} />)}</div>;
-  if (tab === "orders") return <OrdersAdmin orders={(data.orders ?? []) as Row[]} token={token} reload={reload} />;
-  if (tab === "accounts") return <AccountsAdmin accounts={(data.accounts ?? []) as Row[]} token={token} reload={reload} />;
-  if (tab === "admins") return <AdminUsers admins={(data.admins ?? []) as Row[]} profile={(data.profile ?? {}) as Row} token={token} reload={reload} />;
-  return <div className="audit-list">{((data.logs ?? []) as Row[]).map((log) => <article key={String(log.id)}><strong>{String(log.action)}</strong><span>{String(log.entity_type)} · {String(log.entity_id ?? "-")}</span><time>{new Date(String(log.created_at)).toLocaleString("th-TH")}</time></article>)}</div>;
+  if (tab === "products") return <div className="admin-stack"><CreateProduct token={token} reload={reload} />{rows(data.products).map((product) => <ProductEditor key={String(product.id)} token={token} product={product} reload={reload} />)}</div>;
+  if (tab === "orders") return <OrdersAdmin orders={rows(data.orders)} token={token} reload={reload} />;
+  if (tab === "accounts") return <AccountsAdmin accounts={rows(data.accounts)} token={token} reload={reload} />;
+  if (tab === "admins") return <AdminUsers admins={rows(data.admins)} profile={(data.profile ?? {}) as Row} token={token} reload={reload} />;
+  return <div className="audit-list">{rows(data.logs).map((log) => <article key={String(log.id)}><strong>{String(log.action)}</strong><span>{String(log.entity_type)} · {String(log.entity_id ?? "-")}</span><time>{new Date(String(log.created_at)).toLocaleString("th-TH")}</time></article>)}</div>;
 }
 
 function OrdersAdmin({ orders, token, reload }: { orders: Row[]; token: string; reload: () => void }) {
@@ -117,8 +124,8 @@ function OrdersAdmin({ orders, token, reload }: { orders: Row[]; token: string; 
   const [query, setQuery] = useState("");
   const normalizedQuery = query.trim().toLocaleLowerCase("th-TH");
   const visibleOrders = normalizedQuery ? orders.filter((order) => {
-    const items = (order.order_items ?? []) as Row[];
-    const payments = (order.payments ?? []) as Row[];
+    const items = rows(order.order_items);
+    const payments = rows(order.payments);
     const haystack = [
       order.order_number, order.full_name, order.phone, order.address, order.province,
       order.postal_code, order.status, adminStatusLabel[String(order.status)], order.note,
@@ -173,9 +180,9 @@ function CreateProduct({ token, reload }: { token: string; reload: () => void })
 
 function OrderAdmin({ order, token, reload }: { order: Row; token: string; reload: () => void }) {
   const [status, setStatus] = useState("");
-  const items = (order.order_items ?? []) as Row[];
-  const attempts = [...((order.slip_attempts ?? []) as Row[])].sort((a, b) => Number(b.attempt_number) - Number(a.attempt_number));
-  const payments = (order.payments ?? []) as Row[];
+  const items = rows(order.order_items);
+  const attempts = rows(order.slip_attempts).sort((a, b) => Number(b.attempt_number) - Number(a.attempt_number));
+  const payments = rows(order.payments);
   const [actionBusy, setActionBusy] = useState(false);
   const [slipMessage, setSlipMessage] = useState("");
   const [viewer, setViewer] = useState<{ url: string; attempt: number } | null>(null);
