@@ -339,6 +339,13 @@ if (
 }
 if (
   !adminFunction.includes('request.method === "DELETE" && action === "order"') ||
+  !adminFunction.includes('action === "order-slip"') ||
+  !adminFunction.includes('action === "slip-url"') ||
+  !adminFunction.includes('action === "admin-account"') ||
+  !adminFunction.includes('.createSignedUrl(') ||
+  !adminFunction.includes('auth.admin.createUser') ||
+  !adminFunction.includes('order.slip.upload') ||
+  !adminFunction.includes('order.slip.view') ||
   !adminFunction.includes('order.fulfillment_status') ||
   !adminFunction.includes('.is("deleted_at", null)') ||
   !sharedHttpFunction.includes('GET, POST, PATCH, DELETE, OPTIONS')

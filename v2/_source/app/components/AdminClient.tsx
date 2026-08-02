@@ -8,7 +8,7 @@ import { Icon } from "./Icons";
 const SESSION_KEY = "meemon:v2:admin-access-token";
 const ORDER_SENDER = "นาคีมีมนตรมีมนตร์ 92 ม7  บ้านบังบาตร ตำบลชัยพร อำเภอเมือเมือง จังหวจังหวัดบึงกาฬ บึงกาฬ 38000";
 const ORDER_COMPANY = "MEEMON · นาคีมีมนตร์";
-type Tab = "dashboard" | "orders" | "products" | "accounts" | "audit";
+type Tab = "dashboard" | "orders" | "products" | "accounts" | "admins" | "audit";
 type Row = Record<string, unknown>;
 
 const adminStatusLabel: Record<string, string> = {
@@ -17,10 +17,15 @@ const adminStatusLabel: Record<string, string> = {
   completed: "สำเร็จ", expired: "หมดเวลา", cancelled: "ยกเลิก", refunded: "คืนเงินแล้ว",
 };
 
+const slipStatusLabel: Record<string, string> = {
+  verifying: "กำลังตรวจสอบ", verified: "ยืนยันแล้ว", rejected: "ไม่ผ่าน",
+  delayed: "ธนาคารกำลังประมวลผล", needs_review: "รอตรวจด้วยตา", provider_error: "ระบบตรวจขัดข้อง",
+};
+
 const tabs: Array<{ id: Tab; label: string }> = [
   { id: "dashboard", label: "ภาพรวม" }, { id: "orders", label: "ออเดอร์" },
   { id: "products", label: "สินค้า" }, { id: "accounts", label: "บัญชีรับเงิน" },
-  { id: "audit", label: "ประวัติ" },
+  { id: "admins", label: "ผู้ดูแล" }, { id: "audit", label: "ประวัติ" },
 ];
 
 function ProductEditor({ token, product, reload }: { token: string; product: Row; reload: () => void }) {
@@ -92,18 +97,72 @@ export function AdminClient() {
   if (!commerceConfigured) return <div className="admin-login"><span className="empty-icon"><Icon name="shield" /></span><h2>หลังบ้านยังไม่เชื่อมต่อ</h2><p>ใส่ Public Supabase URL, anon key และ Turnstile site key ตอน build ก่อนเปิดใช้งาน โดย secret ทั้งหมดต้องอยู่ใน Supabase เท่านั้น</p></div>;
   if (!token) return <form className="admin-login" onSubmit={login}><span className="empty-icon"><Icon name="shield" /></span><small>MEEMON SECURE ADMIN</small><h2>เข้าสู่ระบบผู้ดูแล</h2><label>Username<input name="username" autoComplete="username" required /></label><label>Password<input name="password" type="password" autoComplete="current-password" required /></label>{error ? <div className="form-error">{error}</div> : null}<button className="button button-gold" disabled={busy}>{busy ? "กำลังตรวจสอบ…" : "เข้าสู่หลังบ้าน"}</button></form>;
 
-  return <div className="admin-shell"><aside className="admin-nav"><div><small>MEEMON ADMIN</small><strong>ศูนย์จัดการร้าน</strong></div>{tabs.map((item) => <button className={tab === item.id ? "active" : ""} onClick={() => setTab(item.id)} key={item.id}>{item.label}</button>)}<button onClick={logout}>ออกจากระบบ</button></aside><main className="admin-main"><header><div><small>LIVE COMMERCE</small><h2>{tabs.find((item) => item.id === tab)?.label}</h2></div><button className="button button-ghost" onClick={load} disabled={busy}>รีเฟรช</button></header>{error ? <div className="form-error">{error}</div> : null}{busy && !Object.keys(data).length ? <div className="empty-state">กำลังโหลด…</div> : <AdminPanel tab={tab} data={data} token={token} reload={load} />}</main></div>;
+  return <div className="admin-shell"><aside className="admin-nav"><div><small>MEEMON ADMIN</small><strong>ศูนย์จัดการร้าน</strong></div>{tabs.map((item) => <button className={tab === item.id ? "active" : ""} onClick={() => { setData({}); setTab(item.id); }} key={item.id}>{item.label}</button>)}<button onClick={logout}>ออกจากระบบ</button></aside><main className="admin-main"><header><div><small>LIVE COMMERCE</small><h2>{tabs.find((item) => item.id === tab)?.label}</h2></div><button className="button button-ghost" onClick={load} disabled={busy}>รีเฟรช</button></header>{error ? <div className="form-error">{error}</div> : null}{busy && !Object.keys(data).length ? <div className="empty-state">กำลังโหลด…</div> : <AdminPanel tab={tab} data={data} token={token} reload={load} />}</main></div>;
 }
 
 function AdminPanel({ tab, data, token, reload }: { tab: Tab; data: Row; token: string; reload: () => void }) {
   if (tab === "dashboard") {
     const counts = (data.counts ?? {}) as Row;
-    return <><div className="admin-metrics"><article><span>ออเดอร์ทั้งหมด</span><strong>{String(counts.orders ?? 0)}</strong></article><article><span>สินค้า</span><strong>{String(counts.products ?? 0)}</strong></article><article><span>รอตรวจสอบ</span><strong>{String(counts.needsReview ?? 0)}</strong></article></div><div className="notice"><Icon name="shield" />หลังบ้านนี้ใช้บัญชีผู้ดูแลหลักเพียงบัญชีเดียว</div></>;
+    return <><div className="admin-metrics"><article><span>ออเดอร์ทั้งหมด</span><strong>{String(counts.orders ?? 0)}</strong></article><article><span>สินค้า</span><strong>{String(counts.products ?? 0)}</strong></article><article><span>รอตรวจสอบ</span><strong>{String(counts.needsReview ?? 0)}</strong></article></div><div className="notice"><Icon name="shield" />ข้อมูลสลิปเป็นไฟล์ส่วนตัว เปิดดูได้เฉพาะผู้ดูแลที่เข้าสู่ระบบ</div></>;
   }
   if (tab === "products") return <div className="admin-stack"><CreateProduct token={token} reload={reload} />{((data.products ?? []) as Row[]).map((product) => <ProductEditor key={String(product.id)} token={token} product={product} reload={reload} />)}</div>;
-  if (tab === "orders") return <div className="admin-stack">{((data.orders ?? []) as Row[]).map((order) => <OrderAdmin key={String(order.id)} order={order} token={token} reload={reload} />)}</div>;
+  if (tab === "orders") return <OrdersAdmin orders={(data.orders ?? []) as Row[]} token={token} reload={reload} />;
   if (tab === "accounts") return <AccountsAdmin accounts={(data.accounts ?? []) as Row[]} token={token} reload={reload} />;
+  if (tab === "admins") return <AdminUsers admins={(data.admins ?? []) as Row[]} profile={(data.profile ?? {}) as Row} token={token} reload={reload} />;
   return <div className="audit-list">{((data.logs ?? []) as Row[]).map((log) => <article key={String(log.id)}><strong>{String(log.action)}</strong><span>{String(log.entity_type)} · {String(log.entity_id ?? "-")}</span><time>{new Date(String(log.created_at)).toLocaleString("th-TH")}</time></article>)}</div>;
+}
+
+function OrdersAdmin({ orders, token, reload }: { orders: Row[]; token: string; reload: () => void }) {
+  const [draftQuery, setDraftQuery] = useState("");
+  const [query, setQuery] = useState("");
+  const normalizedQuery = query.trim().toLocaleLowerCase("th-TH");
+  const visibleOrders = normalizedQuery ? orders.filter((order) => {
+    const items = (order.order_items ?? []) as Row[];
+    const payments = (order.payments ?? []) as Row[];
+    const haystack = [
+      order.order_number, order.full_name, order.phone, order.address, order.province,
+      order.postal_code, order.status, adminStatusLabel[String(order.status)], order.note,
+      ...items.flatMap((item) => [item.product_name, item.sku_label]),
+      ...payments.flatMap((payment) => [payment.trans_ref, payment.receiver_name, payment.receiving_bank]),
+    ].map((value) => String(value ?? "").toLocaleLowerCase("th-TH")).join(" ");
+    return haystack.includes(normalizedQuery);
+  }) : orders;
+  return <div className="admin-stack">
+    <form className="admin-order-search" onSubmit={(event) => { event.preventDefault(); setQuery(draftQuery); }}>
+      <span><Icon name="search" /></span>
+      <label><strong>ค้นหาออเดอร์</strong><input value={draftQuery} onChange={(event) => setDraftQuery(event.target.value)} placeholder="ชื่อ เบอร์โทร เลขออเดอร์ สินค้า หรือเลขอ้างอิงสลิป" /></label>
+      <button className="button button-gold">ค้นหา</button>
+      {query ? <button className="button button-ghost" type="button" onClick={() => { setDraftQuery(""); setQuery(""); }}>ล้าง</button> : null}
+      <small>พบ {visibleOrders.length} จาก {orders.length} ออเดอร์</small>
+    </form>
+    {visibleOrders.length ? visibleOrders.map((order) => <OrderAdmin key={String(order.id)} order={order} token={token} reload={reload} />) : <div className="empty-state compact-empty"><Icon name="search" /><h2>ไม่พบออเดอร์</h2><p>ลองค้นด้วยชื่อ เบอร์โทร หรือเลขออเดอร์อีกครั้ง</p></div>}
+  </div>;
+}
+
+function AdminUsers({ admins, profile, token, reload }: { admins: Row[]; profile: Row; token: string; reload: () => void }) {
+  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState("");
+  async function create(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const formElement = event.currentTarget;
+    const form = new FormData(formElement);
+    setBusy(true); setMessage("");
+    try {
+      await adminRequest(token, "admin-account", { method: "POST", body: JSON.stringify({ username: form.get("username"), password: form.get("password") }) });
+      formElement.reset(); setMessage("เพิ่มบัญชีผู้ดูแลแล้ว"); reload();
+    } catch (error) { setMessage(error instanceof Error ? error.message : "เพิ่มผู้ดูแลไม่สำเร็จ"); }
+    finally { setBusy(false); }
+  }
+  return <div className="admin-stack">
+    <form className="admin-credentials-card" onSubmit={create}>
+      <div><small>ADMIN ACCESS</small><h3>เพิ่ม Username และ Password</h3><p>บัญชีใหม่จะเข้าสู่หน้าแอดมินและจัดการร้านได้ทันที</p></div>
+      <label>Username<input name="username" required minLength={3} maxLength={40} pattern="[a-zA-Z0-9._-]{3,40}" autoComplete="off" placeholder="เช่น manager" /></label>
+      <label>Password<input name="password" type="password" required minLength={6} maxLength={72} autoComplete="new-password" placeholder="อย่างน้อย 6 ตัวอักษร" /></label>
+      <button className="button button-gold" disabled={busy}>{busy ? "กำลังเพิ่ม…" : "เพิ่มผู้ดูแล"}</button>
+      {message ? <span className="admin-form-message">{message}</span> : null}
+    </form>
+    <section className="admin-user-list"><header><div><small>AUTHORIZED USERS</small><h3>บัญชีผู้ดูแลทั้งหมด</h3></div><span>คุณเข้าสู่ระบบในชื่อ {String(profile.username ?? "-")}</span></header>{admins.map((admin) => <article key={String(admin.user_id)}><span className="admin-avatar"><Icon name="shield" /></span><div><strong>{String(admin.username)}</strong><small>สร้างเมื่อ {new Date(String(admin.created_at)).toLocaleString("th-TH")}</small></div><em className={`status-pill ${admin.active ? "active" : "inactive"}`}>{admin.active ? "ใช้งานได้" : "ปิดใช้งาน"}</em></article>)}</section>
+  </div>;
 }
 
 function CreateProduct({ token, reload }: { token: string; reload: () => void }) {
@@ -113,9 +172,15 @@ function CreateProduct({ token, reload }: { token: string; reload: () => void })
 }
 
 function OrderAdmin({ order, token, reload }: { order: Row; token: string; reload: () => void }) {
-  const [status, setStatus] = useState(""); const items = (order.order_items ?? []) as Row[];
+  const [status, setStatus] = useState("");
+  const items = (order.order_items ?? []) as Row[];
+  const attempts = [...((order.slip_attempts ?? []) as Row[])].sort((a, b) => Number(b.attempt_number) - Number(a.attempt_number));
+  const payments = (order.payments ?? []) as Row[];
   const [actionBusy, setActionBusy] = useState(false);
+  const [slipMessage, setSlipMessage] = useState("");
+  const [viewer, setViewer] = useState<{ url: string; attempt: number } | null>(null);
   const printSheet = useRef<HTMLElement>(null);
+  const canUploadSlip = ["pending_payment", "verification_failed", "needs_review", "expired"].includes(String(order.status)) && attempts.length < 5;
   async function save() {
     if (!status) return;
     setActionBusy(true);
@@ -128,6 +193,26 @@ function OrderAdmin({ order, token, reload }: { order: Row; token: string; reloa
     setActionBusy(true);
     try { await adminRequest(token, "order", { method: "DELETE", body: JSON.stringify({ id: order.id }) }); reload(); }
     catch (error) { window.alert(error instanceof Error ? error.message : "ลบออเดอร์ไม่สำเร็จ"); }
+    finally { setActionBusy(false); }
+  }
+  async function uploadOrderSlip(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const formElement = event.currentTarget;
+    const body = new FormData(formElement);
+    body.set("orderId", String(order.id));
+    setActionBusy(true); setSlipMessage(""); setViewer(null);
+    try {
+      const result = await adminRequest<{ message: string }>(token, "order-slip", { method: "POST", body });
+      formElement.reset(); setSlipMessage(result.message); await reload();
+    } catch (error) { setSlipMessage(error instanceof Error ? error.message : "อัปโหลดสลิปไม่สำเร็จ"); }
+    finally { setActionBusy(false); }
+  }
+  async function viewSlip(attempt: Row) {
+    setActionBusy(true); setSlipMessage("");
+    try {
+      const result = await adminRequest<{ url: string }>(token, "slip-url", { method: "POST", body: JSON.stringify({ attemptId: attempt.id }) });
+      setViewer({ url: result.url, attempt: Number(attempt.attempt_number) });
+    } catch (error) { setSlipMessage(error instanceof Error ? error.message : "เปิดสลิปไม่สำเร็จ"); }
     finally { setActionBusy(false); }
   }
   async function printOrder() {
@@ -168,6 +253,30 @@ function OrderAdmin({ order, token, reload }: { order: Row; token: string; reloa
     <p>{String(order.full_name)} · {String(order.phone)}<br />{String(order.address)} {String(order.province)} {String(order.postal_code)}</p>
     <div className="order-item-mini">{items.map((item) => <span key={String(item.id)}>{String(item.product_name)} × {String(item.quantity)}</span>)}</div>
     <strong>{formatPrice(Number(order.total_satang) / 100)}</strong>
+    <section className="admin-slip-panel">
+      <header><div><small>PAYMENT EVIDENCE</small><h4>สลิปและผลตรวจสอบ</h4></div><span>{attempts.length ? `${attempts.length} สลิป` : "ยังไม่มีสลิป"}</span></header>
+      {attempts.length ? <div className="admin-slip-list">{attempts.map((attempt) => {
+        const payment = payments.find((item) => String(item.slip_attempt_id) === String(attempt.id));
+        return <article key={String(attempt.id)}>
+          <div><strong>สลิปครั้งที่ {String(attempt.attempt_number)}</strong><small>{new Date(String(attempt.created_at)).toLocaleString("th-TH")}</small></div>
+          <em className={`status-pill ${String(attempt.status)}`}>{slipStatusLabel[String(attempt.status)] ?? String(attempt.status)}</em>
+          <dl>
+            <div><dt>ผลระบบ</dt><dd>{attempt.provider_code ? `รหัส ${String(attempt.provider_code)}` : "ยังไม่มีผล"}</dd></div>
+            <div><dt>เลขอ้างอิง</dt><dd>{String(attempt.trans_ref ?? payment?.trans_ref ?? "-")}</dd></div>
+            {payment ? <><div><dt>ยอดที่ยืนยัน</dt><dd>{formatPrice(Number(payment.amount_satang) / 100)}</dd></div><div><dt>ผู้รับ / ธนาคาร</dt><dd>{String(payment.receiver_name ?? "-")} · {String(payment.receiving_bank ?? "-")}</dd></div></> : null}
+          </dl>
+          {attempt.provider_message ? <p>{String(attempt.provider_message)}</p> : null}
+          <button className="button button-ghost" type="button" disabled={actionBusy || !attempt.object_path} onClick={() => viewSlip(attempt)}>{attempt.object_path ? "ดูภาพสลิป" : "ไฟล์หมดอายุ"}</button>
+        </article>;
+      })}</div> : <p className="admin-slip-empty">ลูกค้ายังไม่ได้ส่งสลิป แอดมินสามารถอัปโหลดแทนได้ด้านล่าง</p>}
+      {viewer ? <div className="admin-slip-viewer"><header><strong>ภาพสลิปครั้งที่ {viewer.attempt}</strong><div><a href={viewer.url} target="_blank" rel="noreferrer">เปิดภาพเต็ม</a><button type="button" onClick={() => setViewer(null)}>ปิด</button></div></header><img src={viewer.url} alt={`สลิปออเดอร์ ${String(order.order_number)} ครั้งที่ ${viewer.attempt}`} /></div> : null}
+      <form className="admin-slip-upload" onSubmit={uploadOrderSlip}>
+        <label>อัปโหลดสลิปแทนลูกค้า<input name="file" type="file" accept="image/jpeg,image/png,image/webp" required disabled={!canUploadSlip || actionBusy} /></label>
+        <button className="button button-gold" disabled={!canUploadSlip || actionBusy}>{actionBusy ? "กำลังตรวจสอบ…" : "อัปโหลดและตรวจสลิป"}</button>
+        {!canUploadSlip ? <small>{attempts.length >= 5 ? "อัปโหลดครบ 5 ครั้งแล้ว" : "ออเดอร์นี้ยืนยันการชำระแล้ว"}</small> : <small>รองรับ JPG, PNG, WebP ไม่เกิน 4 MB · ตรวจยอดและผู้รับด้วย EasySlip</small>}
+      </form>
+      {slipMessage ? <div className="admin-slip-message">{slipMessage}</div> : null}
+    </section>
     <div className="admin-actions admin-order-actions">
       <button className="button button-gold" type="button" disabled={actionBusy} onClick={printOrder}>พิมพ์ออเดอร์</button>
       <select aria-label="เลือกสถานะถัดไป" value={status} disabled={actionBusy} onChange={(event) => setStatus(event.target.value)}><option value="">เลือกสถานะถัดไป</option><option value="packing">กำลังแพ็ค</option><option value="shipped">จัดส่งแล้ว</option></select>

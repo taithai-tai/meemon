@@ -7,6 +7,7 @@ const lookupStart = migration.indexOf("create or replace function public.lookup_
 const lookupBody = migration.slice(lookupStart);
 const adminUi = await readFile("app/components/AdminClient.tsx", "utf8");
 const globalCss = await readFile("app/globals.css", "utf8");
+const adminFunction = await readFile("../../supabase/functions/admin/index.ts", "utf8");
 
 test("phone history exposes order items and status without shipping details", () => {
   assert.ok(lookupStart >= 0);
@@ -23,4 +24,21 @@ test("admin print and fulfillment controls stay in the static UI contract", () =
   assert.match(adminUi, /\/v2\/assets\/brand\/logo\.png/);
   assert.match(globalCss, /@page \{ size: A4 portrait; margin: 8mm; \}/);
   assert.match(globalCss, /body\.printing-order > \*:not\(\.active-order-print\)/);
+});
+
+test("admin order evidence, search, and credential management stay protected", () => {
+  assert.match(adminUi, /อัปโหลดและตรวจสลิป/);
+  assert.match(adminUi, /ชื่อ เบอร์โทร เลขออเดอร์ สินค้า หรือเลขอ้างอิงสลิป/);
+  assert.match(adminUi, /เพิ่ม Username และ Password/);
+  assert.match(adminFunction, /createSignedUrl\(attempt\.object_path, 5 \* 60\)/);
+  assert.match(adminFunction, /auth\.admin\.createUser/);
+  assert.match(adminFunction, /order\.slip\.upload/);
+  assert.match(adminFunction, /order\.slip\.view/);
+});
+
+test("home typography is enlarged on desktop and remains responsive on mobile", () => {
+  assert.match(globalCss, /\.home-hero h1 \{ font-size: clamp\(62px, 7\.5vw, 102px\); \}/);
+  assert.match(globalCss, /\.home-hero-copy > p \{ max-width: 680px; font-size: 19px; \}/);
+  assert.match(globalCss, /\.featured-products \.product-copy h3 \{ min-height: 58px; font-size: 16px; \}/);
+  assert.match(globalCss, /\.home-hero h1 \{ font-size: clamp\(50px, 14vw, 66px\); \}/);
 });
