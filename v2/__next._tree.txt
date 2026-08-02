@@ -5,4 +5,4 @@
 :HL["/v2/assets/app-icons/wallpaper.png","image"]
 :HL["/v2/assets/app-icons/rituals.png","image"]
 :HL["/v2/assets/app-icons/archive.png","image"]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"v2","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"W7B3pGcbWWNPzcSgCSWIw"}
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"v2","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"ONC6pbbWvEjp_A0cxmrcs"}

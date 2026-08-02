@@ -23,8 +23,8 @@ jobs:
       - name: Expire unpaid orders and retry delayed checks
         run: |
           if [ -z "$SUPABASE_SERVICE_ROLE_KEY" ] || [ -z "$MAINTENANCE_SECRET" ]; then
-            echo "Missing SUPABASE_SERVICE_ROLE_KEY or MAINTENANCE_SECRET"
-            exit 1
+            echo "::warning::Order maintenance skipped because SUPABASE_SERVICE_ROLE_KEY or MAINTENANCE_SECRET is not configured."
+            exit 0
           fi
           curl --fail-with-body --silent --show-error --retry 2 \
             --request POST \
