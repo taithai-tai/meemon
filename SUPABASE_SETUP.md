@@ -15,7 +15,7 @@ required real test-slip validation.
 2. Link this repository with the Supabase CLI.
 3. Apply every migration in `supabase/migrations/` in filename order.
 4. Copy `supabase/.env.example` to a private local environment file and fill the values. Never commit that file.
-5. Set Edge Function secrets for `EASYSLIP_API_KEY`, `TURNSTILE_SECRET_KEY`, `RATE_LIMIT_SALT`, `MAINTENANCE_SECRET`, and the Supabase service credentials.
+5. Set Edge Function secrets for `EASYSLIP_API_KEY`, `TURNSTILE_SECRET_KEY`, `RATE_LIMIT_SALT`, `MAINTENANCE_SECRET`, `LINE_CHANNEL_ACCESS_TOKEN`, and the Supabase service credentials. `LINE_ADMIN_ORDER_URL` is optional and defaults to the production admin page.
 6. Deploy `checkout`, `admin`, and `maintenance`. Keep JWT verification enabled for `admin` and `maintenance`; only `checkout` is public and it enforces origin, Turnstile, rate limits, token hashing, and server-side pricing.
 
 ## Automatic website deployment from GitHub
@@ -40,6 +40,19 @@ secrets under **Settings → Secrets and variables → Actions**:
 
 `EASYSLIP_API_KEY`, `TURNSTILE_SECRET_KEY`, and `RATE_LIMIT_SALT` are stored
 directly as Supabase Edge Function secrets. They are not copied into GitHub.
+
+## LINE Broadcast for new orders
+
+`checkout` broadcasts each newly committed order through the Meemon Orders
+Messaging API channel. The message contains the order number, status, customer
+name, phone, complete shipping address, note, product variants and quantities,
+prices, total, and admin-page link. Every LINE account that adds the Official
+Account receives the same message. A LINE delivery failure is logged but never
+cancels the customer's order.
+
+Keep the long-lived Channel Access Token only in the Supabase Edge Function
+secret `LINE_CHANNEL_ACCESS_TOKEN`. Never put it in GitHub, the website, or a
+`NEXT_PUBLIC_` variable.
 
 GitHub's scheduled workflow calls maintenance every five minutes, which expires
 unpaid orders, retries delayed bank responses, and removes old private slips.

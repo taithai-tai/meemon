@@ -2,6 +2,7 @@ import { corsHeaders, json, publicError, requestIp, requireAllowedOrigin, sha256
 import { env, serviceClient } from "../_shared/server.ts";
 import { verifyTurnstile } from "../_shared/turnstile.ts";
 import { checkSlip } from "../_shared/easyslip.ts";
+import { broadcastLineNewOrder } from "../_shared/line-order.ts";
 
 const IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 
@@ -67,7 +68,8 @@ async function createOrder(request: Request) {
   const customer = { ...(body.customer ?? {}), phone, countryCode: "TH" };
   const token = randomToken();
   const tokenHash = await sha256(token);
-  const { data, error } = await serviceClient().rpc("create_order_v1", {
+  const client = serviceClient();
+  const { data, error } = await client.rpc("create_order_v1", {
     p_public_token_hash: tokenHash,
     p_customer: customer,
     p_items: body.items ?? [],
@@ -84,6 +86,19 @@ async function createOrder(request: Request) {
       OUT_OF_STOCK: "สินค้าไม่เพียงพอ",
     };
     return publicError(request, messages[code] ?? "สร้างคำสั่งซื้อไม่สำเร็จ", 400, code);
+  }
+  const createdOrder = data as { orderId?: string } | null;
+  if (createdOrder?.orderId) {
+    try {
+      await broadcastLineNewOrder(client, createdOrder.orderId);
+    } catch (notificationError) {
+      // LINE is an administrator notification channel, not part of checkout.
+      // Preserve the successful customer order even if LINE is unavailable.
+      console.error(
+        "LINE order broadcast failed",
+        notificationError instanceof Error ? notificationError.message : "unknown",
+      );
+    }
   }
   return json(request, { ...data, token }, 201);
 }
