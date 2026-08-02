@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meemon - Mystic Wallet Guide</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@200;300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+            background-color: #0f0c29;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .font-serif { font-family: 'Playfair Display', serif; }
+
+        /* Animation Keyframes */
+        @keyframes twinkle {
+            0% { opacity: 0.3; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1.2); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Utility Classes */
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .animate-spin-slow {
+            animation: spin-slow 8s linear infinite;
+        }
+
+        /* Star Styling */
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            opacity: 0.7;
+        }
+
+        /* Glassmorphism Utilities */
+        .glass-panel {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .selection-purple::selection {
+            background-color: #a855f7;
+            color: white;
+        }
+    </style>
+</head>
+<body class="selection-purple min-h-screen relative">
+
+    <!-- Background Layer -->
+    <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+        <div class="absolute inset-0 bg-gradient-to-b from-[#0f0c29] via-[#302b63] to-[#24243e]"></div>
+        <!-- Stars container -->
+        <div id="stars-container" class="absolute inset-0"></div>
+        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20"></div>
+    </div>
+
+    <!-- Content Layer -->
+    <div class="relative z-10 container mx-auto px-4 py-12 sm:py-20 flex flex-col items-center">
+        
+        <!-- Header Section -->
+        <header class="text-center mb-16 animate-float">
+            <div class="inline-block mb-4 px-4 py-1 rounded-full border border-purple-400/30 bg-purple-900/30 backdrop-blur-sm text-purple-200 text-sm tracking-wider uppercase">
+                The Mystic Guide
+            </div>
+            <h1 class="text-5xl sm:text-7xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-purple-300 via-white to-purple-300 drop-shadow-[0_0_20px_rgba(168,85,247,0.5)]">
+                Meemon
+            </h1>
+            <h2 class="text-xl sm:text-2xl text-purple-200/80 font-light">
+                คู่มือการเปิดกระเป๋าสตางค์ให้ปัง
+            </h2>
+            <div class="w-24 h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent mx-auto mt-6"></div>
+        </header>
+
+        <!-- Introduction -->
+        <div class="max-w-3xl mx-auto text-center mb-16 px-4">
+            <p class="text-lg text-gray-300 leading-relaxed font-light">
+                ยินดีต้อนรับสู่โลกของ <span class="text-purple-300 font-medium">มีมนต์</span> นี่คือเคล็ดลับเฉพาะที่จะเปลี่ยนกระเป๋าสตางค์ใบใหม่ของคุณให้กลายเป็นขุมทรัพย์ดึงดูดพลังงานด้านบวก ด้วย 3 ขั้นตอนศักดิ์สิทธิ์
+            </p>
+        </div>
+
+        <!-- Steps Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl mx-auto mb-12">
+            
+            <!-- Step 1 -->
+            <div class="relative group h-full">
+                <div class="absolute -inset-0.5 bg-gradient-to-r from-pink-600 to-purple-600 rounded-2xl blur opacity-30 group-hover:opacity-100 transition duration-500"></div>
+                <div class="relative p-6 sm:p-8 glass-panel rounded-2xl shadow-2xl h-full flex flex-col items-center text-center hover:transform hover:-translate-y-1 transition-all duration-300">
+                    <div class="flex items-center justify-center w-16 h-16 mb-6 rounded-full bg-gradient-to-br from-purple-500/20 to-blue-500/20 border border-purple-400/30 text-purple-300 shadow-[0_0_15px_rgba(168,85,247,0.3)]">
+                        <i data-lucide="wallet" size="32"></i>
+                    </div>
+                    <h3 class="mb-4 text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-200 to-pink-200">
+                        Step 1
+                    </h3>
+                    <div class="text-gray-300 leading-relaxed font-light">
+                        <p class="mb-4">
+                            <span class="text-white font-medium">เริ่มต้นด้วยพลัง:</span> เมื่อได้รับกระเป๋าแล้ว ให้ใส่ <span class="text-purple-300 font-medium">ธนบัตรที่มีมูลค่าสูงที่สุดเท่าที่คุณมี</span> (ไม่จำกัดสกุลเงิน) ลงไปในกระเป๋า เพื่อเป็นการวางรากฐานความมั่งคั่ง และสร้างแรงดึงดูดเงินก้อนใหญ่หรือทรัพย์สินที่มีมูลค่าสูงเข้ามาหาคุณ
+                        </p>
+                        <p class="text-sm text-gray-400 bg-white/5 p-3 rounded-lg border border-white/5">
+                            💡 อย่าลืมใส่ <strong>"ซองแดง"</strong> ที่ติดมากับกระเป๋าลงไปด้วย เพื่อความเป็นสิริมงคลสูงสุด
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="relative group h-full">
+                <div class="absolute -inset-0.5 bg-gradient-to-r from-pink-600 to-purple-600 rounded-2xl blur opacity-30 group-hover:opacity-100 transition duration-500"></div>
+                <div class="relative p-6 sm:p-8 glass-panel rounded-2xl shadow-2xl h-full flex flex-col items-center text-center hover:transform hover:-translate-y-1 transition-all duration-300">
+                    <div class="flex items-center justify-center w-16 h-16 mb-6 rounded-full bg-gradient-to-br from-purple-500/20 to-blue-500/20 border border-purple-400/30 text-purple-300 shadow-[0_0_15px_rgba(168,85,247,0.3)]">
+                        <i data-lucide="moon" size="32"></i>
+                    </div>
+                    <h3 class="mb-4 text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-200 to-pink-200">
+                        Step 2
+                    </h3>
+                    <div class="text-gray-300 leading-relaxed font-light">
+                        <p class="mb-4">
+                            <span class="text-white font-medium">เชื่อมต่อจิตวิญญาณ:</span> นำกระเป๋าไปไว้ <span class="text-purple-300 font-medium">ใต้หมอน</span> เพื่อให้กระเป๋าจดจำเจ้าของ และจดจำกลิ่นอายของเงิน
+                        </p>
+                        <ul class="text-left text-sm space-y-2 text-gray-300 list-disc pl-4">
+                            <li>วางไว้กี่คืนก็ได้ตามความสบายใจ</li>
+                            <li>วันแรกที่เริ่มใช้ ควรเป็นวันที่อารมณ์ดี</li>
+                            <li>ฤกษ์ดี: วันข้างขึ้น 1-15 ค่ำ</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="relative group h-full">
+                <div class="absolute -inset-0.5 bg-gradient-to-r from-pink-600 to-purple-600 rounded-2xl blur opacity-30 group-hover:opacity-100 transition duration-500"></div>
+                <div class="relative p-6 sm:p-8 glass-panel rounded-2xl shadow-2xl h-full flex flex-col items-center text-center hover:transform hover:-translate-y-1 transition-all duration-300">
+                    <div class="flex items-center justify-center w-16 h-16 mb-6 rounded-full bg-gradient-to-br from-purple-500/20 to-blue-500/20 border border-purple-400/30 text-purple-300 shadow-[0_0_15px_rgba(168,85,247,0.3)]">
+                        <i data-lucide="star" size="32"></i>
+                    </div>
+                    <h3 class="mb-4 text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-200 to-pink-200">
+                        Step 3
+                    </h3>
+                    <div class="text-gray-300 leading-relaxed font-light">
+                        <p class="mb-4">
+                            <span class="text-white font-medium">ปลุกเสกด้วยตนเอง:</span> ท่องคาถาเรียกเงินเพื่อให้พลังงานไหลเวียนและเปิดทางให้โชคลาภ
+                        </p>
+                        <p class="text-sm text-gray-400">
+                            เลื่อนลงด้านล่างเพื่อดูคาถาฉบับเต็ม และเทคนิคการท่องให้ได้ผล
+                        </p>
+                        <div class="mt-6 flex justify-center text-purple-400 animate-bounce">
+                            <i data-lucide="arrow-down" size="20"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Mantra Section -->
+        <div class="relative w-full max-w-2xl mx-auto mt-16 p-1">
+            <div class="absolute -inset-1 bg-gradient-to-r from-yellow-400 via-orange-500 to-yellow-400 rounded-2xl blur opacity-40 animate-pulse"></div>
+            <div class="relative bg-black/60 backdrop-blur-md rounded-xl p-8 border border-yellow-500/30 text-center">
+                <div class="flex justify-center mb-4">
+                    <div class="animate-spin-slow text-yellow-400">
+                         <i data-lucide="sparkles" width="40" height="40"></i>
+                    </div>
+                </div>
+                <h3 class="text-3xl font-bold text-yellow-400 mb-2 drop-shadow-[0_0_10px_rgba(250,204,21,0.5)]">
+                    คาถาเรียกเงิน
+                </h3>
+                <p class="text-yellow-100/80 mb-6 text-sm">ทวนคาถาเพื่อเชื่อมพลังงาน ยิ่งท่องบ่อย ยิ่งดี</p>
+                
+                <div class="bg-white/5 rounded-lg p-6 mb-6 border border-white/10 relative group">
+                    <p id="mantra-text" class="text-2xl sm:text-3xl font-medium text-white leading-relaxed tracking-wide">
+                        "พุทธังนำมาเงิน ธัมมังนำมาทอง สังฆังนำมาของ เอหิมะมะ"
+                    </p>
+                    <button 
+                        id="play-btn"
+                        class="absolute top-2 right-2 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors text-white/70 hover:text-white"
+                        title="ฟังเสียงคาถา"
+                    >
+                        <i data-lucide="volume-2" size="18"></i>
+                    </button>
+                </div>
+                
+                <p class="text-gray-400 text-sm italic">
+                    *ท่องได้บ่อยตามต้องการ เพื่อดึงดูดทรัพย์เข้ากระเป๋า
+                </p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-24 text-center text-gray-500 text-sm pb-8">
+            <div class="flex justify-center items-center space-x-2 mb-4">
+                <div class="w-2 h-2 bg-purple-500 rounded-full"></div>
+                <div class="w-2 h-2 bg-purple-500 rounded-full"></div>
+                <div class="w-2 h-2 bg-purple-500 rounded-full"></div>
+            </div>
+            <p class="tracking-wider mb-2 font-bold">MEEMON BRAND</p>
+            <p class="font-light opacity-60">พลังแห่งความเชื่อ สู่ความสำเร็จที่จับต้องได้</p>
+            <div class="mt-6">
+                <a href="https://line.me/R/ti/p/@769utqim" target="_blank" class="inline-block px-6 py-2 border border-purple-500/30 hover:bg-purple-500/10 rounded-full transition-colors text-purple-300 text-sm">
+                    สอบถาม / ปรึกษาเพิ่มเติม
+                </a>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // 1. Generate Stars Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('stars-container');
+            const starCount = 100;
+
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                
+                // Random properties
+                const size = Math.random() * 2 + 1;
+                const left = Math.random() * 100;
+                const top = Math.random() * 100;
+                const duration = Math.random() * 3 + 2;
+                const delay = Math.random() * 2;
+
+                // Apply styles
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${left}%`;
+                star.style.top = `${top}%`;
+                star.style.animation = `twinkle ${duration}s infinite ease-in-out alternate ${delay}s`;
+
+                container.appendChild(star);
+            }
+        });
+
+        // 2. Audio Logic (MP3 Player)
+        const playBtn = document.getElementById('play-btn');
+        // URL of the audio file
+        const audioUrl = 'https://raw.githubusercontent.com/taithai-tai/meemon/refs/heads/main/พุททังนำมาเงิน.mp3';
+        const audio = new Audio(audioUrl);
+        
+        // Handle playback state
+        playBtn.addEventListener('click', () => {
+            if (audio.paused) {
+                // Play
+                audio.play().then(() => {
+                    // Update icon to "Stop/Pause" style (Square)
+                    playBtn.innerHTML = '<i data-lucide="square" size="18" class="text-yellow-400 fill-current"></i>';
+                    lucide.createIcons();
+                }).catch(error => {
+                    console.error("Audio playback failed:", error);
+                    alert("ไม่สามารถเล่นไฟล์เสียงได้ในขณะนี้");
+                });
+            } else {
+                // Stop/Pause
+                audio.pause();
+                audio.currentTime = 0; // Reset to beginning
+                // Reset icon to Speaker
+                playBtn.innerHTML = '<i data-lucide="volume-2" size="18"></i>';
+                lucide.createIcons();
+            }
+        });
+
+        // When audio finishes playing automatically
+        audio.addEventListener('ended', () => {
+            playBtn.innerHTML = '<i data-lucide="volume-2" size="18"></i>';
+            lucide.createIcons();
+        });
+
+    </script>
+</body>
+</html>
+
+
+
