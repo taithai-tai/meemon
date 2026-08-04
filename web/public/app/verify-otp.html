@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meemon | Verify OTP</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen flex items-center justify-center bg-slate-900 text-white p-4">
+
+<div class="bg-white/10 p-8 rounded-xl w-full max-w-sm">
+  <h1 class="text-xl font-bold mb-2">ยืนยัน OTP</h1>
+
+  <p class="text-sm text-white/80 mb-4">
+    ส่งรหัสไปที่: <span id="emailShow" class="font-bold text-yellow-300"></span>
+  </p>
+
+  <input id="otp"
+         inputmode="numeric"
+         maxlength="6"
+         class="w-full p-2 mb-3 rounded text-black text-center text-xl tracking-widest font-bold"
+         placeholder="XXXXXX" />
+
+  <button id="btnVerify" onclick="verifyOtp()"
+          class="w-full bg-blue-400 text-black p-2 rounded font-bold">
+    ยืนยัน
+  </button>
+
+  <button id="btnResend" onclick="resendOtp()"
+          class="w-full mt-2 bg-white/10 p-2 rounded font-bold">
+    ส่ง OTP ใหม่
+  </button>
+
+  <button onclick="backToRegister()"
+          class="w-full mt-2 bg-white/10 p-2 rounded font-bold">
+    กลับไปแก้อีเมล
+  </button>
+
+  <p id="msg" class="text-sm mt-3 text-red-300 min-h-[20px]"></p>
+</div>
+
+<script src="config.js">
+  const API_URL = window.MEEMON_API_URL;
+
+  // ✅ ต้องใช้ key เดียวกับ register.html
+  let email = sessionStorage.getItem("MEEMON_EMAIL") || "";
+  const inOtpFlow = sessionStorage.getItem("MEEMON_OTP_FLOW") === "1";
+
+  // ✅ ถ้าไม่มีอีเมล กลับไปสมัคร (ชี้ /app)
+  if (!email) location.replace("/app/register.html");
+
+  document.getElementById("emailShow").innerText = email;
+
+  function setMsg(t, ok=false){
+    const el = document.getElementById("msg");
+    el.className = "text-sm mt-3 min-h-[20px] " + (ok ? "text-green-400" : "text-red-300");
+    el.innerText = t || "";
+  }
+
+  async function postForm(obj){
+    const form = new URLSearchParams();
+    Object.keys(obj).forEach(k => form.append(k, obj[k]));
+
+    const r = await fetch(API_URL, { method: "POST", body: form });
+    const text = await r.text();
+
+    try { return JSON.parse(text); }
+    catch {
+      console.error("NOT JSON:", text);
+      return { error: "Server ไม่ตอบกลับเป็น JSON", raw: text.slice(0, 250) };
+    }
+  }
+
+  async function verifyOtp(){
+    // ✅ กัน space/แปลกๆ
+    const otp = (document.getElementById("otp").value || "").trim().replace(/\s+/g, "");
+    const btn = document.getElementById("btnVerify");
+
+    if (!otp || otp.length < 6) return setMsg("กรอก OTP ให้ครบ 6 หลัก");
+
+    btn.disabled = true;
+    setMsg("กำลังตรวจสอบ OTP…", true);
+
+    try{
+      const data = await postForm({ action: "verifyOtp", email, otp });
+
+      if (!data.success){
+        setMsg(data.error || "OTP ไม่ถูกต้องหรือหมดอายุ");
+        return;
+      }
+
+      // ✅ สำเร็จ: ล้างธง OTP flow (กันวน)
+      sessionStorage.removeItem("MEEMON_OTP_FLOW");
+
+      setMsg("ยืนยันสำเร็จ 🎉 กำลังไปหน้าเข้าสู่ระบบ…", true);
+
+      // ✅ ไป login ที่ถูก path (/app)
+      setTimeout(() => location.replace("/app/login.html"), 500);
+
+    }catch(err){
+      console.error(err);
+      setMsg("เชื่อมต่อหลังบ้านไม่ได้");
+    }finally{
+      btn.disabled = false;
+    }
+  }
+
+  async function resendOtp(){
+    const btn = document.getElementById("btnResend");
+    btn.disabled = true;
+    setMsg("กำลังส่ง OTP ใหม่…", true);
+
+    try{
+      const data = await postForm({ action: "sendOtp", email });
+      if (data.success){
+        setMsg("ส่ง OTP ใหม่แล้ว ✅ เช็คอีเมล", true);
+      } else {
+        setMsg(data.error || "ส่ง OTP ไม่สำเร็จ");
+      }
+    }catch(err){
+      console.error(err);
+      setMsg("เชื่อมต่อหลังบ้านไม่ได้");
+    }finally{
+      btn.disabled = false;
+    }
+  }
+
+  function backToRegister(){
+    // ล้างค่าเพื่อให้สมัครใหม่ได้
+    sessionStorage.removeItem("MEEMON_EMAIL");
+    sessionStorage.removeItem("MEEMON_OTP_FLOW");
+
+    // ✅ กลับ register ที่ถูก path (/app)
+    location.replace("/app/register.html");
+  }
+
+  // ✅ ถ้ายังอยู่ flow OTP ให้คงอยู่หน้านี้ (กันหน้าอื่นเด้งทับ)
+  window.addEventListener("load", () => {
+    if (inOtpFlow && email) {
+      // อยู่ถูกหน้าแล้ว ไม่ต้องทำอะไร
+    }
+  });
+</script>
+
+</body>
+</html>

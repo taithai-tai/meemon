@@ -1,0 +1,3 @@
+import { PageHero } from "../../components/PageElements";
+export const metadata = { title: "ติดต่อ" };
+export default function Page() { return <><PageHero eyebrow="CONNECT WITH MEEMON" title="คุยกับเราได้ทุกช่องทาง" description="ติดตามคอลเลกชันใหม่ สอบถามสินค้า หรือส่งความคิดเห็นเกี่ยวกับ Meemon Home"/><section className="content-section"><div className="contact-grid"><a href="https://line.me/R/ti/p/@769utqim" target="_blank" rel="noreferrer"><span>LINE</span><h2>@769utqim</h2><p>สอบถามสินค้าและพูดคุยกับ Meemon</p><b>เปิด LINE ↗</b></a><a href="https://shopee.co.th/king_6914" target="_blank" rel="noreferrer"><span>SHOPEE</span><h2>king_6914</h2><p>ชมสินค้า ราคา และสต็อกล่าสุดจากร้านจริง</p><b>เปิดร้านค้า ↗</b></a></div></section></>; }

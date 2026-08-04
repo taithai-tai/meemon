@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <title>โยนไม้เซ้งปวย | Taithai</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg-main: #b91c1c;
+      --panel: #facc15;
+      --panel-soft: #fef3c7;
+      --text-main: #111827;
+      --text-light: #fefce8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Prompt", system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #f97316, #7f1d1d 55%, #450a0a);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 480px;
+      background: var(--bg-main);
+      border-radius: 24px;
+      padding: 20px 18px 24px;
+      box-shadow:
+        0 24px 60px rgba(0, 0, 0, 0.8),
+        0 0 0 3px rgba(248, 250, 252, 0.1) inset;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .app::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(254, 240, 138, 0.25), transparent 55%),
+        radial-gradient(circle at 100% 100%, rgba(252, 211, 77, 0.22), transparent 55%);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .app-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .header {
+      text-align: center;
+      color: var(--text-light);
+      margin-bottom: 16px;
+    }
+
+    .title-main {
+      font-size: 26px;
+      letter-spacing: 0.15em;
+      text-shadow: 0 3px 6px rgba(0, 0, 0, 0.6);
+      margin-bottom: 4px;
+    }
+
+    .title-sub {
+      font-size: 13px;
+      opacity: 0.9;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.28);
+      color: var(--text-light);
+      margin-bottom: 6px;
+    }
+
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #facc15;
+      box-shadow: 0 0 10px rgba(250, 204, 21, 1);
+    }
+
+    .main-area {
+      margin-top: 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .label {
+      font-size: 14px;
+      color: var(--text-light);
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+    }
+
+    /* วงกลมสำหรับลากโยนไม้ */
+    .throw-area {
+      margin-top: 4px;
+      width: 240px;
+      height: 240px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 0%, #fecaca, #991b1b);
+      border: 4px solid #facc15;
+      box-shadow:
+        0 18px 36px rgba(0, 0, 0, 0.85),
+        0 0 0 3px rgba(248, 250, 252, 0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .throw-area-label {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.4);
+      color: var(--text-light);
+      font-size: 12px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      pointer-events: none;
+    }
+
+    /* กลุ่มไม้ 2 อันที่ลากได้ */
+    .drag-handle {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: center;
+      transform: translateY(40px);
+      transition: transform 0.18s ease-out;
+      cursor: grab;
+      touch-action: none;
+    }
+
+    .drag-handle.dragging {
+      cursor: grabbing;
+    }
+
+    .drag-coin {
+      width: 90px;
+      height: auto;
+      filter: drop-shadow(0 16px 24px rgba(0, 0, 0, 0.9));
+      user-select: none;
+      pointer-events: none;
+    }
+
+    /* อันที่สองหมุน 180 องศา */
+    .drag-coin:nth-child(2) {
+      transform: rotate(180deg);
+    }
+
+    .shake {
+      animation: shake 0.55s ease-in-out;
+    }
+
+    @keyframes shake {
+      0%   { transform: translateX(0) rotate(0deg); }
+      20%  { transform: translateX(-8px) rotate(-6deg); }
+      40%  { transform: translateX(8px) rotate(6deg); }
+      60%  { transform: translateX(-5px) rotate(-3deg); }
+      80%  { transform: translateX(5px) rotate(3deg); }
+      100% { transform: translateX(0) rotate(0deg); }
+    }
+
+    .hint {
+      font-size: 12px;
+      color: var(--text-light);
+      text-align: center;
+      opacity: 0.9;
+    }
+
+    .hint span {
+      font-weight: 600;
+      color: #fde68a;
+    }
+
+    /* ---------- POPUP ผลลัพธ์ ---------- */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 40;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease-out;
+    }
+
+    .modal-backdrop.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal {
+      max-width: 420px;
+      width: 100%;
+      background: #111827;
+      border-radius: 20px;
+      padding: 18px 16px 14px;
+      box-shadow:
+        0 24px 60px rgba(0, 0, 0, 0.9),
+        0 0 0 1px rgba(148, 163, 184, 0.4);
+      color: #f9fafb;
+      transform: translateY(20px) scale(0.96);
+      opacity: 0;
+      transition: all 0.22s ease-out;
+    }
+
+    .modal-backdrop.show .modal {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .modal-title {
+      font-size: 16px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-chip {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(250, 204, 21, 0.1);
+      border: 1px solid rgba(250, 204, 21, 0.7);
+      color: #facc15;
+    }
+
+    .modal-close {
+      background: transparent;
+      border: none;
+      color: #9ca3af;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 2px 4px;
+    }
+
+    .modal-body {
+      margin-top: 4px;
+    }
+
+    .modal-coins {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .modal-coin {
+      width: 90px;
+      height: auto;
+      background: var(--panel-soft);
+      border-radius: 999px;
+      padding: 4px;
+      box-shadow:
+        0 10px 20px rgba(0, 0, 0, 0.7),
+        0 0 0 1px rgba(15, 23, 42, 0.8);
+    }
+
+    .modal-coin:nth-child(2) {
+      transform: rotate(180deg);
+    }
+
+    .pattern-text {
+      font-size: 13px;
+      text-align: center;
+      color: #e5e7eb;
+      margin-bottom: 4px;
+    }
+
+    .meaning-main {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .meaning-sub {
+      font-size: 13px;
+      color: #e5e7eb;
+    }
+
+    .result-note {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-top: 6px;
+    }
+
+    .modal-actions {
+      margin-top: 10px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 13px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      color: #e5e7eb;
+    }
+
+    .btn-primary {
+      background: linear-gradient(to right, #facc15, #f97316);
+      color: #111827;
+      font-weight: 600;
+      box-shadow: 0 6px 16px rgba(250, 204, 21, 0.6);
+    }
+
+    .btn-primary:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 10px rgba(250, 204, 21, 0.7);
+    }
+
+    @media (max-width: 480px) {
+      .app {
+        padding: 18px 12px 20px;
+      }
+      .title-main {
+        font-size: 24px;
+      }
+      .throw-area {
+        width: 220px;
+        height: 220px;
+      }
+      .drag-coin {
+        width: 80px;
+      }
+      .modal-coin {
+        width: 80px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="app-inner">
+      <div class="header">
+        <div class="badge">
+          <div class="badge-dot"></div>
+          ไม้เสี่ยงทายตามคติหมุนเซ้งปวย
+        </div>
+        <div class="title-main">เซ้งปวย</div>
+        <div class="title-sub">กดค้างแล้วลากไม้ขึ้นเพื่อโยนถามเทพเจ้า ✨</div>
+      </div>
+
+      <div class="main-area">
+        <div class="label">ลากไม้คว่ำ 2 อันขึ้นด้านบนเพื่อโยน</div>
+
+        <!-- พื้นที่ลากโยนไม้ -->
+        <div id="throwArea" class="throw-area">
+          <div id="dragHandle" class="drag-handle">
+            <img
+              class="drag-coin"
+              src="https://raw.githubusercontent.com/taithai-tai/meemon/main/NFCV.2/Wood/b.png"
+              alt="ไม้เซ้งปวยคว่ำ 1"
+            />
+            <img
+              class="drag-coin"
+              src="https://raw.githubusercontent.com/taithai-tai/meemon/main/NFCV.2/Wood/b.png"
+              alt="ไม้เซ้งปวยคว่ำ 2"
+            />
+          </div>
+          <div class="throw-area-label">กดค้างแล้วลากขึ้น</div>
+        </div>
+
+        <p class="hint">
+          ผลลัพธ์มี 3 แบบ: <span>เฉี่ยปวย, อิมปวย, ปั๊วะปวย</span><br>
+          ใช้เพื่อความสบายใจและความสนุกเท่านั้น
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- POPUP ผลลัพธ์ -->
+  <div id="modalBackdrop" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">
+          🧧 ผลการโยนไม้
+          <span id="resultBadge" class="modal-chip"></span>
+        </div>
+        <button id="btnCloseModal" class="modal-close" aria-label="ปิด">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-coins">
+          <img id="modalCoin1" class="modal-coin"
+               src="https://raw.githubusercontent.com/taithai-tai/meemon/main/NFCV.2/Wood/b.png"
+               alt="ไม้เซ้งปวย 1">
+          <img id="modalCoin2" class="modal-coin"
+               src="https://raw.githubusercontent.com/taithai-tai/meemon/main/NFCV.2/Wood/b.png"
+               alt="ไม้เซ้งปวย 2">
+        </div>
+        <div id="resultName" class="meaning-main" style="text-align:center; margin-bottom:4px;"></div>
+        <div id="patternText" class="pattern-text"></div>
+        <div id="meaningMain" class="meaning-main"></div>
+        <div id="meaningSub" class="meaning-sub"></div>
+        <div id="resultNote" class="result-note"></div>
+      </div>
+      <div class="modal-actions">
+        <button id="btnCloseBottom" class="btn btn-outline">ปิด</button>
+        <button id="btnAgain" class="btn btn-primary">โยนอีกครั้ง 🔁</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // URL รูป
+    const IMG_UP =
+      "https://raw.githubusercontent.com/taithai-tai/meemon/main/NFCV.2/Wood/f.png"; // หงาย
+    const IMG_DOWN =
+      "https://raw.githubusercontent.com/taithai-tai/meemon/main/NFCV.2/Wood/b.png"; // คว่ำ
+
+    const throwArea = document.getElementById("throwArea");
+    const dragHandle = document.getElementById("dragHandle");
+
+    const modalBackdrop = document.getElementById("modalBackdrop");
+    const btnCloseModal = document.getElementById("btnCloseModal");
+    const btnCloseBottom = document.getElementById("btnCloseBottom");
+    const btnAgain = document.getElementById("btnAgain");
+    const modalCoin1 = document.getElementById("modalCoin1");
+    const modalCoin2 = document.getElementById("modalCoin2");
+    const resultName = document.getElementById("resultName");
+    const resultBadge = document.getElementById("resultBadge");
+    const patternText = document.getElementById("patternText");
+    const meaningMain = document.getElementById("meaningMain");
+    const meaningSub = document.getElementById("meaningSub");
+    const resultNote = document.getElementById("resultNote");
+
+    let isThrowing = false;
+
+    // ----- ระบบลากขึ้นเพื่อโยน -----
+    let dragging = false;
+    let startY = 0;
+    let currentDelta = 0;
+    const MAX_UP = -90;
+    const TRIGGER_UP = -45;
+
+    function getY(e) {
+      if (e.touches && e.touches[0]) return e.touches[0].clientY;
+      return e.clientY;
+    }
+
+    function onDragStart(e) {
+      if (isThrowing) return;
+      dragging = true;
+      startY = getY(e);
+      currentDelta = 0;
+      dragHandle.classList.add("dragging");
+      dragHandle.style.transition = "none";
+      e.preventDefault();
+    }
+
+    function onDragMove(e) {
+      if (!dragging) return;
+      const y = getY(e);
+      let delta = y - startY;
+      if (delta < MAX_UP) delta = MAX_UP;
+      if (delta > 40) delta = 40;
+      currentDelta = delta;
+      dragHandle.style.transform = `translateY(${40 + delta}px)`;
+      e.preventDefault();
+    }
+
+    function onDragEnd(e) {
+      if (!dragging) return;
+      dragging = false;
+      dragHandle.classList.remove("dragging");
+      dragHandle.style.transition = "transform 0.18s ease-out";
+
+      if (currentDelta <= TRIGGER_UP && !isThrowing) {
+        // ลากพอ → เด้งขึ้นแล้วโยน
+        dragHandle.style.transform = "translateY(-30px)";
+        setTimeout(() => {
+          dragHandle.style.transform = "translateY(40px)";
+          throwWoods();
+        }, 180);
+      } else {
+        dragHandle.style.transform = "translateY(40px)";
+      }
+    }
+
+    // mouse
+    dragHandle.addEventListener("mousedown", onDragStart);
+    window.addEventListener("mousemove", onDragMove);
+    window.addEventListener("mouseup", onDragEnd);
+    // touch
+    dragHandle.addEventListener("touchstart", onDragStart, { passive: false });
+    window.addEventListener("touchmove", onDragMove, { passive: false });
+    window.addEventListener("touchend", onDragEnd);
+
+    // ----- ฟังก์ชันเปิด/ปิด popup -----
+    function openModal() {
+      modalBackdrop.classList.add("show");
+    }
+
+    function closeModal() {
+      modalBackdrop.classList.remove("show");
+    }
+
+    btnCloseModal.addEventListener("click", closeModal);
+    btnCloseBottom.addEventListener("click", closeModal);
+    modalBackdrop.addEventListener("click", (e) => {
+      if (e.target === modalBackdrop) closeModal();
+    });
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeModal();
+    });
+
+    // ----- ฟังก์ชันโยนไม้ 2 อัน -----
+    function throwWoods() {
+      if (isThrowing) return;
+      isThrowing = true;
+
+      throwArea.classList.add("shake");
+
+      setTimeout(() => {
+        throwArea.classList.remove("shake");
+
+        const up1 = Math.random() < 0.5;
+        const up2 = Math.random() < 0.5;
+
+        // ตั้งรูปใน popup
+        modalCoin1.src = up1 ? IMG_UP : IMG_DOWN;
+        modalCoin2.src = up2 ? IMG_UP : IMG_DOWN;
+
+        const label1 = up1 ? "หงาย" : "คว่ำ";
+        const label2 = up2 ? "หงาย" : "คว่ำ";
+        patternText.textContent = `ลายไม้ที่ออก: ${label1} – ${label2}`;
+
+        if (up1 && up2) {
+          resultName.textContent = "เฉี่ยปวย";
+          resultBadge.textContent = "ยังไม่ชัด โยนใหม่ได้";
+          meaningMain.textContent = "ยังคลุมเครือ เทพเจ้ายังไม่ให้คำตอบชัดเจน";
+          meaningSub.textContent =
+            "มักตีความว่าให้โยนถามใหม่อีกครั้ง หรือพิจารณาคำขอให้ชัดกว่านี้ก่อน.";
+          resultNote.textContent =
+            "ถ้าอยากได้คำตอบชัด ๆ ลองตั้งจิตให้แน่วแน่ แล้วโยนถามใหม่อีกครั้ง.";
+        } else if (!up1 && !up2) {
+          resultName.textContent = "อิมปวย";
+          resultBadge.textContent = "ยังไม่สำเร็จตามที่หวัง";
+          meaningMain.textContent = "การขอครั้งนี้ ยังไม่เป็นไปตามที่ต้องการ";
+          meaningSub.textContent =
+            "อาจต้องเปลี่ยนเวลา เปลี่ยนวิธี หรือทบทวนว่าเรื่องที่ขอนั้นเหมาะสมหรือยัง.";
+          resultNote.textContent =
+            "อย่าเพิ่งท้อ อาจแค่ยังไม่ใช่จังหวะที่ดี ลองวางแผนใหม่ให้รอบคอบขึ้น.";
+        } else {
+          resultName.textContent = "ปั๊วะปวย";
+          resultBadge.textContent = "สิ่งที่ขอมีโอกาสสำเร็จ";
+          meaningMain.textContent = "เทพเจ้ายื่นมือสนับสนุน สิ่งที่ขอมีแนวโน้มจะสำเร็จ";
+          meaningSub.textContent =
+            "แต่ต้องมีการลงมือทำและรับผิดชอบในสิ่งที่ตัวเองตัดสินใจด้วย.";
+          resultNote.textContent =
+            "ถือเป็นนิมิตที่ดี ลองลุยทำตามแผนของคุณอย่างมีสติและไม่ประมาท.";
+        }
+
+        openModal();
+        isThrowing = false;
+      }, 580);
+    }
+
+    // ปุ่ม "โยนอีกครั้ง" ใน popup
+    btnAgain.addEventListener("click", () => {
+      closeModal();
+      setTimeout(throwWoods, 200);
+    });
+  </script>
+</body>
+</html>

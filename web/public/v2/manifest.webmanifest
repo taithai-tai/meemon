@@ -1,0 +1,23 @@
+{
+  "name": "Meemon — Destiny · Faith · Living",
+  "short_name": "Meemon",
+  "description": "ร้านค้า คำทำนาย พิธีมงคล และวอลเปเปอร์ของ Meemon",
+  "lang": "th",
+  "start_url": "/v2/",
+  "scope": "/v2/",
+  "display": "standalone",
+  "background_color": "#09070d",
+  "theme_color": "#1b0f27",
+  "icons": [
+    {
+      "src": "/v2/assets/brand/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/v2/assets/brand/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

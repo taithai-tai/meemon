@@ -1,0 +1,1475 @@
+{
+  "oracleCards": [
+    {
+      "name": "The Sun",
+      "icon": "☀️",
+      "meaning": "ความสำเร็จ ความสุข และพลังงานบวกที่ส่องสว่าง",
+      "lucky": "1 · 9 · 19"
+    },
+    {
+      "name": "The Moon",
+      "icon": "🌕",
+      "meaning": "ความลึกลับ สัญชาตญาณ และความฝันอันแจ่มใส",
+      "lucky": "2 · 11 · 22"
+    },
+    {
+      "name": "The Star",
+      "icon": "⭐",
+      "meaning": "ความหวัง แรงบันดาลใจ และการฟื้นฟูจิตใจ",
+      "lucky": "3 · 7 · 17"
+    },
+    {
+      "name": "The World",
+      "icon": "🌍",
+      "meaning": "ความสมบูรณ์ ชัยชนะ และการเดินทางใหม่",
+      "lucky": "5 · 10 · 21"
+    },
+    {
+      "name": "The Wheel",
+      "icon": "🎡",
+      "meaning": "โชคชะตา วงจรชีวิต และการเปลี่ยนแปลง",
+      "lucky": "0 · 10 · 20"
+    },
+    {
+      "name": "Strength",
+      "icon": "🦁",
+      "meaning": "กำลังใจ ความกล้าหาญ และการควบคุมตนเอง",
+      "lucky": "8 · 18 · 28"
+    },
+    {
+      "name": "The Lovers",
+      "icon": "💑",
+      "meaning": "ความรัก ความสัมพันธ์ และการเลือกที่ถูกต้อง",
+      "lucky": "6 · 16 · 26"
+    },
+    {
+      "name": "The Tower",
+      "icon": "⚡",
+      "meaning": "การเปลี่ยนแปลงฉับพลัน และการปล่อยวาง",
+      "lucky": "4 · 14 · 16"
+    },
+    {
+      "name": "High Priest",
+      "icon": "🧙",
+      "meaning": "ปัญญา คำแนะนำโบราณ และความรู้ลึกซึ้ง",
+      "lucky": "5 · 15 · 25"
+    }
+  ],
+  "tarotCards": [
+    {
+      "name": "0 The Fool",
+      "file": "the fool.png",
+      "meaning": "การเริ่มต้นใหม่ ความกล้าเสี่ยง เปิดใจรับประสบการณ์ใหม่ ๆ",
+      "image": "/v2/assets/tarot/the%20fool.webp"
+    },
+    {
+      "name": "I The Magician",
+      "file": "THE MAGICIAN.png",
+      "meaning": "มีศักยภาพและทรัพยากรพร้อม ลงมือทำให้ไอเดียกลายเป็นจริง",
+      "image": "/v2/assets/tarot/THE%20MAGICIAN.webp"
+    },
+    {
+      "name": "II The High Priestess",
+      "file": "The High Priestess.png",
+      "meaning": "ใช้สัญชาตญาณ ฟังเสียงข้างใน มากกว่าความวุ่นวายภายนอก",
+      "image": "/v2/assets/tarot/The%20High%20Priestess.webp"
+    },
+    {
+      "name": "III The Empress",
+      "file": "The Empress.png",
+      "meaning": "ความอุดมสมบูรณ์ ความรัก การดูแลตัวเองและคนรอบข้าง",
+      "image": "/v2/assets/tarot/The%20Empress.webp"
+    },
+    {
+      "name": "IV The Emperor",
+      "file": "The Emperor.png",
+      "meaning": "โครงสร้าง วินัย ความเด็ดขาด การวางแผนระยะยาว",
+      "image": "/v2/assets/tarot/The%20Emperor.webp"
+    },
+    {
+      "name": "V The Hierophant",
+      "file": "The Hierophant.png",
+      "meaning": "การเรียนรู้จากครู ระบบ ระเบียบ ประเพณี หรือองค์กร",
+      "image": "/v2/assets/tarot/The%20Hierophant.webp"
+    },
+    {
+      "name": "VI The Lovers",
+      "file": "The Lovers.png",
+      "meaning": "การเลือก ความรัก พาร์ทเนอร์ การตัดสินใจสำคัญจากหัวใจ",
+      "image": "/v2/assets/tarot/The%20Lovers.webp"
+    },
+    {
+      "name": "VII The Chariot",
+      "file": "The Chariot.png",
+      "meaning": "มุ่งไปข้างหน้าอย่างมีเป้าหมาย ควบคุมทิศทางชีวิตของตัวเอง",
+      "image": "/v2/assets/tarot/The%20Chariot.webp"
+    },
+    {
+      "name": "VIII Strength",
+      "file": "Strength.png",
+      "meaning": "พลังใจ ความกล้าหาญ การควบคุมอารมณ์ด้วยความอ่อนโยน",
+      "image": "/v2/assets/tarot/Strength.webp"
+    },
+    {
+      "name": "IX The Hermit",
+      "file": "The Hermit.png",
+      "meaning": "เก็บตัวคิดทบทวน หาคำตอบภายในใจ ใช้เวลาอยู่กับตัวเอง",
+      "image": "/v2/assets/tarot/The%20Hermit.webp"
+    },
+    {
+      "name": "X Wheel of Fortune",
+      "file": "Wheel of Fortune.png",
+      "meaning": "จังหวะโชคชะตากำลังเปลี่ยน มีเหตุการณ์ไม่คาดคิดเกิดขึ้น",
+      "image": "/v2/assets/tarot/Wheel%20of%20Fortune.webp"
+    },
+    {
+      "name": "XI Justice",
+      "file": "Justice.png",
+      "meaning": "ความยุติธรรม การตัดสินจากเหตุผล เอกสารสัญญาต่าง ๆ",
+      "image": "/v2/assets/tarot/Justice.webp"
+    },
+    {
+      "name": "XII The Hanged Man",
+      "file": "The Hanged Man.png",
+      "meaning": "หยุดนิ่งชั่วคราว มองจากมุมใหม่ ยอมเสียบางอย่างเพื่อสิ่งที่ดีกว่า",
+      "image": "/v2/assets/tarot/The%20Hanged%20Man.webp"
+    },
+    {
+      "name": "XIII Death",
+      "file": "Death.png",
+      "meaning": "การจบลงของสิ่งเก่า เพื่อเริ่มต้นรอบใหม่ของชีวิต",
+      "image": "/v2/assets/tarot/Death.webp"
+    },
+    {
+      "name": "XIV Temperance",
+      "file": "Temperance.png",
+      "meaning": "ความพอดี การปรับสมดุล ทดลองผสมสิ่งต่าง ๆ เข้าด้วยกัน",
+      "image": "/v2/assets/tarot/Temperance.webp"
+    },
+    {
+      "name": "XV The Devil",
+      "file": "The Devil.png",
+      "meaning": "ความยึดติด ความกลัว สิ่งที่ผูกมัดเราอยู่ ควรสังเกตตัวเองให้ดี",
+      "image": "/v2/assets/tarot/The%20Devil.webp"
+    },
+    {
+      "name": "XVI The Tower",
+      "file": "The Tower.png",
+      "meaning": "การเปลี่ยนแปลงแบบสายฟ้าแลบ ทลายของที่ไม่มั่นคงออกไป",
+      "image": "/v2/assets/tarot/The%20Tower.webp"
+    },
+    {
+      "name": "XVII The Star",
+      "file": "The Star.png",
+      "meaning": "ความหวัง การเยียวยา โปรเจกต์หรือความฝันที่ค่อย ๆ เติบโต",
+      "image": "/v2/assets/tarot/The%20Star.webp"
+    },
+    {
+      "name": "XVIII The Moon",
+      "file": "The Moon.png",
+      "meaning": "ความสับสน ความกลัวในใจ สิ่งที่ยังไม่ชัดเจน ต้องใช้เวลา",
+      "image": "/v2/assets/tarot/The%20Moon.webp"
+    },
+    {
+      "name": "XIX The Sun",
+      "file": "The Sun.png",
+      "meaning": "ความสุขสดใส ความสำเร็จ ความมั่นใจในตัวเอง",
+      "image": "/v2/assets/tarot/The%20Sun.webp"
+    },
+    {
+      "name": "XX Judgement",
+      "file": "Judgement.png",
+      "meaning": "การตื่นรู้ครั้งใหญ่ การประเมินตนเอง การตัดสินครั้งสำคัญ",
+      "image": "/v2/assets/tarot/Judgement.webp"
+    },
+    {
+      "name": "XXI The World",
+      "file": "The WORLD.png",
+      "meaning": "จบวงจรหนึ่งอย่างสมบูรณ์ พร้อมเริ่มต้นบทใหม่ของชีวิต",
+      "image": "/v2/assets/tarot/The%20WORLD.webp"
+    },
+    {
+      "name": "Ace of Wands",
+      "file": "Ace of Wands.png",
+      "meaning": "แรงบันดาลใจใหม่ โปรเจกต์ใหม่ พลังไฟกำลังลุก",
+      "image": "/v2/assets/tarot/Ace%20of%20Wands.webp"
+    },
+    {
+      "name": "Two of Wands",
+      "file": "Two of Wands.png",
+      "meaning": "การวางแผน มองไกล เลือกทิศทางชีวิต",
+      "image": "/v2/assets/tarot/Two%20of%20Wands.webp"
+    },
+    {
+      "name": "Three of Wands",
+      "file": "Three of Wands.png",
+      "meaning": "โอกาสจากต่างที่/ต่างประเทศ การรอผลจากสิ่งที่เริ่มไปแล้ว",
+      "image": "/v2/assets/tarot/Three%20of%20Wands.webp"
+    },
+    {
+      "name": "Four of Wands",
+      "file": "Four of Wands.png",
+      "meaning": "การเฉลิมฉลอง ความมั่นคงขั้นต้น บ้าน ครอบครัว",
+      "image": "/v2/assets/tarot/Four%20of%20Wands.webp"
+    },
+    {
+      "name": "Five of Wands",
+      "file": "Five of Wands.png",
+      "meaning": "ความขัดแย้ง การแข่งขัน การทดลองไอเดียหลายแบบ",
+      "image": "/v2/assets/tarot/Five%20of%20Wands.webp"
+    },
+    {
+      "name": "Six of Wands",
+      "file": "Six of Wands.png",
+      "meaning": "ชัยชนะ การได้รับการยอมรับจากคนรอบข้าง",
+      "image": "/v2/assets/tarot/Six%20of%20Wands.webp"
+    },
+    {
+      "name": "Seven of Wands",
+      "file": "Seven of Wands.png",
+      "meaning": "ยืนหยัดในจุดยืนของตัวเอง สู้เพราะเชื่อว่าสิ่งที่ทำถูกต้อง",
+      "image": "/v2/assets/tarot/Seven%20of%20Wands.webp"
+    },
+    {
+      "name": "Eight of Wands",
+      "file": "Eight of Wands.png",
+      "meaning": "ข่าวสารเร็ว ๆ การเดินทางด่วน โปรเจกต์เดินหน้าเร็วมาก",
+      "image": "/v2/assets/tarot/Eight%20of%20Wands.webp"
+    },
+    {
+      "name": "Nine of Wands",
+      "file": "Nine of Wands.png",
+      "meaning": "เหนื่อยแต่ยังไม่ยอมแพ้ ตั้งการ์ดเผื่อเรื่องเดิม ๆ จะกลับมา",
+      "image": "/v2/assets/tarot/Nine%20of%20Wands.webp"
+    },
+    {
+      "name": "Ten of Wands",
+      "file": "Ten of Wands.png",
+      "meaning": "แบกภาระเยอะเกินไป ต้องเรียนรู้การแบ่งงาน หรือขอความช่วยเหลือ",
+      "image": "/v2/assets/tarot/Ten%20of%20Wands.webp"
+    },
+    {
+      "name": "Page of Wands",
+      "file": "Page Of Wands.png",
+      "meaning": "ไอเดียใหม่ ๆ ความอยากลองทำอะไรสนุก ๆ",
+      "image": "/v2/assets/tarot/Page%20Of%20Wands.webp"
+    },
+    {
+      "name": "Knight of Wands",
+      "file": "Knight of Wands.png",
+      "meaning": "พลังไฟจัด อยากลงมือทันที การเดินทางที่เร้าใจ",
+      "image": "/v2/assets/tarot/Knight%20of%20Wands.webp"
+    },
+    {
+      "name": "Queen of Wands",
+      "file": "Queen of Wands.png",
+      "meaning": "มั่นใจ มีเสน่ห์ กล้าแสดงออก เป็นผู้นำสายครีเอทีฟ",
+      "image": "/v2/assets/tarot/Queen%20of%20Wands.webp"
+    },
+    {
+      "name": "King of Wands",
+      "file": "King of Wands.png",
+      "meaning": "ผู้นำที่กล้าตัดสินใจ วิชั่นชัด เจ้านาย/ตัวเราในโหมดบอส",
+      "image": "/v2/assets/tarot/King%20of%20Wands.webp"
+    },
+    {
+      "name": "Ace of Cups",
+      "file": "Ace of Cups.png",
+      "meaning": "ความรู้สึกใหม่ ความรักใหม่ การเปิดใจรับคน/สิ่งใหม่",
+      "image": "/v2/assets/tarot/Ace%20of%20Cups.webp"
+    },
+    {
+      "name": "Two of Cups",
+      "file": "2 of cups.png",
+      "meaning": "การพบกันครึ่งทาง ความสัมพันธ์ที่สมดุล คู่หูที่เข้ากันได้ดี",
+      "image": "/v2/assets/tarot/2%20of%20cups.webp"
+    },
+    {
+      "name": "Three of Cups",
+      "file": "3 of cups.png",
+      "meaning": "สังคม เพื่อนฝูง ปาร์ตี้ การเฉลิมฉลองเล็ก ๆ",
+      "image": "/v2/assets/tarot/3%20of%20cups.webp"
+    },
+    {
+      "name": "Four of Cups",
+      "file": "4 of cups.png",
+      "meaning": "รู้สึกเบื่อ เฉย ๆ ไม่อินกับสิ่งที่เข้ามา ควรทบทวนตัวเอง",
+      "image": "/v2/assets/tarot/4%20of%20cups.webp"
+    },
+    {
+      "name": "Five of Cups",
+      "file": "5 of cups.png",
+      "meaning": "โฟกัสกับสิ่งที่เสียไปจนลืมมองสิ่งที่ยังเหลืออยู่",
+      "image": "/v2/assets/tarot/5%20of%20cups.webp"
+    },
+    {
+      "name": "Six of Cups",
+      "file": "6 of cups.png",
+      "meaning": "ความทรงจำเก่า ๆ คนเก่า บ้านเกิด เรื่องจากอดีต",
+      "image": "/v2/assets/tarot/6%20of%20cups.webp"
+    },
+    {
+      "name": "Seven of Cups",
+      "file": "7 of cups.png",
+      "meaning": "ตัวเลือกเยอะ ฝันเยอะ ต้องแยกแยะว่าอะไรจริงอะไรมโน",
+      "image": "/v2/assets/tarot/7%20of%20cups.webp"
+    },
+    {
+      "name": "Eight of Cups",
+      "file": "8 of cups.png",
+      "meaning": "เดินออกจากสิ่งที่ไม่เติมเต็ม แม้จะผูกพันแต่ต้องไปต่อ",
+      "image": "/v2/assets/tarot/8%20of%20cups.webp"
+    },
+    {
+      "name": "Nine of Cups",
+      "file": "9 of cups.png",
+      "meaning": "ความพึงพอใจในตัวเอง สมหวังหลายอย่าง ระวังความขี้เกียจ",
+      "image": "/v2/assets/tarot/9%20of%20cups.webp"
+    },
+    {
+      "name": "Ten of Cups",
+      "file": "10 of cups.png",
+      "meaning": "ความสุขครอบครัว ความสัมพันธ์กลมกลืน อารมณ์อิ่มเอม",
+      "image": "/v2/assets/tarot/10%20of%20cups.webp"
+    },
+    {
+      "name": "Page of Cups",
+      "file": "Page Of Cups.png",
+      "meaning": "ความรู้สึกอ่อนโยน ข้อความหวาน ๆ ไอเดียสร้างสรรค์สายศิลป์",
+      "image": "/v2/assets/tarot/Page%20Of%20Cups.webp"
+    },
+    {
+      "name": "Knight of Cups",
+      "file": "Knight of Cups.png",
+      "meaning": "ข้อเสนอหรือคนโรแมนติก ความฝันที่อยากตามหา",
+      "image": "/v2/assets/tarot/Knight%20of%20Cups.webp"
+    },
+    {
+      "name": "Queen of Cups",
+      "file": "Queen of Cups.png",
+      "meaning": "เข้าใจอารมณ์ลึกซึ้ง ใจดี ใส่ใจคนอื่นสูง",
+      "image": "/v2/assets/tarot/Queen%20of%20Cups.webp"
+    },
+    {
+      "name": "King of Cups",
+      "file": "King of Cups.png",
+      "meaning": "คุมอารมณ์เก่ง เข้าใจคน รอบคอบด้านความรู้สึก",
+      "image": "/v2/assets/tarot/King%20of%20Cups.webp"
+    },
+    {
+      "name": "Ace of Swords",
+      "file": "Ace of Swords.png",
+      "meaning": "ความคิดชัดเจน ไอเดียใหม่ การสื่อสารตรงไปตรงมา",
+      "image": "/v2/assets/tarot/Ace%20of%20Swords.webp"
+    },
+    {
+      "name": "Two of Swords",
+      "file": "2 of Swords.png",
+      "meaning": "ลังเล ตัดสินใจไม่ได้ ปิดใจไม่อยากรับข้อมูลเพิ่ม",
+      "image": "/v2/assets/tarot/2%20of%20Swords.webp"
+    },
+    {
+      "name": "Three of Swords",
+      "file": "3 of Swords.png",
+      "meaning": "ความเสียใจ การผิดหวัง คำพูดที่บาดใจ",
+      "image": "/v2/assets/tarot/3%20of%20Swords.webp"
+    },
+    {
+      "name": "Four of Swords",
+      "file": "4 of Swords.png",
+      "meaning": "พักสมอง พักใจ พักจากดราม่า เพื่อชาร์จพลัง",
+      "image": "/v2/assets/tarot/4%20of%20Swords.webp"
+    },
+    {
+      "name": "Five of Swords",
+      "file": "5 of Swords.png",
+      "meaning": "ชนะก็จริงแต่ไม่ได้มีความสุข นักเลงคีย์บอร์ด ดราม่าที่ไม่มีคนยอมกัน",
+      "image": "/v2/assets/tarot/5%20of%20Swords.webp"
+    },
+    {
+      "name": "Six of Swords",
+      "file": "6 of Swords.png",
+      "meaning": "ค่อย ๆ เคลื่อนออกจากสถานการณ์ตึงเครียด เดินทางเพื่อพักใจ",
+      "image": "/v2/assets/tarot/6%20of%20Swords.webp"
+    },
+    {
+      "name": "Seven of Swords",
+      "file": "7 of Swords.png",
+      "meaning": "การแอบทำอะไรลับ ๆ กลยุทธ์ ความไม่ตรงไปตรงมา",
+      "image": "/v2/assets/tarot/7%20of%20Swords.webp"
+    },
+    {
+      "name": "Eight of Swords",
+      "file": "8 of Swords.png",
+      "meaning": "รู้สึกติดแหง็กแต่จริง ๆ ยังมีทางออก เพียงแต่ความกลัวบังอยู่",
+      "image": "/v2/assets/tarot/8%20of%20Swords.webp"
+    },
+    {
+      "name": "Nine of Swords",
+      "file": "9 of Swords.png",
+      "meaning": "กังวลมากเกินจริง คิดวนไปมา นอนไม่หลับ",
+      "image": "/v2/assets/tarot/9%20of%20Swords.webp"
+    },
+    {
+      "name": "Ten of Swords",
+      "file": "10 of Swords.png",
+      "meaning": "จบแบบเจ็บ ๆ แต่จบแล้ว เริ่มต้นใหม่ได้จากจุดนี้",
+      "image": "/v2/assets/tarot/10%20of%20Swords.webp"
+    },
+    {
+      "name": "Page of Swords",
+      "file": "Page Of Swords.png",
+      "meaning": "อยากรู้อยากเห็น อยากหาข้อมูล เพิ่มทักษะการคิดวิเคราะห์",
+      "image": "/v2/assets/tarot/Page%20Of%20Swords.webp"
+    },
+    {
+      "name": "Knight of Swords",
+      "file": "Knight of Swords.png",
+      "meaning": "พุ่งไปอย่างเร็วด้วยไอเดีย/คำพูด ระวังใจร้อนหรือพูดแรงไป",
+      "image": "/v2/assets/tarot/Knight%20of%20Swords.webp"
+    },
+    {
+      "name": "Queen of Swords",
+      "file": "Queen of Swords.png",
+      "meaning": "ใช้เหตุผลเหนืออารมณ์ พูดตรง ซื่อสัตย์กับความจริง",
+      "image": "/v2/assets/tarot/Queen%20of%20Swords.webp"
+    },
+    {
+      "name": "King of Swords",
+      "file": "King of Swords.png",
+      "meaning": "ผู้นำที่คิดเป็นระบบ กฎหมาย กฎระเบียบ การวิเคราะห์คมกริบ",
+      "image": "/v2/assets/tarot/King%20of%20Swords.webp"
+    },
+    {
+      "name": "Ace of Pentacles",
+      "file": "ACES OF PENTACLES.png",
+      "meaning": "โอกาสใหม่ด้านการเงิน งาน หรือของที่จับต้องได้",
+      "image": "/v2/assets/tarot/ACES%20OF%20PENTACLES.webp"
+    },
+    {
+      "name": "Two of Pentacles",
+      "file": "2 OF PENTACLES.png",
+      "meaning": "การหมุนเงิน ทำหลายอย่างพร้อมกัน จัดสมดุลชีวิต–งาน",
+      "image": "/v2/assets/tarot/2%20OF%20PENTACLES.webp"
+    },
+    {
+      "name": "Three of Pentacles",
+      "file": "3 OF PENTACLES.png",
+      "meaning": "การทำงานเป็นทีม การสร้างผลงานให้คนอื่นเห็นคุณค่า",
+      "image": "/v2/assets/tarot/3%20OF%20PENTACLES.webp"
+    },
+    {
+      "name": "Four of Pentacles",
+      "file": "4 OF PENTACLES.png",
+      "meaning": "ยึดติดกับเงินหรือความปลอดภัยเกินไป กลัวเสียสิ่งที่มี",
+      "image": "/v2/assets/tarot/4%20OF%20PENTACLES.webp"
+    },
+    {
+      "name": "Five of Pentacles",
+      "file": "5 OF PENTACLES.png",
+      "meaning": "รู้สึกขาด รายได้ฝืด ความกังวลด้านการเงิน ต้องมองหาความช่วยเหลือ",
+      "image": "/v2/assets/tarot/5%20OF%20PENTACLES.webp"
+    },
+    {
+      "name": "Six of Pentacles",
+      "file": "6 OF PENTACLES.png",
+      "meaning": "การแบ่งปัน การให้–การรับ ความสมดุลด้านทรัพยากร",
+      "image": "/v2/assets/tarot/6%20OF%20PENTACLES.webp"
+    },
+    {
+      "name": "Seven of Pentacles",
+      "file": "7 OF PENTACLES.png",
+      "meaning": "รอผลจากสิ่งที่ลงทุนไปแล้ว ต้องใช้เวลาและความอดทน",
+      "image": "/v2/assets/tarot/7%20OF%20PENTACLES.webp"
+    },
+    {
+      "name": "Eight of Pentacles",
+      "file": "8 OF PENTACLES.png",
+      "meaning": "ฝึกฝนทักษะ ทำงานละเอียด ซ้ำ ๆ เพื่อเก่งขึ้น",
+      "image": "/v2/assets/tarot/8%20OF%20PENTACLES.webp"
+    },
+    {
+      "name": "Nine of Pentacles",
+      "file": "9 OF PENTACLES.png",
+      "meaning": "ความมั่งคั่งจากน้ำพักน้ำแรงของตัวเอง ใช้ชีวิตแบบมีระดับ",
+      "image": "/v2/assets/tarot/9%20OF%20PENTACLES.webp"
+    },
+    {
+      "name": "Ten of Pentacles",
+      "file": "10 OF PENTACLES.png",
+      "meaning": "ความมั่นคงระยะยาว ครอบครัว ทรัพย์สิน มรดก",
+      "image": "/v2/assets/tarot/10%20OF%20PENTACLES.webp"
+    },
+    {
+      "name": "Page of Pentacles",
+      "file": "page OF PENTACLES.png",
+      "meaning": "เริ่มเรียนรู้เรื่องเงิน/งานใหม่ ๆ ข้อเสนอเล็ก ๆ แต่มีอนาคต",
+      "image": "/v2/assets/tarot/page%20OF%20PENTACLES.webp"
+    },
+    {
+      "name": "Knight of Pentacles",
+      "file": "knights OF PENTACLES.png",
+      "meaning": "ทำงานอย่างสม่ำเสมอ ช้าแต่ชัวร์ ระยะยาวมั่นคง",
+      "image": "/v2/assets/tarot/knights%20OF%20PENTACLES.webp"
+    },
+    {
+      "name": "Queen of Pentacles",
+      "file": "queen OF PENTACLES.png",
+      "meaning": "ดูแลบ้าน การเงิน และคนรอบข้างได้ดี มีความเป็นแม่สูง",
+      "image": "/v2/assets/tarot/queen%20OF%20PENTACLES.webp"
+    },
+    {
+      "name": "King of Pentacles",
+      "file": "king OF PENTACLES.png",
+      "meaning": "เจ้าของกิจการ/ผู้บริหารที่มั่งคั่ง คิดเรื่องความมั่นคงการเงินระยะยาว",
+      "image": "/v2/assets/tarot/king%20OF%20PENTACLES.webp"
+    }
+  ],
+  "fortunes": [
+    {
+      "number": 1,
+      "level": "โชคดีมาก",
+      "title": "รุ่งเรืองดุจอรุณแรกของปี",
+      "main": "ช่วงนี้ดวงขึ้น ทุกอย่างที่วางแผนไว้มีโอกาสสำเร็จสูง หากลงมือทำอย่างจริงจังจะเห็นผลเร็ว",
+      "advice": "อย่าประมาท ใช้จังหวะที่ดีนี้ในการวางรากฐานระยะยาว เช่น การเรียน การงาน หรือการลงทุนที่ศึกษามาดีแล้ว"
+    },
+    {
+      "number": 2,
+      "level": "โชคดี",
+      "title": "น้ำขึ้นให้รีบตัก",
+      "main": "มีโอกาสดีผ่านเข้ามา ทั้งด้านการเรียน การทำโปรเจกต์ หรือโอกาสใหม่ ๆ",
+      "advice": "หมั่นสังเกตโอกาสรอบตัว อย่าปล่อยผ่านเพราะความขี้เกียจ หรือความกลัวเล็ก ๆ น้อย ๆ"
+    },
+    {
+      "number": 3,
+      "level": "ปานกลาง",
+      "title": "ค่อยเป็นค่อยไป",
+      "main": "ช่วงนี้สิ่งต่าง ๆ ยังไปได้เรื่อย ๆ ไม่เร็วไม่ช้า ถ้าพยายามต่อเนื่องจะค่อย ๆ เห็นผล",
+      "advice": "โฟกัสที่วินัยและการจัดเวลา อย่าเปรียบเทียบตัวเองกับคนอื่นมากเกินไป"
+    },
+    {
+      "number": 4,
+      "level": "โชคดีเล็กน้อย",
+      "title": "แสงเล็ก ๆ ปลายทาง",
+      "main": "แม้ตอนนี้อาจยังไม่เห็นผลชัดเจน แต่กำลังเดินมาถูกทางแล้ว",
+      "advice": "ทบทวนแผน ปรับเล็กน้อย แล้วเดินต่อ อย่าท้อเพราะความสำเร็จมักมาช้ากว่าที่คิดเสมอ"
+    },
+    {
+      "number": 5,
+      "level": "เสี่ยงเล็กน้อย",
+      "title": "ลมเปลี่ยนทิศ",
+      "main": "อาจมีเรื่องไม่คาดคิดเกิดขึ้น ทำให้แผนที่วางไว้ต้องเปลี่ยนไปบ้าง",
+      "advice": "เตรียมแผนสำรองไว้ และระวังการตัดสินใจแบบรีบเร่ง พยายามตั้งสติให้ดี"
+    },
+    {
+      "number": 6,
+      "level": "โชคดี",
+      "title": "มีผู้ใหญ่คอยช่วยเหลือ",
+      "main": "หากมีปัญหา ให้ลองถามหรือขอคำปรึกษาจากผู้ใหญ่ ครู หรือคนที่มีประสบการณ์",
+      "advice": "อย่าเกรงใจที่จะขอคำแนะนำ บางครั้งคำพูดหนึ่งประโยคสามารถช่วยเปลี่ยนมุมมองทั้งชีวิตได้"
+    },
+    {
+      "number": 7,
+      "level": "ปานกลาง",
+      "title": "สอบผ่านด้วยความพยายาม",
+      "main": "เรื่องการเรียนหรือการทำงานอาจเหนื่อยหน่อย แต่ถ้าอ่านหนังสือหรือเตรียมตัวดีจะไปได้สวย",
+      "advice": "แบ่งเวลาอ่านหนังสือเป็นช่วงสั้น ๆ แต่สม่ำเสมอ แล้วให้รางวัลตัวเองเล็ก ๆ หลังทำสำเร็จ"
+    },
+    {
+      "number": 8,
+      "level": "โชคดีมาก",
+      "title": "สิ่งดี ๆ กำลังเข้ามา",
+      "main": "มีข่าวดีรออยู่ อาจเกี่ยวกับโปรเจกต์ งาน เงิน หรือคนที่คุณแอบหวัง",
+      "advice": "เตรียมตัวให้พร้อมรับสิ่งดี ๆ และรักษาความเป็นตัวเองที่จริงใจและขยันเอาไว้"
+    },
+    {
+      "number": 9,
+      "level": "เสี่ยงเล็กน้อย",
+      "title": "พักก่อนแล้วค่อยลุยต่อ",
+      "main": "ร่างกายและใจอาจเริ่มล้า ถ้าฝืนต่อไปอาจทำให้ผลลัพธ์ไม่ดีเท่าที่ควร",
+      "advice": "พักผ่อนให้พอ จัดสมดุลระหว่างงาน การเรียน และเวลาส่วนตัว อย่าลืมดูแลสุขภาพ"
+    },
+    {
+      "number": 10,
+      "level": "ไม่ค่อยดี",
+      "title": "เมฆหมอกชั่วคราว",
+      "main": "อาจมีอุปสรรคเข้ามาทดสอบความใจแข็งและความอดทนของคุณ",
+      "advice": "อย่าเพิ่งตัดสินใจเรื่องใหญ่ในช่วงนี้ ใช้เวลาไตร่ตรองให้ดี และมองหาคนที่ไว้ใจได้ไว้ปรึกษา"
+    },
+    {
+      "number": 11,
+      "level": "โชคดี",
+      "title": "มิตรภาพช่วยเกื้อหนุน",
+      "main": "เพื่อนหรือคนรอบตัวจะเป็นกุญแจสำคัญให้ผ่านเรื่องยาก ๆ ไปได้",
+      "advice": "รักษาความสัมพันธ์ดี ๆ ไว้ แบ่งปัน ทั้งคำปรึกษาและน้ำใจ ยิ่งให้ยิ่งได้กลับมา"
+    },
+    {
+      "number": 12,
+      "level": "ปานกลาง",
+      "title": "เรียนรู้จากความผิดพลาด",
+      "main": "สิ่งที่ยังไม่สำเร็จไม่ได้แปลว่าล้มเหลว แต่เป็นบทเรียนสำคัญในก้าวถัดไป",
+      "advice": "ลองมองสิ่งที่เกิดขึ้นแบบคนภายนอก แล้วถามตัวเองว่า ‘ฉันได้เรียนรู้อะไรจากเรื่องนี้?’"
+    },
+    {
+      "number": 13,
+      "level": "โชคดีเล็กน้อย",
+      "title": "เริ่มต้นใหม่อย่างมั่นคง",
+      "main": "มีโอกาสเริ่มต้นสิ่งใหม่ ไม่ว่าจะเป็นงาน โปรเจกต์ หรือความสัมพันธ์",
+      "advice": "วางแผนให้ดีตั้งแต่ต้น อย่ากลัวการเริ่มใหม่ ถ้ามันดีกับอนาคตของคุณ"
+    },
+    {
+      "number": 14,
+      "level": "เสี่ยงเล็กน้อย",
+      "title": "คำพูดคือดาบสองคม",
+      "main": "ช่วงนี้อาจมีปัญหาเรื่องการสื่อสาร ความเข้าใจผิด หรืออารมณ์ที่พาไป",
+      "advice": "คิดก่อนพูดทุกครั้ง พยายามใช้คำพูดนุ่มนวล และฟังอีกฝ่ายให้จบก่อนตอบ"
+    },
+    {
+      "number": 15,
+      "level": "โชคดี",
+      "title": "ความพยายามไม่เคยทรยศ",
+      "main": "สิ่งที่คุณอดทนทำมาสักพักเริ่มเห็นผล หรือใกล้จะสำเร็จแล้ว",
+      "advice": "อย่าหยุดกลางทาง เพิ่มวินัยอีกนิด คุณอาจอยู่ใกล้เส้นชัยมากกว่าที่คิด"
+    },
+    {
+      "number": 16,
+      "level": "ปานกลาง",
+      "title": "จัดสมดุลชีวิต",
+      "main": "บางอย่างอาจเริ่ม ‘เกินไป’ ไม่ว่าจะเป็นงาน เล่น หรือพัก",
+      "advice": "จัดเวลา 3 ส่วน งาน–ครอบครัว/เพื่อน–ตัวเอง ให้บาลานซ์ แล้วทุกอย่างจะไหลลื่นขึ้น"
+    },
+    {
+      "number": 17,
+      "level": "โชคดีมาก",
+      "title": "โอกาสทองที่ไม่ควรพลาด",
+      "main": "มีจังหวะพิเศษ เช่น คนชวนไปร่วมงาน โปรเจกต์ หรือกิจกรรมที่เปิดโลกใหม่",
+      "advice": "ใช้หัวใจเปิดรับ แต่ใช้สมองกลั่นกรอง ถ้าไม่ฝืนตัวเองจนเกินไป ลองก้าวออกจากคอมฟอร์ตโซนดู"
+    },
+    {
+      "number": 18,
+      "level": "ไม่ค่อยดี",
+      "title": "ใจร้อนเป็นภัย",
+      "main": "การตัดสินใจด้วยอารมณ์อาจทำให้พลาดง่าย ทั้งเรื่องเงิน งาน และความสัมพันธ์",
+      "advice": "ถ้าไม่จำเป็น อย่าเพิ่งตัดสินใจเรื่องใหญ่วันนี้ ลองหลับไปหนึ่งคืนแล้วค่อยคิดใหม่"
+    },
+    {
+      "number": 19,
+      "level": "โชคดีเล็กน้อย",
+      "title": "ข่าวดีเล็ก ๆ ระหว่างวัน",
+      "main": "อาจได้รับข่าวดีเล็ก ๆ น้อย ๆ เช่น ได้ของที่อยากได้ โปรเจกต์ผ่าน หรือมีคนชม",
+      "advice": "เก็บโมเมนต์เล็ก ๆ เหล่านี้ไว้เป็นพลังใจ แล้วใช้มันเป็นแรงผลักให้ทำสิ่งใหญ่ขึ้น"
+    },
+    {
+      "number": 20,
+      "level": "เสี่ยงเล็กน้อย",
+      "title": "ระวังเรื่องเงิน",
+      "main": "อาจมีค่าใช้จ่ายกะทันหัน หรือใช้เงินไปกับของที่ไม่ได้จำเป็นมาก",
+      "advice": "ก่อนจ่ายให้ถามตัวเองว่า ‘จำเป็นจริงไหม’ ถ้ายังลังเล แปลว่ายังไม่จำเป็น"
+    },
+    {
+      "number": 21,
+      "level": "โชคดี",
+      "title": "เสน่ห์ส่วนตัวกำลังทำงาน",
+      "main": "คุณดูน่าสนใจในสายตาคนรอบข้าง ทั้งเรื่องนิสัย ความคิด หรือสไตล์",
+      "advice": "ใช้ช่วงนี้สร้าง connection ดี ๆ รู้จักคนใหม่ ๆ และรักษาความจริงใจเอาไว้"
+    },
+    {
+      "number": 22,
+      "level": "ปานกลาง",
+      "title": "ทางแยกของการตัดสินใจ",
+      "main": "คุณอาจลังเลระหว่างสองทางเลือกที่ต่างกันสุดขั้ว",
+      "advice": "ลองเขียนข้อดี–ข้อเสียของแต่ละทางออกมา แล้วเลือกสิ่งที่สอดคล้องกับตัวตนและเป้าหมายระยะยาวที่สุด"
+    },
+    {
+      "number": 23,
+      "level": "ไม่ค่อยดี",
+      "title": "พักใจก่อนลุยต่อ",
+      "main": "ความกดดันสะสมอาจทำให้รู้สึกเหนื่อย ล้า หรือคิดลบกับตัวเอง",
+      "advice": "อย่าฝืนให้เก่งตลอดเวลา อนุญาตให้ตัวเองอ่อนแอได้บ้าง แล้วค่อยกลับมาเริ่มใหม่อีกครั้ง"
+    },
+    {
+      "number": 24,
+      "level": "โชคดีมาก",
+      "title": "ดวงขึ้นทั้งเรื่องงานและใจ",
+      "main": "ทั้งเรื่องงาน/การเรียน และความสัมพันธ์มีแนวโน้มสดใสไปพร้อมกัน",
+      "advice": "ใช้ช่วงนี้ในการวางรากฐานสำคัญ เช่น สร้างโปรเจกต์ระยะยาว เรียนสกิลใหม่ หรือเปิดใจคุยกับคนสำคัญ"
+    }
+  ],
+  "colors": {
+    "sunday": {
+      "id": "sunday",
+      "name": "วันอาทิตย์",
+      "enName": "SUNDAY",
+      "accent": "text-red-400",
+      "bgGradient": "from-red-900/60 via-slate-950/20 to-transparent",
+      "deityName": "เจ้าแม่กวนอิม",
+      "worship": "เจ้าแม่กวนอิม, เสด็จพ่อ ร.๕, พญาครุฑ, พระแม่อุมาเทวี",
+      "icon": "sun",
+      "luckyColors": [
+        {
+          "pattern": "circles",
+          "color": "#1a1a1a",
+          "label": "อำนาจ บารมี",
+          "desc": "ชื่อเสียง เงินทอง",
+          "textColor": "text-white"
+        },
+        {
+          "pattern": "diamond",
+          "color": "#ea580c",
+          "label": "โชคลาภ",
+          "desc": "โอกาสใหม่ งาน เงิน",
+          "textColor": "text-white"
+        },
+        {
+          "pattern": "waves",
+          "color": "#16a34a",
+          "label": "เมตตา",
+          "desc": "อุปถัมภ์ การเงิน",
+          "textColor": "text-white"
+        },
+        {
+          "pattern": "lines",
+          "color": "#9333ea",
+          "label": "การงาน",
+          "desc": "โอกาสใหม่ เงินพิเศษ",
+          "textColor": "text-white"
+        },
+        {
+          "pattern": "flower",
+          "color": "#2563eb",
+          "label": "เสน่ห์",
+          "desc": "เมตตา อุปถัมภ์",
+          "textColor": "text-white"
+        }
+      ]
+    },
+    "monday": {
+      "id": "monday",
+      "name": "วันจันทร์",
+      "enName": "MONDAY",
+      "accent": "text-yellow-400",
+      "bgGradient": "from-yellow-900/60 via-slate-950/20 to-transparent",
+      "deityName": "พระแม่ลักษมี",
+      "worship": "พระแม่ลักษมี, พญานาค, สมเด็จพระพุฒาจารย์ (โต)",
+      "icon": "moon",
+      "luckyColors": [
+        {
+          "pattern": "circles",
+          "color": "#ca8a04",
+          "label": "อำนาจ บารมี",
+          "desc": "ชื่อเสียง เงินทอง",
+          "textColor": "text-white"
+        },
+        {
+          "pattern": "diamond",
+          "color": "#fbbf24",
+          "label": "โชคลาภ",
+          "desc": "โอกาสใหม่ งาน เงิน",
+          "textColor": "text-black"
+        },
+        {
+          "pattern": "waves",
+          "color": "#0ea5e9",
+          "label": "เมตตา",
+          "desc": "อุปถัมภ์ โชคลาภ",
+          "textColor": "text-white"
+        },
+        {
+          "pattern": "lines",
+          "color": "#1e3a8a",
+          "label": "การงาน",
+          "desc": "โอกาสใหม่ โชค",
+          "textColor": "text-white"
+        },
+        {
+          "pattern": "flower",
+          "color": "#16a34a",
+          "label": "เสน่ห์",
+          "desc": "เมตตา อุปถัมภ์",
+          "textColor": "text-white"
+        }
+      ]
+    },
+    "tuesday": {
+      "id": "tuesday",
+      "name": "วันอังคาร",
+      "enName": "TUESDAY",
+      "accent": "text-pink-400",
+      "bgGradient": "from-pink-900/60 via-slate-950/20 to-transparent",
+      "deityName": "พระพรหม",
+      "worship": "พระพรหม, ปู่ฤาษีพ่อแก่, พญานาค, เสด็จพ่อ ร.๕",
+      "icon": "shield",
+      "luckyColors": [
+        {
+          "pattern": "circles",
+          "color": "#1a1a1a",
+          "label": "อำนาจ บารมี",
+          "desc": "ชื่อเสียง เงินทอง",
+          "textColor": "text-white"
+        },
+        {
+          "pattern": "diamond",
+          "color": "#ea580c",
+          "label": "โชคลาภ",
+          "desc": "โอกาสใหม่ สิ่งใหม่ๆ",
+          "textColor": "text-white"
+        },
+        {
+          "pattern": "lines",
+          "color": "#9333ea",
+          "label": "การเงิน",
+          "desc": "โชคลาภ เงินหลายทาง",
+          "textColor": "text-white"
+        },
+        {
+          "pattern": "diamond",
+          "color": "#fbbf24",
+          "label": "การงาน",
+          "desc": "โชคลาภ พิเศษ",
+          "textColor": "text-black"
+        },
+        {
+          "pattern": "waves",
+          "color": "#1d4ed8",
+          "label": "เมตตา",
+          "desc": "อุปถัมภ์ บารมี",
+          "textColor": "text-white"
+        }
+      ]
+    },
+    "wednesdayDay": {
+      "id": "wednesdayDay",
+      "name": "วันพุธ (กลางวัน)",
+      "enName": "WEDNESDAY (DAY)",
+      "accent": "text-emerald-400",
+      "bgGradient": "from-emerald-900/60 via-slate-950/20 to-transparent",
+      "deityName": "พญานาค",
+      "worship": "พญานาค, พระพิฆเนศ, สมเด็จพระพุฒาจารย์ (โต)",
+      "icon": "cloud",
+      "luckyColors": [
+        {
+          "pattern": "circles",
+          "color": "#b45309",
+          "label": "อำนาจ บารมี",
+          "desc": "ชื่อเสียง เงินทอง",
+          "textColor": "text-white"
+        },
+        {
+          "pattern": "diamond",
+          "color": "#ea580c",
+          "label": "โอกาส",
+          "desc": "ขยายธุรกิจ รายได้",
+          "textColor": "text-white"
+        },
+        {
+          "pattern": "lines",
+          "color": "#a855f7",
+          "label": "การเงิน",
+          "desc": "โชคลาภ เงินพิเศษ",
+          "textColor": "text-white"
+        },
+        {
+          "pattern": "diamond",
+          "color": "#fbbf24",
+          "label": "การงาน",
+          "desc": "ขยายธุรกิจ",
+          "textColor": "text-black"
+        },
+        {
+          "pattern": "flower",
+          "color": "#dc2626",
+          "label": "เมตตา",
+          "desc": "ชื่อเสียง อุปถัมภ์",
+          "textColor": "text-white"
+        }
+      ]
+    },
+    "wednesdayNight": {
+      "id": "wednesdayNight",
+      "name": "วันพุธ (กลางคืน)",
+      "enName": "WEDNESDAY (NIGHT)",
+      "accent": "text-gray-300",
+      "bgGradient": "from-slate-800/60 via-slate-950/20 to-transparent",
+      "deityName": "พระราหู",
+      "worship": "พระราหู, พญาครุฑ, เสด็จพ่อ ร.๕, พระนารายณ์",
+      "icon": "zap",
+      "luckyColors": [
+        {
+          "pattern": "circles",
+          "color": "#e5e7eb",
+          "label": "อำนาจ บารมี",
+          "desc": "ชื่อเสียง อุปถัมภ์",
+          "textColor": "text-black"
+        },
+        {
+          "pattern": "diamond",
+          "color": "#dc2626",
+          "label": "โชคลาภ",
+          "desc": "โอกาสใหม่ เงินพิเศษ",
+          "textColor": "text-white"
+        },
+        {
+          "pattern": "flower",
+          "color": "#f472b6",
+          "label": "เสน่ห์",
+          "desc": "เมตตา โชคการเงิน",
+          "textColor": "text-white"
+        },
+        {
+          "pattern": "waves",
+          "color": "#38bdf8",
+          "label": "ความสำเร็จ",
+          "desc": "ชื่อเสียง บารมี",
+          "textColor": "text-white"
+        },
+        {
+          "pattern": "lines",
+          "color": "#1e3a8a",
+          "label": "การงาน",
+          "desc": "เงินพิเศษ หลายทาง",
+          "textColor": "text-white"
+        }
+      ]
+    },
+    "thursday": {
+      "id": "thursday",
+      "name": "วันพฤหัสบดี",
+      "enName": "THURSDAY",
+      "accent": "text-orange-400",
+      "bgGradient": "from-orange-900/60 via-slate-950/20 to-transparent",
+      "deityName": "ปู่ฤาษีพ่อแก่",
+      "worship": "ปู่ฤาษีพ่อแก่, พระพุทธชินราช, พระแม่อุมาเทวี",
+      "icon": "crown",
+      "luckyColors": [
+        {
+          "pattern": "waves",
+          "color": "#38bdf8",
+          "label": "อำนาจ",
+          "desc": "ชื่อเสียง เงินทอง",
+          "textColor": "text-white"
+        },
+        {
+          "pattern": "diamond",
+          "color": "#ea580c",
+          "label": "โอกาส",
+          "desc": "เมตตา โชคลาภ",
+          "textColor": "text-white"
+        },
+        {
+          "pattern": "lines",
+          "color": "#9333ea",
+          "label": "การเงิน",
+          "desc": "ค้าขาย เงินพิเศษ",
+          "textColor": "text-white"
+        },
+        {
+          "pattern": "diamond",
+          "color": "#fbbf24",
+          "label": "โชคลาภ",
+          "desc": "เมตตา เงิน งาน",
+          "textColor": "text-black"
+        },
+        {
+          "pattern": "flower",
+          "color": "#f9a8d4",
+          "label": "เมตตา",
+          "desc": "อุปถัมภ์ เงิน งาน",
+          "textColor": "text-black"
+        }
+      ]
+    },
+    "friday": {
+      "id": "friday",
+      "name": "วันศุกร์",
+      "enName": "FRIDAY",
+      "accent": "text-cyan-400",
+      "bgGradient": "from-cyan-900/60 via-slate-950/20 to-transparent",
+      "deityName": "พระแม่ลักษมี",
+      "worship": "พระพุทธชินราช, พญานาค, พระแม่ลักษมี",
+      "icon": "heart",
+      "luckyColors": [
+        {
+          "pattern": "circles",
+          "color": "#dc2626",
+          "label": "อำนาจ",
+          "desc": "ชื่อเสียง บารมี",
+          "textColor": "text-white"
+        },
+        {
+          "pattern": "diamond",
+          "color": "#fbbf24",
+          "label": "โอกาส",
+          "desc": "โชค งาน เงินพิเศษ",
+          "textColor": "text-black"
+        },
+        {
+          "pattern": "waves",
+          "color": "#1a1a1a",
+          "label": "การเงิน",
+          "desc": "เมตตา โชคลาภ",
+          "textColor": "text-white"
+        },
+        {
+          "pattern": "lines",
+          "color": "#f472b6",
+          "label": "การงาน",
+          "desc": "โอกาสใหม่ โชค",
+          "textColor": "text-white"
+        },
+        {
+          "pattern": "flower",
+          "color": "#22c55e",
+          "label": "เมตตา",
+          "desc": "อุปถัมภ์ งาน เงิน",
+          "textColor": "text-white"
+        }
+      ]
+    },
+    "saturday": {
+      "id": "saturday",
+      "name": "วันเสาร์",
+      "enName": "SATURDAY",
+      "accent": "text-purple-400",
+      "bgGradient": "from-purple-900/60 via-slate-950/20 to-transparent",
+      "deityName": "พระนารายณ์",
+      "worship": "พระพุทธชินราช, เสด็จพ่อ ร.๕, พระแก้วมรกต",
+      "icon": "star",
+      "luckyColors": [
+        {
+          "pattern": "waves",
+          "color": "#38bdf8",
+          "label": "อำนาจ",
+          "desc": "ชื่อเสียง บารมี",
+          "textColor": "text-white"
+        },
+        {
+          "pattern": "flower",
+          "color": "#f472b6",
+          "label": "โอกาส",
+          "desc": "อะไรใหม่ๆ",
+          "textColor": "text-white"
+        },
+        {
+          "pattern": "lines",
+          "color": "#9333ea",
+          "label": "การเงิน",
+          "desc": "โชค เงินใหม่",
+          "textColor": "text-white"
+        },
+        {
+          "pattern": "diamond",
+          "color": "#dc2626",
+          "label": "โชคลาภ",
+          "desc": "เงิน งาน หลายทาง",
+          "textColor": "text-white"
+        },
+        {
+          "pattern": "circles",
+          "color": "#1a1a1a",
+          "label": "เมตตา",
+          "desc": "บารมี โชคดี",
+          "textColor": "text-white"
+        }
+      ]
+    }
+  },
+  "luckyDays": [
+    {
+      "id": 1,
+      "name": "วันอาทิตย์",
+      "color": "bg-red-500"
+    },
+    {
+      "id": 2,
+      "name": "วันจันทร์",
+      "color": "bg-yellow-400"
+    },
+    {
+      "id": 3,
+      "name": "วันอังคาร",
+      "color": "bg-pink-500"
+    },
+    {
+      "id": 4,
+      "name": "วันพุธ (กลางวัน)",
+      "color": "bg-green-500"
+    },
+    {
+      "id": 8,
+      "name": "วันพุธ (กลางคืน)",
+      "color": "bg-gray-700"
+    },
+    {
+      "id": 5,
+      "name": "วันพฤหัสบดี",
+      "color": "bg-orange-500"
+    },
+    {
+      "id": 6,
+      "name": "วันศุกร์",
+      "color": "bg-blue-500"
+    },
+    {
+      "id": 7,
+      "name": "วันเสาร์",
+      "color": "bg-purple-700"
+    }
+  ],
+  "thaksa": {
+    "borivan": {
+      "label": "บริวาร",
+      "meaning": "คนใกล้ชิด, ครอบครัว, ลูกน้อง",
+      "type": "neutral"
+    },
+    "ayu": {
+      "label": "อายุ",
+      "meaning": "สุขภาพ, ความเป็นอยู่, วิถีชีวิต",
+      "type": "good"
+    },
+    "dech": {
+      "label": "เดช",
+      "meaning": "อำนาจ, ชื่อเสียง, บารมี",
+      "type": "good"
+    },
+    "si": {
+      "label": "ศรี",
+      "meaning": "โชคลาภ, ความสำเร็จ, เงินทอง (ดีมาก)",
+      "type": "very_good"
+    },
+    "mula": {
+      "label": "มูลละ",
+      "meaning": "ทรัพย์สิน, มรดก, ความมั่นคง",
+      "type": "good"
+    },
+    "utsaha": {
+      "label": "อุตสาหะ",
+      "meaning": "หน้าที่การงาน, ความพยายาม",
+      "type": "neutral"
+    },
+    "montri": {
+      "label": "มนตรี",
+      "meaning": "ผู้ใหญ่เมตตา, คนอุปถัมภ์ (ดีมาก)",
+      "type": "very_good"
+    },
+    "kalakini": {
+      "label": "กาลกิณี",
+      "meaning": "อุปสรรค, โชคร้าย, สิ่งที่ควรระวัง (ไม่ดี)",
+      "type": "bad"
+    }
+  },
+  "chants": [
+    {
+      "id": "red",
+      "title": "ม้าแดง (Red Horse)",
+      "subtitle": "คาถาอัศวินไฟ เร่งทรัพย์ เร่งเงิน เร่งโอกาส",
+      "element": "ธาตุไฟ",
+      "power": [
+        "เงินเข้าเร็ว",
+        "ปิดดีลไว",
+        "ลูกค้าเข้าหา",
+        "เงินก้อนเคลื่อนตัว"
+      ],
+      "suitableFor": [
+        "พ่อค้าแม่ค้า",
+        "ไลฟ์ขายของ",
+        "งานยอด/คอมมิชชั่น",
+        "เงินค้างรอเข้า"
+      ],
+      "preparation": [
+        "จับม้าแดงไว้ที่มือขวา",
+        "หลับตาลงอย่างสงบ",
+        "นึกถึง \"เงินที่อยากให้มาเร็วที่สุด 1 เรื่อง\" (ห้ามหลายเรื่อง)"
+      ],
+      "chantText": [
+        "นะ โม พุท ธา ยะ",
+        "อัคคีอัศวินะ มหาลาภัง ชัยยะมัง",
+        "ข้าพเจ้าขออัญเชิญ พลังแห่งม้าไฟ",
+        "ผู้วิ่งนำทรัพย์ ผู้เร่งโชค ผู้เปิดดีล",
+        "เงินที่ค้าง จงมา เงินที่รอ จงถึง",
+        "เงินที่ควรได้ จงเป็นของข้าพเจ้า",
+        "เร็ว จริง ตรง และบริสุทธิ์",
+        "โอม อัศวินะ ลาภัง ชัยยะ"
+      ],
+      "rounds": 3,
+      "audioInstruction": "สวดช้าๆ หนักแน่น",
+      "themeColor": "#ef4444",
+      "gradient": "from-red-900 via-red-800 to-black",
+      "image": "/v2/assets/horse/red.webp"
+    },
+    {
+      "id": "beige",
+      "title": "ม้าเบจ (Beige Horse)",
+      "subtitle": "คาถามหาเสถียร เก็บทรัพย์ ปิดรั่ว รักษาเงิน",
+      "element": "ธาตุดิน",
+      "power": [
+        "เงินอยู่กับตัว",
+        "เก็บเงินได้",
+        "ไม่รั่วไหล",
+        "ไม่โดนดึงออกง่าย"
+      ],
+      "suitableFor": [
+        "คนเก็บเงินไม่อยู่",
+        "สร้างบ้าน",
+        "ซื้อที่ดิน",
+        "ทำธุรกิจระยะยาว"
+      ],
+      "preparation": [
+        "วางม้าเบจไว้กลางฝ่ามือ",
+        "วางมือแนบอก",
+        "นึกถึง \"เงินที่อยากเก็บให้อยู่กับตัว\""
+      ],
+      "chantText": [
+        "นะ โม พุท ธา ยะ",
+        "ปฐวีอัศวินะ มหาทรัพย์ฐา",
+        "ข้าพเจ้าขออัญเชิญ พลังแห่งม้าธาตุดิน",
+        "ผู้รักษาทรัพย์ ผู้ค้ำเงิน ผู้ปิดทางรั่ว",
+        "เงินข้าพเจ้า ขอให้อยู่ ขอให้งอก ขอให้เพิ่ม",
+        "ไม่รั่ว ไม่ไหล ไม่สูญ",
+        "โอม ปฐวี ลาภัง นิรันดร"
+      ],
+      "rounds": 5,
+      "audioInstruction": "เสียงนิ่ง หนัก ลึก",
+      "themeColor": "#d97706",
+      "gradient": "from-amber-900 via-orange-900 to-black",
+      "image": "/v2/assets/horse/beige.webp"
+    },
+    {
+      "id": "white",
+      "title": "ม้าขาว (White Horse)",
+      "subtitle": "คาถาล้างดวง เปิดทาง รีเซ็ตชีวิต",
+      "element": "ธาตุลม + พลังฟ้า",
+      "power": [
+        "ล้างเคราะห์",
+        "เปิดทางใหม่",
+        "ตัดพลังเก่าที่ติดค้าง"
+      ],
+      "suitableFor": [
+        "คนดวงตก",
+        "เจออุปสรรคซ้ำๆ",
+        "เปลี่ยนชีวิต",
+        "เริ่มต้นใหม่"
+      ],
+      "preparation": [
+        "อาบน้ำก่อนสวด (ดีที่สุด)",
+        "จับม้าขาวด้วยสองมือ",
+        "หลับตา",
+        "ถอนหายใจยาว 1 ครั้ง"
+      ],
+      "chantText": [
+        "นะ โม พุท ธา ยะ",
+        "วิสุทธิอัศวินะ ปัญญาโลกา",
+        "ข้าพเจ้าขออัญเชิญ พลังแห่งม้าทางสว่าง",
+        "ขอให้เคราะห์เก่าจบ ขอให้ทางใหม่เปิด",
+        "ขอให้สิ่งที่ไม่ใช่ หลุดออก",
+        "ตั้งแต่วินาทีนี้ ดวงข้าพเจ้าขอเดินหน้า",
+        "ไม่ย้อน ไม่ซ้ำ ไม่ติด",
+        "โอม วิสุทธิ วิสุทธิ ชัยยะ"
+      ],
+      "rounds": 7,
+      "audioInstruction": "เสียงเบา แต่นิ่งมาก",
+      "themeColor": "#f3f4f6",
+      "gradient": "from-slate-200 via-gray-400 to-slate-600",
+      "image": "/v2/assets/horse/white.webp"
+    }
+  ],
+  "wallpapers": {
+    "days": [
+      {
+        "id": "sun",
+        "name": "Sunday",
+        "thai": "อาทิตย์",
+        "emoji": "🌞",
+        "files": {
+          "การเงิน": "/v2/assets/wallpapers/%E0%B8%AD%E0%B8%B2%E0%B8%97%E0%B8%B4%E0%B8%95%E0%B8%A2%E0%B9%8C/S__2908233_0.webp",
+          "ความรัก": "/v2/assets/wallpapers/%E0%B8%AD%E0%B8%B2%E0%B8%97%E0%B8%B4%E0%B8%95%E0%B8%A2%E0%B9%8C/S__2908234_0.webp",
+          "การงาน": "/v2/assets/wallpapers/%E0%B8%AD%E0%B8%B2%E0%B8%97%E0%B8%B4%E0%B8%95%E0%B8%A2%E0%B9%8C/S__2908235_0.webp",
+          "สุขภาพ": "/v2/assets/wallpapers/%E0%B8%AD%E0%B8%B2%E0%B8%97%E0%B8%B4%E0%B8%95%E0%B8%A2%E0%B9%8C/S__2908236_0.webp"
+        }
+      },
+      {
+        "id": "mon",
+        "name": "Monday",
+        "thai": "จันทร์",
+        "emoji": "🌙",
+        "files": {
+          "การเงิน": "/v2/assets/wallpapers/%E0%B8%88%E0%B8%B1%E0%B8%99%E0%B8%97%E0%B8%A3%E0%B9%8C/S__2908191_0.webp",
+          "ความรัก": "/v2/assets/wallpapers/%E0%B8%88%E0%B8%B1%E0%B8%99%E0%B8%97%E0%B8%A3%E0%B9%8C/S__2908192_0.webp",
+          "การงาน": "/v2/assets/wallpapers/%E0%B8%88%E0%B8%B1%E0%B8%99%E0%B8%97%E0%B8%A3%E0%B9%8C/S__2908193_0.webp",
+          "สุขภาพ": "/v2/assets/wallpapers/%E0%B8%88%E0%B8%B1%E0%B8%99%E0%B8%97%E0%B8%A3%E0%B9%8C/S__2908194_0.webp"
+        }
+      },
+      {
+        "id": "tue",
+        "name": "Tuesday",
+        "thai": "อังคาร",
+        "emoji": "🔴",
+        "files": {
+          "การเงิน": "/v2/assets/wallpapers/%E0%B8%AD%E0%B8%B1%E0%B8%87%E0%B8%84%E0%B8%B2%E0%B8%A3/S__2908197_0.webp",
+          "ความรัก": "/v2/assets/wallpapers/%E0%B8%AD%E0%B8%B1%E0%B8%87%E0%B8%84%E0%B8%B2%E0%B8%A3/S__2908198_0.webp",
+          "การงาน": "/v2/assets/wallpapers/%E0%B8%AD%E0%B8%B1%E0%B8%87%E0%B8%84%E0%B8%B2%E0%B8%A3/S__2908199_0.webp",
+          "สุขภาพ": "/v2/assets/wallpapers/%E0%B8%AD%E0%B8%B1%E0%B8%87%E0%B8%84%E0%B8%B2%E0%B8%A3/S__2908200_0.webp"
+        }
+      },
+      {
+        "id": "wed-d",
+        "name": "Wed Day",
+        "thai": "พุธกลางวัน",
+        "emoji": "💚",
+        "files": {
+          "การเงิน": "/v2/assets/wallpapers/%E0%B8%9E%E0%B8%B8%E0%B8%97%E0%B8%81%E0%B8%A5%E0%B8%B2%E0%B8%A7%E0%B8%A7%E0%B8%B1%E0%B8%99/S__2908204_0.webp",
+          "ความรัก": "/v2/assets/wallpapers/%E0%B8%9E%E0%B8%B8%E0%B8%97%E0%B8%81%E0%B8%A5%E0%B8%B2%E0%B8%A7%E0%B8%A7%E0%B8%B1%E0%B8%99/S__2908203_0.webp",
+          "การงาน": "/v2/assets/wallpapers/%E0%B8%9E%E0%B8%B8%E0%B8%97%E0%B8%81%E0%B8%A5%E0%B8%B2%E0%B8%A7%E0%B8%A7%E0%B8%B1%E0%B8%99/S__2908205_0.webp",
+          "สุขภาพ": "/v2/assets/wallpapers/%E0%B8%9E%E0%B8%B8%E0%B8%97%E0%B8%81%E0%B8%A5%E0%B8%B2%E0%B8%A7%E0%B8%A7%E0%B8%B1%E0%B8%99/S__2908206_0.webp"
+        }
+      },
+      {
+        "id": "wed-n",
+        "name": "Wed Night",
+        "thai": "พุธกลางคืน",
+        "emoji": "🌑",
+        "files": {
+          "การเงิน": "/v2/assets/wallpapers/%E0%B8%9E%E0%B8%B8%E0%B8%97%E0%B8%81%E0%B8%A5%E0%B8%B2%E0%B8%A7%E0%B8%A7%E0%B8%B1%E0%B8%99/S__2908209_0.webp",
+          "ความรัก": "/v2/assets/wallpapers/%E0%B8%9E%E0%B8%B8%E0%B8%97%E0%B8%81%E0%B8%A5%E0%B8%B2%E0%B8%A7%E0%B8%A7%E0%B8%B1%E0%B8%99/S__2908210_0.webp",
+          "การงาน": "/v2/assets/wallpapers/%E0%B8%9E%E0%B8%B8%E0%B8%97%E0%B8%81%E0%B8%A5%E0%B8%B2%E0%B8%A7%E0%B8%A7%E0%B8%B1%E0%B8%99/S__2908211_0.webp",
+          "สุขภาพ": "/v2/assets/wallpapers/%E0%B8%9E%E0%B8%B8%E0%B8%97%E0%B8%81%E0%B8%A5%E0%B8%B2%E0%B8%A7%E0%B8%A7%E0%B8%B1%E0%B8%99/S__2908212_0.webp"
+        }
+      },
+      {
+        "id": "thu",
+        "name": "Thursday",
+        "thai": "พฤหัสบดี",
+        "emoji": "🟠",
+        "files": {
+          "การเงิน": "/v2/assets/wallpapers/%E0%B8%9E%E0%A4%A4%E0%B8%AB%E0%B8%B1%E0%B8%AA%E0%B8%9A%E0%B8%94%E0%B8%B5/S__2908215_0.webp",
+          "ความรัก": "/v2/assets/wallpapers/%E0%B8%9E%E0%A4%A4%E0%B8%AB%E0%B8%B1%E0%B8%AA%E0%B8%9A%E0%B8%94%E0%B8%B5/S__2908216_0.webp",
+          "การงาน": "/v2/assets/wallpapers/%E0%B8%9E%E0%A4%A4%E0%B8%AB%E0%B8%B1%E0%B8%AA%E0%B8%9A%E0%B8%94%E0%B8%B5/S__2908217_0.webp",
+          "สุขภาพ": "/v2/assets/wallpapers/%E0%B8%9E%E0%A4%A4%E0%B8%AB%E0%B8%B1%E0%B8%AA%E0%B8%9A%E0%B8%94%E0%B8%B5/S__2908218_0.webp"
+        }
+      },
+      {
+        "id": "fri",
+        "name": "Friday",
+        "thai": "ศุกร์",
+        "emoji": "💙",
+        "files": {
+          "การเงิน": "/v2/assets/wallpapers/%E0%A8%A8%E0%B8%B8%E0%B8%81%E0%B8%A3%E0%B9%8C/S__2908221_0.webp",
+          "ความรัก": "/v2/assets/wallpapers/%E0%A8%A8%E0%B8%B8%E0%B8%81%E0%B8%A3%E0%B9%8C/S__2908222_0.webp",
+          "การงาน": "/v2/assets/wallpapers/%E0%A8%A8%E0%B8%B8%E0%B8%81%E0%B8%A3%E0%B9%8C/S__2908223_0.webp",
+          "สุขภาพ": "/v2/assets/wallpapers/%E0%A8%A8%E0%B8%B8%E0%B8%81%E0%B8%A3%E0%B9%8C/S__2908224_0.webp"
+        }
+      },
+      {
+        "id": "sat",
+        "name": "Saturday",
+        "thai": "เสาร์",
+        "emoji": "💜",
+        "files": {
+          "การเงิน": "/v2/assets/wallpapers/%E0%B9%80%E0%B8%AA%E0%B8%B2%E0%B8%A3%E0%B9%8C/S__2908227_0.webp",
+          "ความรัก": "/v2/assets/wallpapers/%E0%B9%80%E0%B8%AA%E0%B8%B2%E0%B8%A3%E0%B9%8C/S__2908228_0.webp",
+          "การงาน": "/v2/assets/wallpapers/%E0%B9%80%E0%B8%AA%E0%B8%B2%E0%B8%A3%E0%B9%8C/S__2908229_0.webp",
+          "สุขภาพ": "/v2/assets/wallpapers/%E0%B9%80%E0%B8%AA%E0%B8%B2%E0%B8%A3%E0%B9%8C/S__2908230_0.webp"
+        }
+      }
+    ],
+    "anyDay": [
+      {
+        "name": "การเงิน",
+        "icon": "💰",
+        "sub": "เสริมทรัพย์ มั่งมี",
+        "grad": "linear-gradient(160deg,#052210,#0f4c1a)",
+        "url": "/v2/assets/wallpapers/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908240_0.webp"
+      },
+      {
+        "name": "การงาน",
+        "icon": "💼",
+        "sub": "ก้าวหน้า มีตำแหน่ง",
+        "grad": "linear-gradient(160deg,#020c2a,#0a2c5a)",
+        "url": "/v2/assets/wallpapers/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908241_0.webp"
+      },
+      {
+        "name": "ความรัก",
+        "icon": "💕",
+        "sub": "พบรัก มีคู่ครอง",
+        "grad": "linear-gradient(160deg,#200510,#5a0f2a)",
+        "url": "/v2/assets/wallpapers/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908242_0.webp"
+      },
+      {
+        "name": "สุขภาพ",
+        "icon": "🌿",
+        "sub": "แข็งแรง ไม่มีโรคภัย",
+        "grad": "linear-gradient(160deg,#041508,#0f3a1a)",
+        "url": "/v2/assets/wallpapers/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908243_0.webp"
+      },
+      {
+        "name": "อำนาจ",
+        "icon": "⚡",
+        "sub": "มีอำนาจ น่าเกรงขาม",
+        "grad": "linear-gradient(160deg,#180e00,#3a2a00)",
+        "url": "/v2/assets/wallpapers/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908244_0.webp"
+      },
+      {
+        "name": "ค้าขาย",
+        "icon": "🏪",
+        "sub": "ค้าขายดี กำไรงาม",
+        "grad": "linear-gradient(160deg,#051000,#1a3a00)",
+        "url": "/v2/assets/wallpapers/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908245_0.webp"
+      },
+      {
+        "name": "การเรียน",
+        "icon": "📚",
+        "sub": "เรียนเก่ง สอบผ่าน",
+        "grad": "linear-gradient(160deg,#000e1a,#001a3a)",
+        "url": "/v2/assets/wallpapers/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908246_0.webp"
+      },
+      {
+        "name": "เมตตา",
+        "icon": "🙏",
+        "sub": "เป็นที่รัก มีคนช่วย",
+        "grad": "linear-gradient(160deg,#120008,#2a001a)",
+        "url": "/v2/assets/wallpapers/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908248.webp"
+      },
+      {
+        "name": "โชคลาภ",
+        "icon": "🍀",
+        "sub": "โชคดี ถูกรางวัล",
+        "grad": "linear-gradient(160deg,#081000,#1a2a00)",
+        "url": "/v2/assets/wallpapers/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__2908251.webp"
+      },
+      {
+        "name": "ความสำเร็จ",
+        "icon": "🏆",
+        "sub": "ประสบความสำเร็จ",
+        "grad": "linear-gradient(160deg,#1a0800,#3a1a00)",
+        "url": "/v2/assets/wallpapers/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__15785987.webp"
+      },
+      {
+        "name": "แคล้วคลาด",
+        "icon": "🛡️",
+        "sub": "ปลอดภัย พ้นอันตราย",
+        "grad": "linear-gradient(160deg,#000b14,#001a2a)",
+        "url": "/v2/assets/wallpapers/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__15785988.webp"
+      },
+      {
+        "name": "บารมี",
+        "icon": "👑",
+        "sub": "มีบารมี คนนับถือ",
+        "grad": "linear-gradient(160deg,#110800,#2a1a00)",
+        "url": "/v2/assets/wallpapers/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__15785989.webp"
+      },
+      {
+        "name": "ร่มเย็น",
+        "icon": "🌸",
+        "sub": "ชีวิตสงบ ครอบครัวสุข",
+        "grad": "linear-gradient(160deg,#0d0015,#20003a)",
+        "url": "/v2/assets/wallpapers/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__15785990.webp"
+      },
+      {
+        "name": "เริ่มต้นใหม่",
+        "icon": "🌅",
+        "sub": "ชีวิตใหม่ โอกาสใหม่",
+        "grad": "linear-gradient(160deg,#140800,#2e1500)",
+        "url": "/v2/assets/wallpapers/%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%81%E0%B8%B4%E0%B8%94/S__15785992.webp"
+      }
+    ]
+  }
+}
